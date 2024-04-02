@@ -1,0 +1,14 @@
+{
+  "name": "dataapi",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "json - server -p 3007 -w data.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^1.0.0-alpha.23"
+  }
+}

@@ -5,7 +5,8 @@ import { useStateContext } from "./context/ContextProvider";
 import { useEffect } from "react";
 import { FiSettings } from "react-icons/fi";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { Navbar, Footer, Sidebar,ThemeSettings } from "./components";
+import { Navbar, Footer, Sidebar,ThemeSettings,LineChart } from "./components";
+import Dashboard from "./pages/dashboard";
 import {
   Ecommerce,
   Orders,
@@ -20,6 +21,7 @@ import {
 } from "./pages";
 import CreateMovement from "./forms/Transport";
 import CreateService from "./forms/Service";
+
 import Employee from "./pages/Employee";
 import Kanban from "./pages/Kanban";
 import Shed from "./pages/Shed";
@@ -82,7 +84,7 @@ function App() {
                {themeSettings && (<ThemeSettings />)}
               <Routes>
                 <Route exact path="/" element={<Ecommerce />}></Route>
-
+                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/customers" element={<Customers />} />
                 <Route path="/vendors" element={<Employee />} />
@@ -90,13 +92,12 @@ function App() {
                 <Route path="/calibration" element={<Calibration />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/kanban" element={<Kanban />} />
-                <Route path="/color-picker" element={<ColorPicker />} />
                 <Route
                   path="/transactions"
                   element={<CreateMovement />}
                 ></Route>
                 <Route path="/services" element={<CreateService />}></Route>
-                <Route path="/line" element="line" />
+                <Route path="/line" element={<LineChart/>} />
                 <Route path="/pie" element="pie" />
               </Routes>
             </div>

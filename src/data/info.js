@@ -506,7 +506,7 @@ export const links = [
     title: "Dashboard",
     links: [
       {
-        name: "Techno Rings",
+        name: "TechnoRings",
         icon: <FiShoppingBag />,
       },
     ],
@@ -530,14 +530,8 @@ export const links = [
         name: "Services",
         icon: <MdInventory />,
       },
-      {
-        name: "Machinery",
-        icon: <TbTools />,
-      },
-      {
-        name: "Stock Management",
-        icon: <AiOutlineStock />,
-      },
+      
+     
       {
         name: "Transactions",
         icon: <AiOutlineTransaction />,
@@ -559,14 +553,7 @@ export const links = [
         name: "kanban",
         icon: <BsKanban />,
       },
-      {
-        name: "editor",
-        icon: <FiEdit />,
-      },
-      {
-        name: "color-picker",
-        icon: <BiColorFill />,
-      },
+      
     ],
   },
 ];

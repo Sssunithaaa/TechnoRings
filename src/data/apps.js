@@ -1,3 +1,6 @@
+import {BsCurrencyDollar,BsShield} from 'react-icons/bs'
+import { TiTick } from "react-icons/ti";
+import { FiCreditCard } from "react-icons/fi";
 export const shedDetailsData = [
   { shed_id: 1, name: 'Shed 1', location: 'Location 1', phone_number: '123-456-7890' },
   { shed_id: 2, name: 'Shed 2', location: 'Location 2', phone_number: '234-567-8901' },
@@ -258,7 +261,25 @@ export const CalibrationGrid = [
     textAlign: "Center",
   }
 ];
-
+export const recentTransactions = [
+  {
+      MovementDate: "2022-03-17",
+      Tool: "Hammer",
+      SourceShed: "Shed A",
+      DestinationShed: "Shed B",
+      ToolCount: 5,
+      InstrumentName: "Screwdriver",
+    },
+    {
+      MovementDate: "2022-03-18",
+      Tool: "Wrench",
+      SourceShed: "Shed C",
+      DestinationShed: "Shed D",
+      ToolCount: 10,
+      InstrumentName: "Pliers",
+    },
+  
+];
 export const kanbanGrid = [
   { headerText: 'To Do',
     keyField: 'Open',
