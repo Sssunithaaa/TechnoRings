@@ -1,13 +1,6 @@
 import {BsCurrencyDollar,BsShield} from 'react-icons/bs'
 import { TiTick } from "react-icons/ti";
 import { FiCreditCard } from "react-icons/fi";
-export const shedDetailsData = [
-  { shed_id: 1, name: 'Shed 1', location: 'Location 1', phone_number: '123-456-7890' },
-  { shed_id: 2, name: 'Shed 2', location: 'Location 2', phone_number: '234-567-8901' },
-  { shed_id: 3, name: 'Shed 3', location: 'Location 3', phone_number: '345-678-9012' },
-  { shed_id: 4, name: 'Shed 4', location: 'Location 4', phone_number: '456-789-0123' },
-  { shed_id: 5, name: 'Shed 5', location: 'Location 5', phone_number: '567-890-1234' }
-];
 
 export const shedToolsData = [
   { shedtool_id: 1, shed_id: 1, using_tool_id: 'Tool 1' },
@@ -75,175 +68,62 @@ export const shedVendorsGrid = [
   },
   
 ]
-export const calibrationData=[
-  {
-    "sl_no": 1,
-    "Group_name": "Temperature",
-    "Instrument_name": "Thermometer",
-    "Make": "Fluke",
-    "List_count": 100,
-    "Range": "0-100°C",
-    "Instrument_number": "THM001",
-    "Calibration_frequency": "Annually",
-    "Calibration_date": "2023-03-15",
-    "Calibration_due_date": "2024-03-15"
-  },
-  {
-    "sl_no": 2,
-    "Group_name": "Pressure",
-    "Instrument_name": "Pressure Gauge",
-    "Make": "WIKA",
-    "List_count": 50,
-    "Range": "0-100 psi",
-    "Instrument_number": "PG002",
-    "Calibration_frequency": "Bi-annually",
-    "Calibration_date": "2023-05-20",
-    "Calibration_due_date": "2024-11-20"
-  },
-  {
-    "sl_no": 3,
-    "Group_name": "Voltage",
-    "Instrument_name": "Multimeter",
-    "Make": "Fluke",
-    "List_count": 80,
-    "Range": "0-1000V",
-    "Instrument_number": "MM003",
-    "Calibration_frequency": "Quarterly",
-    "Calibration_date": "2023-02-10",
-    "Calibration_due_date": "2024-05-10"
-  },
-  {
-    "sl_no": 4,
-    "Group_name": "Flow",
-    "Instrument_name": "Flowmeter",
-    "Make": "Endress+Hauser",
-    "List_count": 30,
-    "Range": "0-10 L/min",
-    "Instrument_number": "FM004",
-    "Calibration_frequency": "Annually",
-    "Calibration_date": "2023-07-08",
-    "Calibration_due_date": "2024-07-08"
-  },
-  {
-    "sl_no": 5,
-    "Group_name": "Weight",
-    "Instrument_name": "Scale",
-    "Make": "Mettler Toledo",
-    "List_count": 20,
-    "Range": "0-500 g",
-    "Instrument_number": "SC005",
-    "Calibration_frequency": "Bi-annually",
-    "Calibration_date": "2023-04-30",
-    "Calibration_due_date": "2024-10-30"
-  },
-  {
-    "sl_no": 6,
-    "Group_name": "pH",
-    "Instrument_name": "pH Meter",
-    "Make": "Hanna Instruments",
-    "List_count": 40,
-    "Range": "0-14 pH",
-    "Instrument_number": "PH006",
-    "Calibration_frequency": "Quarterly",
-    "Calibration_date": "2023-01-15",
-    "Calibration_due_date": "2024-04-15"
-  },
-  {
-    "sl_no": 7,
-    "Group_name": "Length",
-    "Instrument_name": "Vernier Caliper",
-    "Make": "Mitutoyo",
-    "List_count": 60,
-    "Range": "0-150 mm",
-    "Instrument_number": "VC007",
-    "Calibration_frequency": "Annually",
-    "Calibration_date": "2023-08-25",
-    "Calibration_due_date": "2024-08-25"
-  },
-  {
-    "sl_no": 8,
-    "Group_name": "Humidity",
-    "Instrument_name": "Hygrometer",
-    "Make": "Vaisala",
-    "List_count": 25,
-    "Range": "0-100% RH",
-    "Instrument_number": "HG008",
-    "Calibration_frequency": "Bi-annually",
-    "Calibration_date": "2023-06-10",
-    "Calibration_due_date": "2024-12-10"
-  },
-  {
-    "sl_no": 9,
-    "Group_name": "Conductivity",
-    "Instrument_name": "Conductivity Meter",
-    "Make": "Oakton Instruments",
-    "List_count": 35,
-    "Range": "0-2000 μS/cm",
-    "Instrument_number": "CM009",
-    "Calibration_frequency": "Quarterly",
-    "Calibration_date": "2023-03-05",
-    "Calibration_due_date": "2024-06-05"
-  },
-  {
-    "sl_no": 10,
-    "Group_name": "Light",
-    "Instrument_name": "Light Meter",
-    "Make": "Extech Instruments",
-    "List_count": 15,
-    "Range": "0-20000 Lux",
-    "Instrument_number": "LM010",
-    "Calibration_frequency": "Annually",
-    "Calibration_date": "2023-09-18",
-    "Calibration_due_date": "2024-09-18"
-  }
-]
+
 
 export const CalibrationGrid = [
   { type: 'checkbox', width: '50' },
   {
-    field: "sl_no",
-    headerText: "SL No",
+    field: "instrument_no",
+    headerText: "Instrument Number",
     width: "80",
     textAlign: "Center",
   },
+  
   {
-    field: "Group_name",
-    headerText: "Group Name",
-    width: "150",
-    textAlign: "Center",
-  },
-  {
-    field: "Instrument_name",
+    field: "instrument_name",
     headerText: "Instrument Name",
     width: "150",
     textAlign: "Center",
   },
   {
-    field: "Make",
-    headerText: "Make",
-    width: "120",
-    textAlign: "Center",
-  },
-  {
-    field: "List_count",
-    headerText: "List Count",
-    width: "100",
-    textAlign: "Center",
-  },
-  {
-    field: "Range",
-    headerText: "Range",
-    width: "120",
-    textAlign: "Center",
-  },
-  {
-    field: "Instrument_number",
-    headerText: "Instrument Number",
+    field: "manufacturer_name",
+    headerText: "Group Name",
     width: "150",
     textAlign: "Center",
   },
   {
-    field: "Calibration_frequency",
+    field: "year_of_purchase",
+    headerText: "Year of purchase",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+    field: "gst",
+    headerText: "GST",
+    width: "120",
+    textAlign: "Center",
+  },
+  {
+    field: "description",
+    headerText: "Description",
+    width: "120",
+    textAlign: "Center",
+  },
+  {
+    field: "least_count",
+    headerText: "Least Count",
+    width: "100",
+    textAlign: "Center",
+  },
+  {
+    field: "instrument_range",
+    headerText: "Range",
+    width: "120",
+    textAlign: "Center",
+  },
+  
+  {
+    field: "calibration_frequency",
     headerText: "Calibration Frequency",
     width: "150",
     textAlign: "Center",

@@ -6,15 +6,20 @@ import { Provider } from 'react-redux'
 // import store from './store/store'
 import { registerLicense } from "@syncfusion/ej2-base";
 import { ContextProvider } from "./context/ContextProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 registerLicense(
-  "Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCfUx0QXxbf1x0ZFRMY1hbRnBPMyBoS35RckVgWHhecXdRRGZfVURw"
-);
+"ORg4AjUWIQA/Gnt2UFhhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5XdkdjW3tccnJQRGdV");
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
      {/* <Provider store={store}> */}
     <ContextProvider>
+        <QueryClientProvider client={queryClient}>
+
       <App />
+      </QueryClientProvider>
     </ContextProvider>
     {/* </Provider> */}
   </React.StrictMode>

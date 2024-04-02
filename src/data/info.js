@@ -5,6 +5,7 @@ import product from "./product.jpg";
 import avatar2 from './avatar2.jpg'
 import avatar3 from './avatar3.png'
 import avatar4 from './avatar4.jpg'
+import { FaWarehouse } from "react-icons/fa";
 import {
   AiOutlineCalendar,
   AiOutlineTransaction,
@@ -506,8 +507,9 @@ export const links = [
     title: "Dashboard",
     links: [
       {
-        name: "TechnoRings",
+        name: "Home",
         icon: <FiShoppingBag />,
+        link:"Home"
       },
     ],
   },
@@ -517,28 +519,36 @@ export const links = [
       {
         name: "Vendors",
         icon: <IoMdContacts />,
-      },
-      {
-        name: "customers",
-        icon: <RiContactsLine />,
-      },
-      {
-        name: "shed",
-        icon: <MdInventory />,
-      },
-      {
-        name: "Services",
-        icon: <MdInventory />,
+        link:"vendors"
       },
       
+      {
+        name: "shed",
+        icon: <FaWarehouse />,
+        link:"shed"
+      },
+     
+
+      {
+        name: "Tools",
+        icon: <MdInventory />,
+        link:"calibration"
+      },
+       {
+        name: "Services",
+        icon: <MdInventory />,
+        link:"services"
+      },
      
       {
-        name: "Transactions",
+        name: "Tool movement",
         icon: <AiOutlineTransaction />,
+        link:"transactions"
       },
       {
         name: "Reports",
         icon: <HiDocumentReport />,
+        link:"deliverychallan"
       },
     ],
   },
@@ -548,10 +558,12 @@ export const links = [
       {
         name: "calendar",
         icon: <AiOutlineCalendar />,
+        link:"calendar"
       },
       {
         name: "kanban",
         icon: <BsKanban />,
+        link:"kanban"
       },
       
     ],

@@ -21,11 +21,14 @@ import {
 } from "./pages";
 import CreateMovement from "./forms/Transport";
 import CreateService from "./forms/Service";
-
-import Employee from "./pages/Employee";
+import VendorHandle from "./forms/VendorHandle";
 import Kanban from "./pages/Kanban";
 import Shed from "./pages/Shed";
 import Calibration from "./pages/Calibration";
+import DeliveryChallan from "./forms/DeliveryChallan";
+import Vendor from "./pages/Vendor";
+import Transactions from "./pages/Transactions";
+import ShedTools from "./pages/ShedTools";
 function App() {
   const {
     setCurrentColor,
@@ -84,17 +87,27 @@ function App() {
                {themeSettings && (<ThemeSettings />)}
               <Routes>
                 <Route exact path="/" element={<Ecommerce />}></Route>
-                 <Route path="/dashboard" element={<Dashboard />} />
+                 <Route path="/home" element={<Dashboard />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/customers" element={<Customers />} />
-                <Route path="/vendors" element={<Employee />} />
+                <Route path="/vendors" element={<Vendor />} />
                 <Route path="/shed" element={<Shed />} />
                 <Route path="/calibration" element={<Calibration />} />
+                                <Route path="/calibration/:id" element={<Transactions />} />
+                 <Route path="/shed/:id" element={<ShedTools />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/kanban" element={<Kanban />} />
                 <Route
                   path="/transactions"
                   element={<CreateMovement />}
+                ></Route>
+                <Route
+                  path="/vendorhandle"
+                  element={<VendorHandle />}
+                ></Route>
+                <Route
+                  path="/deliverychallan"
+                  element={<DeliveryChallan />}
                 ></Route>
                 <Route path="/services" element={<CreateService />}></Route>
                 <Route path="/line" element={<LineChart/>} />

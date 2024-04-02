@@ -3,6 +3,13 @@ import { KanbanComponent,ColumnsDirective,ColumnDirective } from '@syncfusion/ej
 import { kanbanData, kanbanGrid, } from '../data/apps'
 import {Header} from '../components'
 const Kanban = () => {
+  const handleActionComplete = (args)=> {
+    console.log(args)
+     if (args.requestType === 'cardChanged') {
+      const updatedData = args.changedRecords;
+      console.log(updatedData)
+     }
+  }
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       <Header category="App" title="Kanban"/>
@@ -11,6 +18,8 @@ const Kanban = () => {
       dataSource={kanbanData}
       cardSettings={{contentField:'Summary',headerField:'Id'}}
       keyField='Status'
+      actionComplete={handleActionComplete}
+      allowDragAndDrop
       >
         <ColumnsDirective>
         {kanbanGrid.map((item,index)=> <ColumnDirective key={index} {...item}/>)}
