@@ -13,8 +13,8 @@ const Transactions = () => {
   const [transportOrder,setTransportOrder] = useState([])
   const fetchToolData = async (id) => {
     try {
-        const response = await axios.get(`http://localhost:8000/instrument-transport-history/${id}/`);
-        const response1 = await axios.get(`http://localhost:8000/instrument-service-history/${id}/`);
+        const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${id}/`);
+        const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${id}/`);
 
         setService(response1?.data?.service_history)
         setTransportOrder(response?.data?.transport_orders)
@@ -32,7 +32,7 @@ useEffect(()=> {
   let grid;
   // Fetch shed details from the server
   useEffect(() => {
-    axios.get('http://localhost:8000/shed-details/')
+    axios.get(`${process.env.REACT_APP_URL}/shed-details/`)
       .then(response => {
         const shedMap = {};
         console.log(response.data.shed_details)
@@ -104,7 +104,7 @@ useEffect(()=> {
       if (args.requestType === "delete") {
     try {
       console.log(args.data[0].movement_id)
-      const response= await axios.post(`http://127.0.0.1:8000/transport_order/${args.data[0].movement_id}/delete/`);
+      const response= await axios.post(`${process.env.REACT_APP_URL}/transport_order/${args.data[0].movement_id}/delete/`);
       toast.success("Transport order deleted successfully")
     } catch (error) {
       toast.error(error.message)
@@ -116,7 +116,7 @@ useEffect(()=> {
       if (args.requestType === "delete") {
     try {
       console.log(args.data[0].service_id)
-      const response= await axios.post(`http://127.0.0.1:8000/service_order/${args.data[0].service_id}/delete/`);
+      const response= await axios.post(`${process.env.REACT_APP_URL}/service_order/${args.data[0].service_id}/delete/`);
             toast.success("Service order deleted successfully")
 
     } catch (error) {
@@ -132,7 +132,7 @@ useEffect(()=> {
         
     
         try {
-      const response = await axios.post(`http://127.0.0.1:8000/shed/${id}/delete/`);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/shed/${id}/delete/`);
       console.log(response)
     } catch (error) {
       console.error("Error deleting data:", error);
@@ -141,11 +141,12 @@ useEffect(()=> {
     
   const handleAcknowledgment = async (props) => {
   try {
-    const response = await axios.post(`http://127.0.0.1:8000/transport/${props.movement_id}/acknowledge/`);
+    const response = await axios.post(`${process.env.REACT_APP_URL}/transport/${props.movement_id}/acknowledge/`);
     toast.success("Transport acknowledged successfully");
   } catch (error) {
     toast.error(error.message);
-    console.error("Error acknowledging transport:", error);
+    
+    console.log("Error acknowledging transport:", error);
   }
 };
   return (

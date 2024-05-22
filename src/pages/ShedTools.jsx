@@ -15,7 +15,7 @@ console.log(usingTools);
 const id= useParams();
 const fetchToolData = async (shed_id) => {
     try {
-        const response = await axios.get(`http://localhost:8000/shed_detail/${shed_id}/`);
+        const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
 
   
         setShedTools(response?.data?.shed_tools)
@@ -78,7 +78,7 @@ useEffect(()=> {
     console.log(shed_id)
      const handleDelete = async ()=> {
      try {
-      const response = await axios.post(`http://127.0.0.1:8000/shed/${shed_id}/delete/`);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/shed/${shed_id}/delete/`);
       console.log(response)
     } catch (error) {
       console.error("Error deleting data:", error);

@@ -17,7 +17,7 @@ const VendorHandle = ({}) => {
 
        const fetchTools = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/instrument-tools/");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
       setVendorTools(response.data);
     } catch (error) {
       console.error("Error fetching sheds:", error);
@@ -64,7 +64,7 @@ const VendorHandle = ({}) => {
       turnaround_time: data.turnaround_time
     };
       console.log(requestData)
-      const response = await axios.post('http://127.0.0.1:8000/add_vendor_handles/', requestData);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/add_vendor_handles/`, requestData);
       console.log(response)
       toast.success("Vendor handled successfully", {
         position: "top-center",
@@ -84,7 +84,7 @@ const VendorHandle = ({}) => {
 useEffect(() => {
   const fetchVendors = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/vendor/");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
       setVendors(response.data);
     } catch (error) {
       console.error("Error fetching sheds:", error);

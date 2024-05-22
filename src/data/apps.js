@@ -552,6 +552,34 @@ export const themeColors = [
   },
 ];
 
+
+export const service_orders_data = [
+    {
+        "Id": 1,
+        "Subject": "Oil Change",
+        "Location": "Vendor A",
+        "StartTime": "2021-01-10T09:00:00.000Z",
+        "EndTime": "2021-01-10T10:00:00.000Z",
+        "CategoryColor": "#1aaa55"
+    },
+    {
+        "Id": 2,
+        "Subject": "Engine Overhaul",
+        "Location": "Vendor B",
+        "StartTime": "2021-02-15T11:00:00.000Z",
+        "EndTime": "2021-02-15T14:00:00.000Z",
+        "CategoryColor": "#357cd2"
+    },
+    {
+        "Id": 3,
+        "Subject": "Tire Replacement",
+        "Location": "Vendor C",
+        "StartTime": "2021-03-20T08:00:00.000Z",
+        "EndTime": "2021-03-20T09:30:00.000Z",
+        "CategoryColor": "#7fa900"
+    }
+]
+
 export const scheduleData = [
   {
     Id: 1,

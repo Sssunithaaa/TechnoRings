@@ -32,7 +32,7 @@ const VendorsDetail = () => {
 
     const [vendorDetails, setVendorDetails] = useState({}); // State to store shed details
     useEffect(() => {
-    axios.get('http://localhost:8000/vendor/')
+    axios.get(`${process.env.REACT_APP_URL}/vendor/`)
       .then(response => {
         const vendorMap = {};
         console.log(response.data.vendors)
@@ -83,7 +83,7 @@ const toolbarClick = (args) => {
   const vendor_id = id["id"]
   const handleDelete = async ()=> {
      try {
-      const response = await axios.post(`http://127.0.0.1:8000/vendor/${vendor_id}/delete/`);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/vendor/${vendor_id}/delete/`);
       toast.success("Vendor deleted successfully")
       console.log(response)
     } catch (error) {
@@ -94,7 +94,7 @@ const toolbarClick = (args) => {
       if (args.requestType === "delete") {
     try {
       const id=args.data[0].vendorhandle_id;
-      const response= await axios.post(`http://127.0.0.1:8000/vendor_handles/${id}/delete/`);
+      const response= await axios.post(`${process.env.REACT_APP_URL}/vendor_handles/${id}/delete/`);
             toast.success("Vendor handle deleted successfully")
 
     } catch (error) {

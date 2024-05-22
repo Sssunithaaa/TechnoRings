@@ -17,7 +17,7 @@ const CreateMovement = ({}) => {
   useEffect(() => {
     if (selectedShed) {
       console.log(selectedShed)
-       axios.get(`http://localhost:8000/shed_detail/${selectedShed}/`)
+       axios.get(`${process.env.REACT_APP_URL}/shed_detail/${selectedShed}/`)
         .then(response => {
           setShedTools(response.data.shed_tools);
         })
@@ -73,7 +73,7 @@ const CreateMovement = ({}) => {
         instrument_name: data.instrumentName,
       };
       console.log(requestData)
-      const response = await axios.post('http://127.0.0.1:8000/add-transport-order/', requestData);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/add-transport-order/`, requestData);
       console.log(response)
       toast.success("Tool movement added successfully", {
         position: "top-center",
@@ -94,7 +94,7 @@ const CreateMovement = ({}) => {
 useEffect(() => {
   const fetchSheds = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/shed-details/");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
       setSheds(response.data);
     } catch (error) {
       console.error("Error fetching sheds:", error);

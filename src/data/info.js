@@ -546,7 +546,7 @@ export const links = [
         link:"transactions"
       },
       {
-        name: "Reports",
+        name: "Return order",
         icon: <HiDocumentReport />,
         link:"deliverychallan"
       },

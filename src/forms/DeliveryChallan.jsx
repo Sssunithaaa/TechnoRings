@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -13,7 +13,7 @@ const DeliveryChallan = ({}) => {
   const { data: deliveryChllan } = useQuery({
     queryKey: ["delivery"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:8000/service-order/");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/service-order/`);
       setDetails(response?.data);
       return response.data;
     },
@@ -21,7 +21,7 @@ const DeliveryChallan = ({}) => {
   const { data: shedDetails } = useQuery({
     queryKey: ["shed"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:8000/shed-details/");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
       console.log(response.data);
       return response.data;
     },
@@ -32,6 +32,7 @@ const DeliveryChallan = ({}) => {
     register,
     handleSubmit,
     reset,
+    watch,
     getValues,
     formState: { errors },
   } = useForm({
@@ -71,7 +72,7 @@ const DeliveryChallan = ({}) => {
     console.log(formData);
         // Submit logic for calibration details form
         console.log("Submitting calibration details form:");
-        const response = await axios.post("http://localhost:8000/store-delivery-challan/",formData);
+        const response = await axios.post(`${process.env.REACT_APP_URL}/store-delivery-challan/`,formData);
         console.log(response);
       setShowCalibrationModal(false);
       
@@ -94,18 +95,33 @@ const DeliveryChallan = ({}) => {
 
   const vendors = details?.vendors;
   const shed_details = shedDetails?.shed_details;
- 
+    const selectedServiceId = watch("service");
+  const [serviceTools, setServiceTools] = useState([]);
+
+  useEffect(() => {
+    if (selectedServiceId) {
+      const fetchServiceTools = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_URL}/service_orders/${selectedServiceId}/`);
+          setServiceTools(response.data.service_tools);
+        } catch (error) {
+          console.error("Error fetching service tools:", error);
+        }
+      };
+      fetchServiceTools();
+    }
+  }, [selectedServiceId]);
 
   return (
     <>
       <div className="w-full my-auto flex justify-center h-screen items-center">
         <div className=" w-[500px]  flex justify-center items-center  mx-auto bg-white shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.38)]  m-2  pt-2  md:m-10 lg:mt-15  md:p-10  rounded-3xl">
-          <div className="  max-w-xl w-[500px] py-10 lg:py-0  flex mx-auto justfy-center items-center rounded-lg">
+          <div className="  max-w-md  py-10 lg:py-0  flex mx-auto justfy-center items-center rounded-lg">
             <form
               onSubmit={handleSubmit(submitHandler)}
               className="w-[400px] flex flex-col h-[100%] pt-4 p-0 my-auto space-y-6 mx-auto"
             >
-              <div className="w-[400px]">
+              <div >
                 <label className="flex flex-row justify-center items-center">
                   <span className="font-semibold text-[16px] text-gray-700 w-full">Received Date:</span>
                   <input
@@ -123,7 +139,7 @@ const DeliveryChallan = ({}) => {
                 </label>
               </div>
 
-              <div className="w-[400px]">
+              <div >
                 <label className="flex flex-row justify-center items-center">
                   <span className="font-semibold text-[16px] text-gray-700 w-full">Vendor:</span>
                   <select
@@ -140,14 +156,14 @@ const DeliveryChallan = ({}) => {
                     <option value="">Select a vendor</option>
                     {vendors?.map((vendor) => (
                       <option key={vendor.vendor_id} value={vendor.vendor_id}>
-                        {vendor.vendor_id}
+                        {vendor.name}
                       </option>
                     ))}
                   </select>
                 </label>
               </div>
 
-              <div className="w-[400px]">
+              <div >
                 <label className="flex flex-row justify-center items-center">
                   <span className="font-semibold text-[16px] text-gray-700 w-full">Shed:</span>
                   <select
@@ -171,7 +187,7 @@ const DeliveryChallan = ({}) => {
                 </label>
               </div>
 
-              <div className="w-[400px]">
+              <div >
                 <label className="flex flex-row justify-center items-center">
                   <span className="font-semibold text-[16px] text-gray-700 w-full">Select service id</span>
                   <select
@@ -195,7 +211,7 @@ const DeliveryChallan = ({}) => {
                 </label>
               </div>
 
-              <div className="w-[400px]">
+              <div >
                 <button
                   type="button"
                   onClick={handleAddCalibrationDetails}
@@ -219,6 +235,7 @@ const DeliveryChallan = ({}) => {
           getValues={getValues}
           formData={formData}
           reset={reset}
+          tools={serviceTools}
           sendToolDetails={handleToolDetails}
         />
       )}

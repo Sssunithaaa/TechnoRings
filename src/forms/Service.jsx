@@ -15,7 +15,7 @@ const Service = () => {
    useEffect(() => {
     if (selectedVendor) {
       console.log(selectedVendor)
-       axios.get(`http://localhost:8000/vendor_details/${selectedVendor}/`)
+       axios.get(`${process.env.REACT_APP_URL}/vendor_details/${selectedVendor}/`)
         .then(response => {
           setVendorTools(response.data.vendor_handles);
         })
@@ -32,6 +32,7 @@ const Service = () => {
     }
     newTools[index].tool = value;
     setTools(newTools);
+    console.log(tools)
   };
 
   const addToolField = () => {
@@ -63,15 +64,15 @@ const Service = () => {
       tool_count: toolCount,
       vendor: parseInt(data.vendor),
       tools: tools.map(tool => ({
-        tool: parseInt(tool.id), // Assuming tool is stored as an ID
+        tool: parseInt(tool.tool), // Assuming tool is stored as an ID
         vendor: parseInt(data.vendor), // Vendor ID
-        service: 9 // Service ID, replace with actual service ID
+        // service: 9 // Service ID, replace with actual service ID
       })),
     };
     console.log(requestData)
 
     try {
-      const response = await axios.post('http://localhost:8000/service-order/', requestData);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/service-order/`, requestData);
       toast.success("Service order added successfully", {
         position: "top-center",
         autoClose: 1000,
@@ -92,7 +93,7 @@ const Service = () => {
   useEffect(() => {
   const fetchVendors = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/vendor/");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
       setVendors(response.data);
     } catch (error) {
       console.error("Error fetching sheds:", error);

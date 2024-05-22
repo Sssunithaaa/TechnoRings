@@ -11,7 +11,7 @@ const Shed = () => {
   const {data:shedDetailsData,refetch} = useQuery({
     queryKey:["shed"],
     queryFn: async ()=> {
-      const response =await axios.get("http://127.0.0.1:8000/shed-details/");
+      const response =await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
       console.log(response)
       return response.data
     }
@@ -26,7 +26,7 @@ const Shed = () => {
     if (args.requestType === "save") {
       try {
         console.log(args.data)
-        const response = await axios.post("http://localhost:8000/add_shed/", args.data);
+        const response = await axios.post(`${process.env.REACT_APP_URL}/add_shed/`, args.data);
         console.log(response)
          toast.success("Shed added successfully", {
         position: "top-center",
@@ -62,7 +62,7 @@ const Shed = () => {
    // Function to fetch tool data
    const fetchToolData = async (shed_id) => {
     try {
-        const response = await axios.get(`http://localhost:8000/shed_detail/${shed_id}/`);
+        const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
 
         // Set toolData and service
         

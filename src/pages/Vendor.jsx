@@ -61,7 +61,7 @@ const Vendor = () => {
 
   const fetchVendorData = async (vendor_id) => {
     try {
-        const response = await axios.get(`http://localhost:8000/vendor_details/${vendor_id}/`);
+        const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${vendor_id}/`);
 
         
 
@@ -76,7 +76,7 @@ const Vendor = () => {
   const { data: vendors,refetch } = useQuery({
     queryKey: ["vendors"],
     queryFn: async () => {
-      const response = await axios.get(" http://127.0.0.1:8000/vendor");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
       console.log(response.data)
       return response.data;
     },
@@ -85,7 +85,7 @@ const handleActionComplete = async (args) => {
   if (args.requestType === "save") {
     try {
       console.log(args.data)
-      const response = await axios.post("http://localhost:8000/add_vendor/", args.data);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/add_vendor/`, args.data);
       console.log(response.data)
       if (response.data.success === false) {
         // Parse the error message from the response and toast it

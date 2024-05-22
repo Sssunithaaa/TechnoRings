@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from "react";
 import axios from "axios";
-const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, register, reset,sendToolDetails }) => {
+const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, register,tools, reset,sendToolDetails }) => {
   const [toolCount, setToolCount] = useState(1); // State to track the number of tools
    const [toolDetails, setToolDetails] = useState([
     {
@@ -43,12 +43,12 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
     // Construct JSON object to store details of all tools
     const toolsData = toolDetails.map((tool, index) => ({
         // calibration_tool: e.target[`toolName${index}`].value,
-        calibration_tool: 13,
+        calibration_tool: e.target[`toolName${index}`].value,
         calibration_date: e.target[`calibrationDate${index}`].value,
         calibration_report_no: e.target[`calibrationReportNumber${index}`].value,
         calibration_agency: e.target[`calibrationAgency${index}`].value,
         // result: e.target[`result${index}`].value,
-        result: 1,
+        result: e.target[`result${index}`].value,
         action: e.target[`action${index}`].value,
         notification_date: '2024-05-19',
         next_calibration_date: e.target[`nextCalibrationDate${index}`].value,
@@ -75,11 +75,11 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
                             name={`toolName${i}`}
                             className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
                         >
-                            <option value="">Select Tool Name</option>
-                            {/* Add options dynamically */}
-                            <option value="tool1">13</option>
-                            <option value="tool2">12</option>
-                            {/* Add more options as needed */}
+                              {tools?.map((tool) => (
+                      <option key={tool.tool} value={tool.tool}>
+                        {tool.tool}
+                      </option>
+                    ))}
                         </select>
                     </td>
                      <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
@@ -113,17 +113,16 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
             />
                                 </td>
                                 <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
-                                    <select
+                                    <input
               {...register(`result${i}`, {
                 required: "Result is required",
               })}
+              type="number"
               name={`result${i}`}  
-              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
+              className="form-input border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             >
-              <option value="">Select Result</option>
-              <option value="pass">Pass</option>
-              <option value="fail">Fail</option>
-            </select>
+             
+            </input>
                                 </td>
                                 <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
                                    <input

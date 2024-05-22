@@ -11,7 +11,7 @@ const AddShedTools = ({setClose}) => {
 
        const fetchTools = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/instrument-tools/");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
       setTools(response.data);
     } catch (error) {
       console.error("Error fetching sheds:", error);
@@ -45,7 +45,7 @@ const AddShedTools = ({setClose}) => {
       
     };
       console.log(requestData)
-      const response = await axios.post('http://127.0.0.1:8000/add_shed_tools/', requestData);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/add_shed_tools/`, requestData);
       console.log(response)
       toast.success("Tool added successfully", {
         position: "top-center",
