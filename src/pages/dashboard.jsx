@@ -10,7 +10,7 @@ const Homepage = () => {
     const { data: toolsData } = useQuery({
     queryKey: ["tools"],
     queryFn: async () => {
-      const response = await axios.get(" http://127.0.0.1:8000/add-transport-order");
+      const response = await axios.get(`${process.env.REACT_APP_URL}/add-transport-order`);
       console.log(response)
       return response.data;
     },
