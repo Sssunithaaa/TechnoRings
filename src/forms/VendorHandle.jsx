@@ -120,7 +120,7 @@ useEffect(() => {
                     required
                   >
                     <option value="">Select a vendor</option>
-                    {vendors?.vendor?.map((vendor) => (
+                    {vendors?.vendors?.map((vendor) => (
                       <option key={vendor.vendor_id} value={vendor.vendor_id}>
                         {vendor.name}
                       </option>

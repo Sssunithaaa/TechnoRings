@@ -19,6 +19,7 @@ import {
   Customers,
   
 } from "./pages";
+import VendorsDetail from "./pages/VendorsDetail";
 import CreateMovement from "./forms/Transport";
 import CreateService from "./forms/Service";
 import VendorHandle from "./forms/VendorHandle";
@@ -29,6 +30,8 @@ import DeliveryChallan from "./forms/DeliveryChallan";
 import Vendor from "./pages/Vendor";
 import Transactions from "./pages/Transactions";
 import ShedTools from "./pages/ShedTools";
+import CalibrationDetailsForm from "./forms/CalibrationDetails";
+import InstrumentGroup from "./forms/InstrumentGroup";
 function App() {
   const {
     setCurrentColor,
@@ -95,8 +98,11 @@ function App() {
                 <Route path="/calibration" element={<Calibration />} />
                                 <Route path="/calibration/:id" element={<Transactions />} />
                  <Route path="/shed/:id" element={<ShedTools />} />
+                 <Route path="/vendors/:id" element={<VendorsDetail />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/kanban" element={<Kanban />} />
+                <Route path="/calibrationreport" element={<CalibrationDetailsForm />} />
+
                 <Route
                   path="/transactions"
                   element={<CreateMovement />}
@@ -112,6 +118,7 @@ function App() {
                 <Route path="/services" element={<CreateService />}></Route>
                 <Route path="/line" element={<LineChart/>} />
                 <Route path="/pie" element="pie" />
+                <Route path="/instrument-group" element={<InstrumentGroup/>}></Route>
               </Routes>
             </div>
           </div>

@@ -89,7 +89,7 @@ const Calibration = () => {
     const pdfExportComplete = () => {
         grid.hideSpinner();
     };
-
+    console.log(calibrationData?.instrument_models)
     return (
         <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
             <ToastContainer/>

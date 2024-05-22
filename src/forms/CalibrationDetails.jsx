@@ -1,161 +1,226 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
+import axios from "axios";
+const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, register, reset,sendToolDetails }) => {
+  const [toolCount, setToolCount] = useState(1); // State to track the number of tools
+   const [toolDetails, setToolDetails] = useState([
+    {
+      toolName: "",
+      calibrationDate: "",
+      calibrationReportNumber: "",
+      calibrationAgency: "",
+      result: "",
+      action: "",
+      nextCalibrationDate: "",
+      remark: "",
+    },
+  ]);
 
-const CalibrationDetailsForm = ({ onClose, onSubmit,formData,getValues, register, reset }) => {
-    console.log(formData)
+  // useEffect(async ()=> {
+  //  const tools =await axios.get("http://localhost:8000/instrument-tools/");
+  //  console.log(tools)
+
+  // },[])
+ 
+    const handleAddTool = () => {
+        setToolCount(toolCount + 1);
+        setToolDetails([
+      ...toolDetails,
+      {
+        toolName: "",
+        calibrationDate: "",
+        calibrationReportNumber: "",
+        calibrationAgency: "",
+        result: "",
+        action: "",
+        nextCalibrationDate: "",
+        remark: "",
+      },
+    ]);
+    };
     const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-    const combinedData = getValues();
-    onSubmit(combinedData); // Call onSubmit function with form data
-  };
-  return (
-    <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
-      <div className="bg-white dark:text-gray-200 text-gray-500  flex mx-auto flex-col justify-center items-center  dark:bg-secondary-dark-bg rounded-lg shadow-lg p-6 w-[500px]">
-        <h2 className="text-lg font-semibold mb-4">Add Calibration Details</h2>
-        <form onSubmit={handleSubmit} className="space-y-4 text-md">
-          {/* Tool Name Drop Down */}
-          <div className="w-[400px] ">
-            <label className=" flex flex-row justify-center items-center mb-1 font-semibold"><span className="font-semibold w-full">Tool Name:</span>
-            <select
-              {...register("toolName", {
-                required: "Tool name is required",
-              })}
-              name="toolName"
-              className="form-select border-2 border-gray-300 dark:border-0 py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-            >
-              <option value="">Select Tool Name</option>
-              {/* Add options dynamically */}
-              <option value="tool1">Tool 1</option>
-              <option value="tool2">Tool 2</option>
-              {/* Add more options as needed */}
-            </select>
-            </label>
-          </div>
 
-          {/* Calibration Date */}
-          <div className="w-[400px] ">
-            <label className=" flex flex-row justify-center items-center mb-1 font-semibold"><span className="font-semibold w-full">Calibration Date:</span>
-            <input
-              {...register("calibrationDate", {
-                required: "Calibration date is required",
-              })}
-              name="calibrationDate"
-              type="date"
-              className="form-select border-2 border-gray-300 dark:border-0 py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-            />
-            </label>
-          </div>
+    // Construct JSON object to store details of all tools
+    const toolsData = toolDetails.map((tool, index) => ({
+        // calibration_tool: e.target[`toolName${index}`].value,
+        calibration_tool: 13,
+        calibration_date: e.target[`calibrationDate${index}`].value,
+        calibration_report_no: e.target[`calibrationReportNumber${index}`].value,
+        calibration_agency: e.target[`calibrationAgency${index}`].value,
+        // result: e.target[`result${index}`].value,
+        result: 1,
+        action: e.target[`action${index}`].value,
+        notification_date: '2024-05-19',
+        next_calibration_date: e.target[`nextCalibrationDate${index}`].value,
+        remark: e.target[`remark${index}`].value,
+    }));
 
-          {/* Calibration Report Number */}
-          <div className="w-[400px] ">
-            <label className=" flex flex-row justify-center items-center mb-1 font-semibold"><span className="font-semibold w-full">Calibration Report Number:</span>
-            <input
-              {...register("calibrationReportNumber", {
+    console.log(toolsData);
+  
+    onSubmit(toolsData);
+
+   
+};
+
+     const renderToolRows = () => {
+        const rows = [];
+        for (let i = 0; i < toolCount; i++) {
+            rows.push(
+                <tr key={i}>
+                    <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                        <select
+                            {...register(`toolName${i}`, {
+                                required: "Tool name is required",
+                            })}
+                            name={`toolName${i}`}
+                            className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
+                        >
+                            <option value="">Select Tool Name</option>
+                            {/* Add options dynamically */}
+                            <option value="tool1">13</option>
+                            <option value="tool2">12</option>
+                            {/* Add more options as needed */}
+                        </select>
+                    </td>
+                     <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                    <input
+                                        {...register(`calibrationDate${i}`, {
+                                            required: "Calibration date is required",
+                                        })}
+                                        name={`calibrationDate${i}`}
+                                        type="date"
+                                        className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
+                                    />
+                                </td>
+                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                   <input
+              {...register(`calibrationReportNumber${i}`, {
                 required: "Calibration report number is required",
               })}
-              name="calibrationReportNumber"
+              name={`calibrationReportNumber${i}`}
               type="text"
-              className="form-select border-2 border-gray-300 dark:border-0 py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             />
-            </label>
-          </div>
-
-          {/* Calibration Agency */}
-          <div className="w-[400px] ">
-            <label className=" flex flex-row justify-center items-center mb-1 font-semibold"><span className="font-semibold w-full">Calibration Agency:</span>
-            <input
-              {...register("calibrationAgency", {
+                                </td>
+                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                   <input
+              {...register(`calibrationAgency${i}`, {
                 required: "Calibration agency is required",
               })}
-              name="calibrationAgency"
+              name={`calibrationAgency${i}`}
               type="text"
-              className="form-select border-2 border-gray-300 dark:border-0 py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             />
-            </label>
-          </div>
-
-          {/* Result */}
-          <div className="w-[400px] ">
-            <label className=" flex flex-row justify-center items-center mb-1 font-semibold"><span className="font-semibold w-full">Result:</span>
-            <select
-              {...register("result", {
+                                </td>
+                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                    <select
+              {...register(`result${i}`, {
                 required: "Result is required",
               })}
-              name="result"
-              className="form-select border-2 border-gray-300 dark:border-0 py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+              name={`result${i}`}  
+              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             >
               <option value="">Select Result</option>
               <option value="pass">Pass</option>
               <option value="fail">Fail</option>
             </select>
-            </label>
-          </div>
-
-          {/* Action */}
-          <div className="w-[400px] ">
-            <label className=" flex flex-row justify-center items-center mb-1 font-semibold"><span className="font-semibold w-full">Action:</span>
-            <input
-              {...register("action", {
+                                </td>
+                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                   <input
+              {...register(`action${i}`, {
                 required: "Action is required",
               })}
               type="text"
-              name="action"
-              className="form-select border-2 border-gray-300 dark:border-0 py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+              name={`action${i}`}
+              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             />
-            </label>
-          </div>
-
-          {/* Next Calibration Date */}
-          <div className="w-[400px] ">
-            <label className=" flex flex-row justify-center items-center mb-1 font-semibold"><span className="font-semibold w-full">Next Calibration Date:</span>
-            <input
-              {...register("nextCalibrationDate", {
+                                </td>
+                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                  <input
+              {...register(`nextCalibrationDate${i}`, {
                 required: "Next calibration date is required",
               })}
               type="date"
-              name="nextCalibrationDate"
-              className="form-select border-2 border-gray-300 dark:border-0 py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+        name={`nextCalibrationDate${i}`}
+              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             />
-            </label>
-          </div>
-
-          {/* Remark */}
-          <div className="w-[400px] ">
-            <label className=" flex flex-row justify-center items-center mb-1 font-semibold"><span className="font-semibold w-full">Remark:</span>
-            <textarea
-              {...register("remark")}
-              name="remark"
-              className="form-select border-2 border-gray-300 dark:border-0 py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+                                </td>
+                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                   <textarea
+              {...register(`remark${i}`)}
+              name={`remark${i}`}
+              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
               rows="3"
             ></textarea>
-            </label>
-          </div>
+                                </td>
+                </tr>
+            );
+        }
+        return rows;
+    };
 
-          <div className="flex justify-between">
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-            >
-              Submit
-            </button>
-            {/* Cancel Button */}
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                reset();
-              }}
-              className=" bg-red-600 text-yellow-200 font-semibold py-2 px-4 rounded-md hover:text-white focus:outline-none"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+    return (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
+            <div className="bg-white flex mx-auto flex-col justify-center items-center rounded-lg shadow-lg p-6 w-[90%]">
+                <h2 className="text-lg font-semibold mb-4">Add Calibration Details</h2>
+                <form onSubmit={handleSubmit} className="space-y-4 text-md">
+                    <table className="w-full">
+                        <thead>
+                            <tr>
+                                <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Tool Name</th>
+                                <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Calibration date</th>
+                         <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Calibration Report Number</th>
+                         <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Calibration Agency</th> 
+                        <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Result</th> 
+                        <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Action</th> 
+                        <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Next Calibration Date</th>
+                         <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {renderToolRows()}
+                            
+                        </tbody>
+                    </table>
+
+                    <div className="flex justify-between">
+                       <button
+                            type="button"
+                            onClick={handleAddTool}
+                            className="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600"
+                        >
+                            Add Tool
+                        </button>
+                        <button
+                            type="submit"
+                            className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                        >
+                            Submit
+                        </button>
+                        {/* Cancel Button */}
+                        <button
+                            type="button"
+                            onClick={() => {
+                                onClose();
+                                reset();
+                            }}
+                            className=" bg-red-600 text-yellow-200 font-semibold py-2 px-4 rounded-md hover:text-white focus:outline-none"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
 };
 
-export default CalibrationDetailsForm;
+export default CalibrationDetailsForm

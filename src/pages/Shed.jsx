@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const Shed = () => {
-  const {data:shedDetailsData} = useQuery({
+  const {data:shedDetailsData,refetch} = useQuery({
     queryKey:["shed"],
     queryFn: async ()=> {
       const response =await axios.get("http://127.0.0.1:8000/shed-details/");
@@ -16,6 +16,10 @@ const Shed = () => {
       return response.data
     }
   })
+   const refetchData = () => {
+    refetch();
+  };
+
   console.log(shedDetailsData)
   const navigate = useNavigate()
    const handleActionComplete = async (args) => {
@@ -34,6 +38,7 @@ const Shed = () => {
         closeButton: false,
         progress: undefined,
       });
+      refetch()
       } catch (error) {
         console.error("Error inserting data:", error);
       }
@@ -63,7 +68,7 @@ const Shed = () => {
         
         console.log(response.data)
         // Navigate after setting state
-         navigate(`${shed_id}`,{state: {shed_tools:response.data}});
+      navigate(`${shed_id}`, { state: { shed_tools: response.data } });
     } catch (error) {
         console.error("Error fetching tool data:", error);
     }

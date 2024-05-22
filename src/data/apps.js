@@ -129,17 +129,12 @@ export const CalibrationGrid = [
     textAlign: "Center",
   },
   {
-    field: "Calibration_date",
-    headerText: "Calibration Date",
+    field: "type_of_tool",
+    headerText: "Type of tool",
     width: "150",
     textAlign: "Center",
   },
-  {
-    field: "Calibration_due_date",
-    headerText: "Calibration Due Date",
-    width: "180",
-    textAlign: "Center",
-  }
+
 ];
 export const recentTransactions = [
   {
