@@ -61,7 +61,7 @@ const Navbar = () => {
 
   return (
     <div className="flex justify-between p-2 md:ml-6 md:mr-6 relative">
-      <NavButton
+      {/* <NavButton
         title="Menu"
         customFunc={handleActiveMenu}
         color={currentColor}
@@ -112,7 +112,7 @@ const Navbar = () => {
         {isClicked.chat && <Chat />}
         {isClicked.notification && <Notification />}
         {isClicked.userProfile && <UserProfile />}
-      </div>
+      </div> */}
     </div>
   );
 };

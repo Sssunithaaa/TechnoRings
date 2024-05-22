@@ -12,7 +12,7 @@ const Calibration = () => {
     const { data: calibrationData } = useQuery({
         queryKey: ["calibration"],
         queryFn: async () => {
-            const response = await axios.get("http://localhost:8000/instrument-tools/");
+            const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
             return response.data;
         },
     });
@@ -23,8 +23,8 @@ const Calibration = () => {
     // Function to fetch tool data
    const fetchToolData = async (instrument_no) => {
     try {
-        const response = await axios.get(`http://localhost:8000/instrument-transport-history/${instrument_no}/`);
-        const response1 = await axios.get(`http://localhost:8000/instrument-service-history/${instrument_no}/`);
+        const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${instrument_no}/`);
+        const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${instrument_no}/`);
 
         // Set toolData and service
         setToolData(response.data);
@@ -41,7 +41,7 @@ const Calibration = () => {
     if (args.requestType === "save") {
       try {
         console.log(args.data)
-        const response = await axios.post("http://localhost:8000/add_instrument1/", args.data);
+        const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument1/`, args.data);
         console.log(response)
           toast.success("Tool added successfully", {
         position: "top-center",
