@@ -14,7 +14,7 @@ const VendorsDetail = () => {
   const [vendorHandle,setVendorHandle] = useState([])
   const fetchVendorData = async (vendor_id) => {
     try {
-        const response = await axios.get(`http://localhost:8000/vendor_details/${vendor_id}/`);
+        const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${vendor_id}/`);
         console.log(response.data)
         setVendorHandle(response?.data?.vendor_handles)
         
