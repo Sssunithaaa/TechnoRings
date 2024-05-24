@@ -32,6 +32,7 @@ import Transactions from "./pages/Transactions";
 import ShedTools from "./pages/ShedTools";
 import CalibrationDetailsForm from "./forms/CalibrationDetails";
 import InstrumentGroup from "./forms/InstrumentGroup";
+import Instruments from "./pages/Instruments";
 function App() {
   const {
     setCurrentColor,
@@ -119,6 +120,7 @@ function App() {
                 <Route path="/line" element={<LineChart/>} />
                 <Route path="/pie" element="pie" />
                 <Route path="/instrument-group" element={<InstrumentGroup/>}></Route>
+                <Route path="/instruments" element={<Instruments/>}></Route>
               </Routes>
             </div>
           </div>

@@ -6,41 +6,45 @@ import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
-
-const Transactions = () => {
+import { useQuery } from "@tanstack/react-query";
+const Instruments = () => {
   const location = useLocation();
-  const id= useParams()
-  const [service,setService] = useState([])
-  const [transportOrder,setTransportOrder] = useState([])
-  const fetchToolData = async (id) => {
-    try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${id}/`);
-        const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${id}/`);
+  const id = useParams();
+  const [toolId, setToolId] = useState(""); // State to store the tool ID
+  const [service, setService] = useState([]);
+  const [transportOrder, setTransportOrder] = useState([]);
+  const [shedDetails, setShedDetails] = useState({}); // State to store shed details
+  let grid;
 
-        setService(response1?.data?.service_history)
-        setTransportOrder(response?.data?.transport_orders)
+   const { data: calibrationData } = useQuery({
+        queryKey: ["instruments"],
+        queryFn: async () => {
+            const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
+            return response.data;
+        },
+    });
+    console.log(calibrationData)
+
+  const fetchToolData = async (toolId) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${toolId}/`);
+        const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${toolId}/`);
+
+        setService(response1?.data?.service_history);
+        setTransportOrder(response?.data?.transport_orders);
     } catch (error) {
         console.error("Error fetching tool data:", error);
     }
+  }; 
 
-}; 
-useEffect(()=> {
-  fetchToolData(id["id"])
-},[])
-  
-  
-  const [shedDetails, setShedDetails] = useState({}); // State to store shed details
-  let grid;
   // Fetch shed details from the server
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_URL}/shed-details/`)
       .then(response => {
         const shedMap = {};
-        console.log(response.data.shed_details)
-        response.data?.shed_details?.forEach(shed => {
+        response.data.shed_details.forEach(shed => {
           shedMap[shed.shed_id] = shed.name;
         });
-        console.log(shedMap)
         // Set the shed details state
         setShedDetails(shedMap);
       })
@@ -53,18 +57,15 @@ useEffect(()=> {
   const mapShedIdToName = (id) => {
     return shedDetails[id] || 'Unknown'; // Return the shed name or 'Unknown' if not found
   };
-   const sourceShedTemplate = (props) => {
-    return <div>
-      {mapShedIdToName(props.source_shed)}
-    </div>;
+
+  const sourceShedTemplate = (props) => {
+    return <div>{mapShedIdToName(props.source_shed)}</div>;
   };
 
-  // Template function to display destination shed name
   const destinationShedTemplate = (props) => {
-    return <div>
-      {mapShedIdToName(props.destination_shed)}
-    </div>;
+    return <div>{mapShedIdToName(props.destination_shed)}</div>;
   };
+
   // Columns configuration for the service grid
   const serviceGridColumns = [
     { type: 'checkbox', width: '50' },
@@ -78,7 +79,6 @@ useEffect(()=> {
 
   // Columns configuration for the transport grid
   const transportGridColumns = [
-    
     { field: "movement_id", headerText: "Movement ID", width: "150", textAlign: "Center" },
     { field: "movement_date", headerText: "Movement date", width: "150", textAlign: "Center" },
     { field: "acknowledgment", headerText: "Acknowledgment", width: "150", textAlign: "Center" },
@@ -87,8 +87,6 @@ useEffect(()=> {
     { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
   ];
 
-  // Template function to display source shed name
- 
   // Function to handle PDF export toolbar click
   const toolbarClick = (args) => {
     if (args.item.id === 'gridcomp_pdfexport') {
@@ -101,63 +99,94 @@ useEffect(()=> {
   const pdfExportComplete = () => {
     grid.hideSpinner();
   };
-     const handleActionComplete=async (args)=> {
-      if (args.requestType === "delete") {
-    try {
-      console.log(args.data[0].movement_id)
-      const response= await axios.post(`${process.env.REACT_APP_URL}/transport_order/${args.data[0].movement_id}/delete/`);
-      toast.success("Transport order deleted successfully")
-    } catch (error) {
-      toast.error(error.message)
-      console.error("Error deleting data:", error);
-    }
-  }
-     }
-     const handleActionComplete1=async (args)=> {
-      if (args.requestType === "delete") {
-    try {
-      console.log(args.data[0].service_id)
-      const response= await axios.post(`${process.env.REACT_APP_URL}/service_order/${args.data[0].service_id}/delete/`);
-            toast.success("Service order deleted successfully")
 
-    } catch (error) {
-            toast.error(error.message)
-
-      console.error("Error deleting data:", error);
+  const handleActionComplete = async (args) => {
+    if (args.requestType === "delete") {
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/transport_order/${args.data[0].movement_id}/delete/`);
+        toast.success("Transport order deleted successfully");
+      } catch (error) {
+        toast.error(error.message);
+        console.error("Error deleting data:", error);
+      }
     }
-  }
-     }
-    const rowSelected2 = async (args) => {
-        console.log(args.data);
-        const id = Object.values(args.data)[0]
-        
-    
-        try {
+  };
+
+  const handleActionComplete1 = async (args) => {
+    if (args.requestType === "delete") {
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/service_order/${args.data[0].service_id}/delete/`);
+        toast.success("Service order deleted successfully");
+      } catch (error) {
+        toast.error(error.message);
+        console.error("Error deleting data:", error);
+      }
+    }
+  };
+
+  const rowSelected2 = async (args) => {
+    const id = Object.values(args.data)[0];
+    try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/shed/${id}/delete/`);
-      console.log(response)
+      console.log(response);
     } catch (error) {
       console.error("Error deleting data:", error);
     }
-    };
-    
+  };
+
   const handleAcknowledgment = async (props) => {
-  try {
-    const response = await axios.post(`${process.env.REACT_APP_URL}/transport/${props.movement_id}/acknowledge/`);
-    toast.success("Transport acknowledged successfully");
-  } catch (error) {
-    toast.error(error.message);
-    
-    console.log("Error acknowledging transport:", error);
-  }
-};
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/transport/${props.movement_id}/acknowledge/`);
+      toast.success("Transport acknowledged successfully");
+    } catch (error) {
+      toast.error(error.message);
+      console.log("Error acknowledging transport:", error);
+    }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    fetchToolData(toolId);
+  };
+
+
   return (
     <div>
-     <div className="flex justify-start ml-10 mt-10">
-       <BackButton/>
-     </div>
-      <div className="m-2 md:m-10 mt-20 p-2 md:p-10 bg-white rounded-3xl">
+      {/* <div className="flex justify-start ml-10 mt-10">
+        <BackButton />
+      </div> */}
+      <div className="  w-[40%] mt-24 flex mx-auto flex-col justify-center items-center p-6 bg-white rounded-3xl">
+  <div className="w-full flex ">
+    <div className="w-full max-w-md">
+      <Header className="Page" title="Enter Tool ID" />
+      <form onSubmit={handleFormSubmit} className="mb-4">
+        <label htmlFor="toolId" className="block text-sm font-medium text-gray-700">
+          Tool ID
+        </label>
+        <select
+          id="toolId"
+          value={toolId}
+          onChange={(e) => setToolId(e.target.value)}
+          className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm"
+        >
+          <option value="" disabled>Select Tool</option>
+          {calibrationData?.instrument_models?.map((tool) => (
+            <option key={tool.instrument_no} value={tool.instrument_no}>
+              {tool.instrument_name}
+            </option>
+          ))}
+        </select>
+        <button type="submit" className="mt-4 px-4 py-2 flex mx-auto bg-blue-500 text-white rounded-md">
+          Submit
+        </button>
+      </form>
+      <ToastContainer />
+    </div>
+  </div>
+</div>
+
+      <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
         <Header className="Page" title="Service orders" />
-        <ToastContainer/>
         <GridComponent
           dataSource={service}
           width="auto"
@@ -166,14 +195,13 @@ useEffect(()=> {
           allowFiltering
           allowSorting
           allowDeleting
-          toolbar={['PdfExport','Delete']}
+          toolbar={['PdfExport', 'Delete']}
           allowPdfExport
           pdfExportComplete={pdfExportComplete}
-          editSettings={{allowDeleting:true}}
+          editSettings={{ allowDeleting: true }}
           toolbarClick={toolbarClick}
           rowSelected={rowSelected2}
           actionComplete={handleActionComplete1}
-
         >
           <ColumnsDirective>
             {serviceGridColumns.map((item, index) => (
@@ -193,12 +221,11 @@ useEffect(()=> {
           allowFiltering
           allowSorting
           allowDeleting
-          toolbar={['PdfExport','Delete']}
+          toolbar={['PdfExport', 'Delete']}
           allowPdfExport
           pdfExportComplete={pdfExportComplete}
-                            actionComplete={handleActionComplete}
-                    editSettings={{allowDeleting:true}}
-
+          actionComplete={handleActionComplete}
+          editSettings={{ allowDeleting: true }}
           toolbarClick={toolbarClick}
         >
           <ColumnsDirective>
@@ -206,10 +233,10 @@ useEffect(()=> {
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
             <ColumnDirective headerText="Acknowledge" width="150" template={(props) => (
-                        <button className="bg-blue-500 rounded-sm py-2 px-4 text-white">
-                            <button onClick={() => handleAcknowledgment(props)}>Acknowledge</button>
-                        </button>
-                    )}></ColumnDirective>
+              <button className="bg-blue-500 rounded-sm py-2 px-4 text-white">
+                <button onClick={() => handleAcknowledgment(props)}>Acknowledge</button>
+              </button>
+            )}></ColumnDirective>
           </ColumnsDirective>
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
         </GridComponent>
@@ -218,4 +245,4 @@ useEffect(()=> {
   );
 };
 
-export default Transactions;
+export default Instruments;

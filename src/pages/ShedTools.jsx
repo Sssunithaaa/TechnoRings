@@ -4,6 +4,7 @@ import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar,
 import { Header } from "../components";
 import AddShedTools from "../forms/AddShedTool";
 import axios from "axios";
+import BackButton from "../components/BackButton";
 const ShedTools = () => {
   const location = useLocation();
   const [shedTools,setShedTools] = useState([])
@@ -86,6 +87,9 @@ useEffect(()=> {
   }
   return (
     <div>
+       <div className="flex justify-start ml-10 mt-10">
+       <BackButton/>
+     </div>
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
         
          {showAddShedTools && <AddShedTools  setClose={setShowAddShedTools} />}

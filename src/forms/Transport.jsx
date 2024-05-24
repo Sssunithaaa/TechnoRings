@@ -62,7 +62,7 @@ const CreateMovement = ({}) => {
       const sourceShedId = shed_details.find(shed => shed.name === data.sourceShed)?.shed_id;
       const destinationShedId = shed_details.find(shed => shed.name === data.destinationShed)?.shed_id;
 
-      const toolsArray = tools.map((tool) => ({ tool: tool.id }));
+      const toolsArray = tools.map((tool) => ({ tool: tool.tool }));
 
       const requestData = {
         movement_date: data.movementDate,
