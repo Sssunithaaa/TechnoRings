@@ -25,47 +25,75 @@ const Vendor = () => {
   const navigate = useNavigate()
   let grid;
 
-  const employeesGrid = [
-    {
-      field: "vendor_id",
-      headerText: "Vendor ID",
-      width: "150",
-      textAlign: "Center",
+const employeesGrid = [
+  {
+    field: "vendor_id",
+    headerText: "Vendor ID",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+    field: "name",
+    headerText: "Name",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+    field: "location",
+    headerText: "Location",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+    field: "address",
+    headerText: "Address",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+    field: "phone_number",
+    headerText: "Phone number",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+    field: "email",
+    headerText: "Email",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+    field: "vendor_type",
+    headerText: "Vendor Type",
+    width: "150",
+    textAlign: "Center",
+    template: (data) => {
+      const vendorTypes = ["Manufacturer", "Dealer", "Calibration Agency"];
+      return vendorTypes[data.vendor_type - 1]; // Assuming vendor_type is 1, 2, or 3
     },
-    {
-      field: "name",
-      headerText: "Name",
-      width: "150",
-      textAlign: "Center",
-    },
-    {
-      field: "location",
-      headerText: "Location",
-      width: "150",
-      textAlign: "Center",
-    },
-    {
-      field: "address",
-      headerText: "Address",
-      width: "150",
-      textAlign: "Center",
-    },
-    {
-      field: "phone_number",
-      headerText: "Phone number",
-      width: "150",
-      textAlign: "Center",
-    },
-    
-  ];
+  },
+  {
+    field: "nabl_number",
+    headerText: "NABL Number",
+    width: "150",
+    textAlign: "Center",
+    isVisible: (data) => data.vendor_type === 3, // Only visible if vendor type is Calibration Agency
+  },
+  {
+    field: "certificate",
+    headerText: "Certificate",
+    width: "150",
+    textAlign: "Center",
+    isVisible: (data) => data.vendor_type === 3, // Only visible if vendor type is Calibration Agency
+  },
+];
+
+
 
   const fetchVendorData = async (vendor_id) => {
     try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${vendor_id}/`);
 
-        
-
-        // Navigate after setting state
         navigate(`${vendor_id}`);
     } catch (error) {
         console.error("Error fetching tool data:", error);
