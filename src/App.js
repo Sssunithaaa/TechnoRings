@@ -16,7 +16,7 @@ import {
   Area,
   Bar,
   ColorMapping,
-  Customers,
+  
   
 } from "./pages";
 import VendorsDetail from "./pages/VendorsDetail";
@@ -33,6 +33,8 @@ import ShedTools from "./pages/ShedTools";
 import CalibrationDetailsForm from "./forms/CalibrationDetails";
 import InstrumentGroup from "./forms/InstrumentGroup";
 import Instruments from "./pages/Instruments";
+import History from "./pages/History";
+import ServiceHistory from "./pages/ServiceHistory";
 function App() {
   const {
     setCurrentColor,
@@ -93,7 +95,6 @@ function App() {
                 <Route exact path="/" element={<Ecommerce />}></Route>
                  <Route path="/home" element={<Dashboard />} />
                 <Route path="/orders" element={<Orders />} />
-                <Route path="/customers" element={<Customers />} />
                 <Route path="/vendors" element={<Vendor />} />
                 <Route path="/shed" element={<Shed />} />
                 <Route path="/calibration" element={<Calibration />} />
@@ -103,6 +104,8 @@ function App() {
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/kanban" element={<Kanban />} />
                 <Route path="/calibrationreport" element={<CalibrationDetailsForm />} />
+                  <Route path="/transport-history" element={<History />} />
+                              <Route path="/service-history" element={<ServiceHistory />} />
 
                 <Route
                   path="/transactions"

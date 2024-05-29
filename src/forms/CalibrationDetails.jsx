@@ -34,10 +34,12 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
         action: "",
         nextCalibrationDate: "",
         remark: "",
+        file: null
       },
     ]);
     };
-    const handleSubmit = (e) => {
+    
+   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Construct JSON object to store details of all tools
@@ -53,6 +55,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
         notification_date: '2024-05-19',
         next_calibration_date: e.target[`nextCalibrationDate${index}`].value,
         remark: e.target[`remark${index}`].value,
+        file: e.target[`file${index}`].value
     }));
 
     console.log(toolsData);
@@ -152,6 +155,16 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
               rows="3"
             ></textarea>
                                 </td>
+                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                  <input
+              {...register(`file${i}`, {
+                required: "File is required",
+              })}
+              type="file"
+        name={`file${i}`}
+              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
+            ></input>
+            </td>
                 </tr>
             );
         }
@@ -182,6 +195,8 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
                         class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Next Calibration Date</th>
                          <th  scope="col"
                         class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Remark</th>
+                        <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">File</th>
                             </tr>
                         </thead>
                         <tbody>

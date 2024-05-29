@@ -1,21 +1,19 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const Service = () => {
   const [toolCount, setToolCount] = useState(1);
-  const [tools, setTools] = useState([{ id: 1, tool: "" }]);
-    const [vendorTools, setVendorTools] = useState([]);
+  const [tools, setTools] = useState([{ id: 1, tool: "", service_type: "", service_remarks: "" }]);
+  const [vendorTools, setVendorTools] = useState([]);
+  const [serviceTypes, setServiceTypes] = useState([]);
+  const [selectedVendor, setSelectedVendor] = useState(null);
 
-
-    const [selectedVendor, setSelectedVendor] = useState(null);
-
-   useEffect(() => {
+  useEffect(() => {
     if (selectedVendor) {
-      console.log(selectedVendor)
-       axios.get(`${process.env.REACT_APP_URL}/vendor_details/${selectedVendor}/`)
+      axios.get(`${process.env.REACT_APP_URL}/vendor_details/${selectedVendor}/`)
         .then(response => {
           setVendorTools(response.data.vendor_handles);
         })
@@ -23,21 +21,33 @@ const Service = () => {
           console.error("Error fetching shed tools:", error);
         });
     }
-    console.log(vendorTools)
   }, [selectedVendor]);
-  const handleToolChange = (index, value) => {
+
+  useEffect(() => {
+    const fetchServiceTypes = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/service_types/`);
+        setServiceTypes(response.data);
+      } catch (error) {
+        console.error("Error fetching service types:", error);
+      }
+    };
+
+    fetchServiceTypes();
+  }, []);
+
+  const handleToolChange = (index, key, value) => {
     const newTools = [...tools];
     if (!newTools[index]) {
-      newTools[index] = { id: index + 1, tool: "" };
+      newTools[index] = { id: index + 1, tool: "", service_type: "", service_remarks: "" };
     }
-    newTools[index].tool = value;
+    newTools[index][key] = value;
     setTools(newTools);
-    console.log(tools)
   };
 
   const addToolField = () => {
     setToolCount(prevCount => prevCount + 1);
-    setTools(prevTools => [...prevTools, { id: toolCount + 1, tool: "" }]);
+    setTools(prevTools => [...prevTools, { id: toolCount + 1, tool: "", service_type: "", service_remarks: "" }]);
   };
 
   const {
@@ -53,10 +63,8 @@ const Service = () => {
     },
     mode: "onChange",
   });
-  
 
   const submitHandler = async (data) => {
-    console.log(data)
     const requestData = {
       date: data.date,
       amount: parseFloat(data.amount),
@@ -64,12 +72,12 @@ const Service = () => {
       tool_count: toolCount,
       vendor: parseInt(data.vendor),
       tools: tools.map(tool => ({
-        tool: parseInt(tool.tool), // Assuming tool is stored as an ID
-        vendor: parseInt(data.vendor), // Vendor ID
-        // service: 9 // Service ID, replace with actual service ID
+        tool: parseInt(tool.tool),
+        service_type: parseInt(tool.service_type),
+        service_remarks: tool.service_remarks,
+        vendor: parseInt(data.vendor),
       })),
     };
-    console.log(requestData)
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/service-order/`, requestData);
@@ -86,22 +94,22 @@ const Service = () => {
     } catch (error) {
       console.error('Error sending data:', error);
     }
-
   };
-    const [vendors, setVendors] = useState([]);
+
+  const [vendors, setVendors] = useState([]);
 
   useEffect(() => {
-  const fetchVendors = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
-      setVendors(response.data);
-    } catch (error) {
-      console.error("Error fetching sheds:", error);
-    }
-  };
+    const fetchVendors = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
+        setVendors(response.data);
+      } catch (error) {
+        console.error("Error fetching sheds:", error);
+      }
+    };
 
-  fetchVendors();
-}, []);
+    fetchVendors();
+  }, []);
 
   return (
     <div className='w-full mt-12 my-5 flex justify-center items-center'>
@@ -125,8 +133,6 @@ const Service = () => {
                 />
               </label>
             </div>
-
-            {/* Add other input fields (Amount, Description, Vendor) */}
 
             <div className="lg:w-[400px] w-[300px]">
               <label className="flex flex-row justify-center items-center">
@@ -154,78 +160,70 @@ const Service = () => {
             </div>
             
             <div className="lg:w-[400px] w-[300px]">
-  <label className="flex flex-row justify-center items-center">
-    <span className="font-semibold w-full">Amount:</span>
-    <input
-      {...register("amount", {
-        required: {
-          value: true,
-          message: "Amount is required",
-        },
-      })}
-      type="number"
-      name="amount"
-      className="form-input py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-      required
-    />
-  </label>
-</div>
+              <label className="flex flex-row justify-center items-center">
+                <span className="font-semibold w-full">Amount:</span>
+                <input
+                  {...register("amount", {
+                    required: {
+                      value: true,
+                      message: "Amount is required",
+                    },
+                  })}
+                  type="number"
+                  name="amount"
+                  className="form-input py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+                  required
+                />
+              </label>
+            </div>
 
+            <div className="lg:w-[400px] w-[300px]">
+              <label className="flex flex-row justify-center items-center">
+                <span className="font-semibold w-full">Description:</span>
+                <input
+                  {...register("description", {
+                    required: {
+                      value: true,
+                      message: "Description is required",
+                    },
+                  })}
+                  type="text"
+                  name="description"
+                  className="form-input py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+                  required
+                />
+              </label>
+            </div>
 
-<div className="lg:w-[400px] w-[300px]">
-  <label className="flex flex-row justify-center items-center">
-    <span className="font-semibold w-full">Description:</span>
-    <input
-      {...register("description", {
-        required: {
-          value: true,
-          message: "Description is required",
-        },
-      })}
-      type="text"
-      name="description"
-      className="form-input py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-      required
-    />
-  </label>
-</div>
-
-
-
-
-                  
             <div className="lg:w-[400px] w-[300px] ">
-  <label className=" relative  flex flex-row items-center">
-    <span className="font-semibold w-full">Tool count:</span>
-  <input
-    type="number"
-    value={toolCount}
-    onChange={(e) => setToolCount(parseInt(e.target.value))}
-    className="form-input py-2 px-4 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-    required
-  />
-  <button
-    type="button"
-    onClick={addToolField}
-    className="ml-2 bg-black text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-950 absolute right-0"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-    </svg>
-  </button>
-  </label>
-</div>
+              <label className="relative flex flex-row items-center">
+                <span className="font-semibold w-full">Tool count:</span>
+                <input
+                  type="number"
+                  value={toolCount}
+                  onChange={(e) => setToolCount(parseInt(e.target.value))}
+                  className="form-input py-2 px-4 dark:bg-main-dark-bg rounded-md mt-1 w-full"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={addToolField}
+                  className="ml-2 bg-black text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-950 absolute right-0"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </button>
+              </label>
+            </div>
 
-
-            {/* Render tool input fields based on tool count */}
             {[...Array(toolCount)].map((_, index) => (
               <div className="lg:w-[400px] w-[300px]" key={index}>
                 <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold w-full">{`Service Tool
-Details ${index + 1}:`}</span>
+                  <span className="font-semibold w-full">{`Service Tool Details ${index + 1}:`}</span>
                   <select
                     value={tools[index]?.tool || ""}
-                    onChange={(e) => handleToolChange(index, e.target.value)}
+                    onChange={(e) => handleToolChange(index, "tool", e.target.value)}
                     className="form-select dark:bg-main-dark-bg rounded-md py-2 px-4 mt-1 w-full"
                     required
                   >
@@ -237,6 +235,31 @@ Details ${index + 1}:`}</span>
                     ))}
                   </select>
                 </label>
+                <label className="flex flex-row justify-center items-center">
+                  <span className="font-semibold w-full">{`Service Type ${index + 1}:`}</span>
+                  <select
+                    value={tools[index]?.service_type || ""}
+                    onChange={(e) => handleToolChange(index, "service_type", e.target.value)}
+                    className="form-select dark:bg-main-dark-bg rounded-md py-2 px-4 mt-1 w-full"
+                    required
+                  >
+                    <option value="">Select a service type</option>
+                    {serviceTypes.map((serviceType) => (
+                      <option key={serviceType.servicetype_id} value={serviceType.servicetype_id}>
+                        {serviceType.service_type}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex flex-row justify-center items-center">
+                  <span className="font-semibold w-full">{`Service Remarks ${index + 1}:`}</span>
+                  <input
+                    type="text"
+                    value={tools[index]?.service_remarks || ""}
+                    onChange={(e) => handleToolChange(index, "service_remarks", e.target.value)}
+                    className="form-input dark:bg-main-dark-bg rounded-md py-2 px-4 mt-1 w-full"
+                  />
+                </label>
               </div>
             ))}
 
@@ -245,16 +268,15 @@ Details ${index + 1}:`}</span>
                 type="submit"
                 className="bg-black text-white font-semibold py-2 px-4 rounded-md mx-auto mt-10 hover:bg-gray-950"
               >
-                 Add Service
+                Add Service
               </button>
-              
             </div>
-            <ToastContainer className="z-[100001]"/>
+            <ToastContainer className="z-[100001]" />
           </form>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Service;

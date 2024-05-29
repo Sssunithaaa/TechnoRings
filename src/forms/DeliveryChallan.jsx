@@ -48,45 +48,66 @@ const DeliveryChallan = ({}) => {
 
   const services = details?.service_orders;
   const [formData, setFormData] = useState();
+const handleAddCalibrationDetails = () => {
+  setShowCalibrationModal(true);
+};
 
-  const handleAddCalibrationDetails = () => {
-
+const submitHandler = async (data) => {
+  try {
+    console.log("Submitting calibration details form:", data);
     
-   
-    setShowCalibrationModal(true);
-  };
+    // Create a new FormData object
+    const formData = new FormData();
+    formData.append("received_date", getValues("receivedDate"));
+    formData.append("vendor", getValues("vendor"));
+    formData.append("shed", getValues("shed"));
+    formData.append("service", getValues("service"));
+    
+    // Append each tool's data to the FormData object
+    data.forEach((tool, index) => {
+      formData.append(`toolData[${index}][calibration_tool]`, tool.calibration_tool);
+      formData.append(`toolData[${index}][calibration_date]`, tool.calibration_date);
+      formData.append(`toolData[${index}][calibration_report_no]`, tool.calibration_report_no);
+      formData.append(`toolData[${index}][calibration_agency]`, tool.calibration_agency);
+      formData.append(`toolData[${index}][result]`, tool.result);
+      formData.append(`toolData[${index}][action]`, tool.action);
+      formData.append(`toolData[${index}][next_calibration_date]`, tool.next_calibration_date);
+      formData.append(`toolData[${index}][remark]`, tool.remark);
+      formData.append(`toolData[${index}][notification_date]`,"2024-01-01")
+      if (tool.file) {
+        formData.append(`toolData[${index}][calibration_report_file]`, tool.file);
+      }
+    });
 
-  const submitHandler = async (data) => {
-    try {
-      // Submit logic for calibration details form
-      console.log("Submitting calibration details form:", data);
-      
-      
-       const formData = {
-        received_date: getValues("receivedDate"),
-        vendor: getValues("vendor"),
-        shed: getValues("shed"),
-        service: getValues("service"),
-        toolData: data, // Include tool details
-      };
-    console.log(formData);
-        // Submit logic for calibration details form
-        console.log("Submitting calibration details form:");
-        const response = await axios.post(`${process.env.REACT_APP_URL}/store-delivery-challan/`,formData);
-        console.log(response);
-      setShowCalibrationModal(false);
-      
-      toast.success("Calibration details added successfully", {
-        position: "top-center",
-        autoClose: 2000,
-        closeButton: false,
-        progress: undefined,
-      });
-    } catch (error) {
-      console.error("Error submitting calibration details:", error);
-      toast.error("Failed to add calibration details. Please try again later.");
+    // Debug: Log formData contents
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
     }
-  };
+
+    // Axios request configuration
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+    
+    // Send the form data to the backend
+    const response = await axios.post(`http://127.0.0.1:8000/store-delivery-challan/`, formData, config);
+
+    console.log(response);
+    setShowCalibrationModal(false);
+
+    toast.success("Calibration details added successfully", {
+      position: "top-center",
+      autoClose: 2000,
+      closeButton: false,
+      progress: undefined,
+    });
+  } catch (error) {
+    console.error("Error submitting calibration details:", error);
+    toast.error("Failed to add calibration details. Please try again later.");
+  }
+};
   const handleToolDetails = (toolDetails) => {
    
     console.log("Received tool details:", toolDetails);

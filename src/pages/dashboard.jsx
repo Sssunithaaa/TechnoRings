@@ -17,6 +17,14 @@ const Homepage = () => {
       return response.data;
     },
   });
+   const { data: count } = useQuery({
+    queryKey: ["counts"],
+    queryFn: async () => {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/count_of/`);
+      console.log(response);
+      return response.data;
+    },
+  });
 
   const transport_orders = toolsData?.transport_orders;
   const shed_details = toolsData?.shed_details;
@@ -39,24 +47,24 @@ const Homepage = () => {
       <div className='w-full flex flex-col gap-x-5 gap-y-2'>
         <p className='font-bold text-3xl text-white '>Dashboard</p>
         <div className='flex lg:flex-row flex-col gap-y-5 gap-x-5'>
-          <div className='bg-gray-800 p-8 lg:w-[25%] w-[100%] '>
-            <p className='text-light-gray-500 flex flex-row justify-start items-center gap-x-3 text-xl text-white'><span className='p-1 bg-[#8177d5] rounded-md'><BsPersonWorkspace color='#2e1cc9'/></span>Total Employees</p>
-            <p className='mt-3 font-semibold text-white text-2xl'>12345</p>
+          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%] '>
+            <p className='text-light-gray-500 flex flex-row justify-start items-center gap-x-2 text-xl text-white'><span className='p-1 bg-[#8177d5] rounded-md'><BsPersonWorkspace color='#2e1cc9'/></span>Total Instruments</p>
+            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.instruments_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
           </div>
-          <div className='bg-gray-800 p-8 lg:w-[25%] w-[100%] '>
-            <p className='text-light-gray-500 flex flex-row justify-start items-center gap-x-3 text-xl text-white'><span className='p-1 bg-[#8177d5] rounded-md'><BsPersonWorkspace color='#2e1cc9'/></span>Total Vendors</p>
-            <p className='mt-3 font-semibold text-white text-2xl'>12345</p>
+          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%] '>
+            <p className='text-light-gray-500 flex flex-row justify-start items-center gap-x-2 text-xl text-white'><span className='p-1 bg-[#8177d5] rounded-md'><BsPersonWorkspace color='#2e1cc9'/></span>Total Vendors</p>
+            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.vendor_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
           </div>
-          <div className='bg-gray-800 p-8 lg:w-[25%] w-[100%] '>
-            <p className='text-light-gray-500 flex flex-row justify-start items-center gap-x-3 text-xl text-white'><span className='p-1 bg-[#8177d5] rounded-md'><FaWarehouse color='#2e1cc9'/></span>Total Sheds</p>
-            <p className='mt-3 font-semibold text-white text-2xl'>12345</p>
+          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%] '>
+            <p className='text-light-gray-500 flex flex-row justify-start items-center gap-x-2 text-xl text-white'><span className='p-1 bg-[#8177d5] rounded-md'><FaWarehouse color='#2e1cc9'/></span>Total Sheds</p>
+            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.shed_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
           </div>
-          <div className='bg-gray-800 p-8 lg:w-[25%] w-[100%] '>
-            <p className='text-light-gray-500 flex flex-row justify-start items-center gap-x-3 text-xl text-white'><span className='p-1 bg-[#8177d5] rounded-md'><MdOutlineMiscellaneousServices color='#2e1cc9'/></span>Total Services</p>
-            <p className='mt-3 font-semibold text-white text-2xl'>12345</p>
+          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%] '>
+            <p className='text-light-gray-500 flex flex-row justify-start items-center gap-x-2 text-xl text-white'><span className='p-1 bg-[#8177d5] rounded-md'><MdOutlineMiscellaneousServices color='#2e1cc9'/></span>Total Services</p>
+            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.service_order_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
           </div>
         </div>
