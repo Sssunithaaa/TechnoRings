@@ -41,7 +41,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
     
    const handleSubmit = (e) => {
     e.preventDefault();
-
+    
     // Construct JSON object to store details of all tools
     const toolsData = toolDetails.map((tool, index) => ({
         // calibration_tool: e.target[`toolName${index}`].value,
@@ -55,7 +55,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
         notification_date: '2024-05-19',
         next_calibration_date: e.target[`nextCalibrationDate${index}`].value,
         remark: e.target[`remark${index}`].value,
-        file: e.target[`file${index}`].value
+        file: e.target[`file${index}`].files[0]
     }));
 
     console.log(toolsData);

@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React,{useState,useEffect} from "react"
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, IconButton } from '@mui/material';
 
-const Service = () => {
+const Service = ({ open, handleClose }) => {
   const [toolCount, setToolCount] = useState(1);
   const [tools, setTools] = useState([{ id: 1, tool: "", service_type: "", service_remarks: "" }]);
   const [vendorTools, setVendorTools] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
+  const [vendors, setVendors] = useState([]);
+  const date=new Date().toISOString().split('T')[0]
 
   useEffect(() => {
     if (selectedVendor) {
@@ -36,11 +39,21 @@ const Service = () => {
     fetchServiceTypes();
   }, []);
 
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
+        setVendors(response.data);
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      }
+    };
+
+    fetchVendors();
+  }, []);
+
   const handleToolChange = (index, key, value) => {
     const newTools = [...tools];
-    if (!newTools[index]) {
-      newTools[index] = { id: index + 1, tool: "", service_type: "", service_remarks: "" };
-    }
     newTools[index][key] = value;
     setTools(newTools);
   };
@@ -56,7 +69,7 @@ const Service = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      date: "",
+      date: date,
       amount: "",
       description: "",
       vendor: "",
@@ -84,198 +97,141 @@ const Service = () => {
       toast.success("Service order added successfully", {
         position: "top-center",
         autoClose: 1000,
-        style: {
-          width: "auto",
-          style: "flex justify-center",
-        },
         closeButton: false,
-        progress: undefined,
       });
+      handleClose();
     } catch (error) {
       console.error('Error sending data:', error);
     }
   };
 
-  const [vendors, setVendors] = useState([]);
-
-  useEffect(() => {
-    const fetchVendors = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
-        setVendors(response.data);
-      } catch (error) {
-        console.error("Error fetching sheds:", error);
-      }
-    };
-
-    fetchVendors();
-  }, []);
-
   return (
-    <div className='w-full mt-12 my-5 flex justify-center items-center'>
-      <div className="dark:text-gray-200 w-[550px] bg-[#eeedf0] shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.38)]  mx-auto dark:bg-secondary-dark-bg pt-2 md:m-10 mt-12 md:p-10  rounded-3xl">
-        <div className="h-fit max-w-xl lg:w-[500px] w-[300px] py-10 mx-auto my-auto rounded-lg lg:p-2 p-2 m-5">
-          <form onSubmit={handleSubmit(submitHandler)} className="lg:w-[400px] w-[300px] my-5 p-0 space-y-6 mx-auto">
-            <div className="lg:w-[400px] w-[300px]">
-              <label className="flex flex-row justify-center items-center">
-                <span className="font-semibold w-full">Date:</span>
-                <input
-                  {...register("date", {
-                    required: {
-                      value: true,
-                      message: "Date is required",
-                    },
-                  })}
-                  type="date"
-                  name="date"
-                  className="dark:bg-main-dark-bg form-input py-2 px-4 focus:outline-2 rounded-md mt-1 w-full"
-                  required
-                />
-              </label>
-            </div>
-
-            <div className="lg:w-[400px] w-[300px]">
-              <label className="flex flex-row justify-center items-center">
-                <span className="font-semibold w-full">Vendor:</span>
-                <select
-                  {...register("vendor", {
-                    required: {
-                      value: true,
-                      message: "Vendor is required",
-                    },
-                  })}
-                  name="vendor"
-                  className="form-select py-2 px-4 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-                  onChange={(e) => setSelectedVendor(e.target.value)}
-                  required
-                >
-                  <option value="">Select a vendor</option>
-                  {vendors["vendors"]?.map((vendor) => (
-                    <option key={vendor.vendor_id} value={vendor.vendor_id}>
-                      {vendor.name} - {vendor.location}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            
-            <div className="lg:w-[400px] w-[300px]">
-              <label className="flex flex-row justify-center items-center">
-                <span className="font-semibold w-full">Amount:</span>
-                <input
-                  {...register("amount", {
-                    required: {
-                      value: true,
-                      message: "Amount is required",
-                    },
-                  })}
-                  type="number"
-                  name="amount"
-                  className="form-input py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-                  required
-                />
-              </label>
-            </div>
-
-            <div className="lg:w-[400px] w-[300px]">
-              <label className="flex flex-row justify-center items-center">
-                <span className="font-semibold w-full">Description:</span>
-                <input
-                  {...register("description", {
-                    required: {
-                      value: true,
-                      message: "Description is required",
-                    },
-                  })}
-                  type="text"
-                  name="description"
-                  className="form-input py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-                  required
-                />
-              </label>
-            </div>
-
-            <div className="lg:w-[400px] w-[300px] ">
-              <label className="relative flex flex-row items-center">
-                <span className="font-semibold w-full">Tool count:</span>
-                <input
-                  type="number"
-                  value={toolCount}
-                  onChange={(e) => setToolCount(parseInt(e.target.value))}
-                  className="form-input py-2 px-4 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={addToolField}
-                  className="ml-2 bg-black text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-950 absolute right-0"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                </button>
-              </label>
-            </div>
-
-            {[...Array(toolCount)].map((_, index) => (
-              <div className="lg:w-[400px] w-[300px]" key={index}>
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold w-full">{`Service Tool Details ${index + 1}:`}</span>
-                  <select
-                    value={tools[index]?.tool || ""}
-                    onChange={(e) => handleToolChange(index, "tool", e.target.value)}
-                    className="form-select dark:bg-main-dark-bg rounded-md py-2 px-4 mt-1 w-full"
-                    required
-                  >
-                    <option value="">Select a tool</option>
-                    {vendorTools?.map((tool, toolIndex) => (
-                      <option key={toolIndex} value={tool.tool}>
-                        {tool.tool_name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold w-full">{`Service Type ${index + 1}:`}</span>
-                  <select
-                    value={tools[index]?.service_type || ""}
-                    onChange={(e) => handleToolChange(index, "service_type", e.target.value)}
-                    className="form-select dark:bg-main-dark-bg rounded-md py-2 px-4 mt-1 w-full"
-                    required
-                  >
-                    <option value="">Select a service type</option>
-                    {serviceTypes.map((serviceType) => (
-                      <option key={serviceType.servicetype_id} value={serviceType.servicetype_id}>
-                        {serviceType.service_type}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold w-full">{`Service Remarks ${index + 1}:`}</span>
-                  <input
-                    type="text"
-                    value={tools[index]?.service_remarks || ""}
-                    onChange={(e) => handleToolChange(index, "service_remarks", e.target.value)}
-                    className="form-input dark:bg-main-dark-bg rounded-md py-2 px-4 mt-1 w-full"
-                  />
-                </label>
-              </div>
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <DialogTitle>Add Service Order</DialogTitle>
+      <DialogContent>
+        <form onSubmit={handleSubmit(submitHandler)} className="space-y-6">
+          <TextField
+            {...register("date", {
+              required: "Date is required",
+            })}
+            label="Date"
+            type="date"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            error={!!errors.date}
+            helperText={errors.date?.message}
+            margin="normal"
+            required
+          />
+          <TextField
+            {...register("vendor", {
+              required: "Vendor is required",
+            })}
+            select
+            label="Vendor"
+            fullWidth
+            onChange={(e) => setSelectedVendor(e.target.value)}
+            error={!!errors.vendor}
+            helperText={errors.vendor?.message}
+            margin="normal"
+            required
+          >
+            <MenuItem value="">
+              <em>Select a vendor</em>
+            </MenuItem>
+            {vendors?.vendors?.map((vendor) => (
+              <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>
+                {vendor.name} - {vendor.location}
+              </MenuItem>
             ))}
-
-            <div className="flex flex-row justify-center items-center">
-              <button
-                type="submit"
-                className="bg-black text-white font-semibold py-2 px-4 rounded-md mx-auto mt-10 hover:bg-gray-950"
+          </TextField>
+          <TextField
+            {...register("amount", {
+              required: "Amount is required",
+            })}
+            label="Amount"
+            type="number"
+            fullWidth
+            error={!!errors.amount}
+            helperText={errors.amount?.message}
+            margin="normal"
+            required
+          />
+          <TextField
+            {...register("description", {
+              required: "Description is required",
+            })}
+            label="Description"
+            type="text"
+            fullWidth
+            error={!!errors.description}
+            helperText={errors.description?.message}
+            margin="normal"
+            required
+          />
+          {tools.map((_, index) => (
+            <div key={index}>
+              <TextField
+                select
+                label={`Service Tool ${index + 1}`}
+                fullWidth
+                value={tools[index]?.tool || ""}
+                onChange={(e) => handleToolChange(index, "tool", e.target.value)}
+                margin="normal"
+                required
               >
-                Add Service
-              </button>
+                <MenuItem value="">
+                  <em>Select a tool</em>
+                </MenuItem>
+                {vendorTools?.map((tool, toolIndex) => (
+                  <MenuItem key={toolIndex} value={tool.tool}>
+                    {tool.tool_name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                select
+                label={`Service Type ${index + 1}`}
+                fullWidth
+                value={tools[index]?.service_type || ""}
+                onChange={(e) => handleToolChange(index, "service_type", e.target.value)}
+                margin="normal"
+                required
+              >
+                <MenuItem value="">
+                  <em>Select a service type</em>
+                </MenuItem>
+                {serviceTypes.map((serviceType) => (
+                  <MenuItem key={serviceType.servicetype_id} value={serviceType.servicetype_id}>
+                    {serviceType.service_type}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                label={`Service Remarks ${index + 1}`}
+                type="text"
+                fullWidth
+                value={tools[index]?.service_remarks || ""}
+                onChange={(e) => handleToolChange(index, "service_remarks", e.target.value)}
+                margin="normal"
+              />
             </div>
-            <ToastContainer className="z-[100001]" />
-          </form>
-        </div>
-      </div>
-    </div>
+          ))}
+          <IconButton onClick={addToolField} color="primary" aria-label="add tool">
+            
+          </IconButton>
+          <DialogActions>
+            <Button onClick={handleClose} color="secondary">
+              Cancel
+            </Button>
+            <Button type="submit" color="primary">
+              Submit
+            </Button>
+          </DialogActions>
+        </form>
+      </DialogContent>
+      <ToastContainer />
+    </Dialog>
   );
 };
 

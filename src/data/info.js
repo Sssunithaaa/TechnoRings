@@ -155,11 +155,7 @@ export const links = [
         icon: <MdInventory />,
         link:"calibration"
       },
-       {
-        name: "Services",
-        icon: <MdInventory />,
-        link:"services"
-      },
+      
        {
         name: "Instrument History",
         icon: <AiOutlineTransaction />,

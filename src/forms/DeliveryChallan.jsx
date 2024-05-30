@@ -92,7 +92,7 @@ const submitHandler = async (data) => {
     };
     
     // Send the form data to the backend
-    const response = await axios.post(`http://127.0.0.1:8000/store-delivery-challan/`, formData, config);
+    const response = await axios.post(`${process.env.REACT_APP_URL}/store-delivery-challan/`, formData, config);
 
     console.log(response);
     setShowCalibrationModal(false);

@@ -3,7 +3,10 @@ import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,Con
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
+import CreateMovement from "../forms/Transport";
 const History = () => {
+      const [open, setOpen] = useState(false);
+
      const { data: transportOrders } = useQuery({
     queryKey: ["transportorders"],
     queryFn: async () => {
@@ -39,7 +42,12 @@ const History = () => {
       {mapShedIdToName(props.source_shed)}
     </div>;
   };
-
+      const handleDialogClose = () => {
+        setOpen(false);
+    };
+  const handleDialogOpen = () => {
+        setOpen(true);
+    };
   // Template function to display destination shed name
   const destinationShedTemplate = (props) => {
     return <div>
@@ -57,7 +65,10 @@ const History = () => {
   ];
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+      <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
+ onClick={handleDialogOpen}>Add Tool Movement</button>
       <Header className="Page" title="Transport Orders" />
+
       <GridComponent
         id="gridcomp"
         dataSource={transportOrders}
@@ -89,6 +100,8 @@ const History = () => {
           ]}
         />
       </GridComponent>
+                  <CreateMovement open={open} handleClose={handleDialogClose} />
+
     </div>
   );
 };

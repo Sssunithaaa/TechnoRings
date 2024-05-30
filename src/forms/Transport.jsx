@@ -3,8 +3,17 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  MenuItem,
+} from "@mui/material";
 
-const CreateMovement = () => {
+const CreateMovement = ({ open, handleClose }) => {
   const [toolCount, setToolCount] = useState(1);
   const [tools, setTools] = useState([{ id: 1, tool: "", remark: "" }]);
   const [shedTools, setShedTools] = useState([]);
@@ -40,6 +49,7 @@ const CreateMovement = () => {
       { id: toolCount + 1, tool: "", remark: "" },
     ]);
   };
+  const date=new Date().toISOString().split('T')[0]
 
   const {
     register,
@@ -47,12 +57,13 @@ const CreateMovement = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      movementDate: "",
+      movementDate: date,
       sourceShed: 0,
       destinationShed: 0,
     },
     mode: "onChange",
   });
+  
 
   const submitHandler = async (data) => {
     try {
@@ -86,6 +97,8 @@ const CreateMovement = () => {
         closeButton: false,
         progress: undefined,
       });
+
+      handleClose(); // Close the dialog on successful submission
     } catch (error) {
       console.error("Error sending data:", error);
     }
@@ -109,164 +122,114 @@ const CreateMovement = () => {
   const shed_details = sheds?.shed_details;
 
   return (
-    <div className="w-full flex justify-center items-center">
-      <div className="dark:text-gray-200 w-[600px] mx-auto bg-gray-200 dark:bg-secondary-dark-bg m-2 pt-2 md:m-10 mt-24 md:p-10 rounded-3xl">
-        <div className="h-fit max-w-xl w-[500px] mx-auto my-auto rounded-lg p-5">
-          <form
-            onSubmit={handleSubmit(submitHandler)}
-            className="w-[400px] my-10 p-0 space-y-6 mx-auto"
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle>Add Tool Movement</DialogTitle>
+      <DialogContent>
+        <form onSubmit={handleSubmit(submitHandler)}>
+          <TextField
+            {...register("movementDate", {
+              required: "Movement date is required",
+            })}
+            type="date"
+            label="Movement Date"
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            margin="normal"
+            error={!!errors.movementDate}
+            helperText={errors.movementDate?.message}
+          />
+
+          <TextField
+            {...register("sourceShed", {
+              required: "Source shed is required",
+            })}
+            select
+            label="Source Shed"
+            fullWidth
+            margin="normal"
+            onChange={(e) => setSelectedShed(e.target.value)}
+            error={!!errors.sourceShed}
+            helperText={errors.sourceShed?.message}
           >
-            <div className="w-[400px]">
-              <label className="flex flex-row justify-center items-center">
-                <span className="font-semibold w-full">Movement Date:</span>
-                <input
-                  {...register("movementDate", {
-                    required: {
-                      value: true,
-                      message: "Movement date is required",
-                    },
-                  })}
-                  type="date"
-                  name="movementDate"
-                  className="dark:bg-main-dark-bg form-input py-2 px-2 focus:outline-2 rounded-md mt-1 w-full"
-                  required
-                />
-              </label>
-            </div>
-
-            <div className="w-[400px]">
-              <label className="flex flex-row justify-center items-center">
-                <span className="font-semibold w-full">Source Shed:</span>
-                <select
-                  {...register("sourceShed", {
-                    required: {
-                      value: true,
-                      message: "Source shed is required",
-                    },
-                  })}
-                  name="sourceShed"
-                  className="form-select py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-                  onChange={(e) => setSelectedShed(e.target.value)}
-                  required
-                >
-                  <option value="">Select a Source Shed</option>
-                  {shed_details?.map((shed) => (
-                    <option key={shed.shed_id} value={shed.shed_id}>
-                      {shed.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-
-            <div className="w-[400px]">
-              <label className="flex flex-row justify-center items-center">
-                <span className="font-semibold w-full">Destination Shed:</span>
-                <select
-                  {...register("destinationShed", {
-                    required: {
-                      value: true,
-                      message: "Destination shed is required",
-                    },
-                  })}
-                  name="destinationShed"
-                  className="form-select py-2 px-2 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-                  required
-                >
-                  <option value="">Select a Destination Shed</option>
-                  {shed_details?.map((shed) => (
-                    <option key={shed.shed_id} value={shed.shed_id}>
-                      {shed.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-
-            <div className="lg:w-[400px] w-[300px]">
-              <label className="relative flex flex-row items-center">
-                <span className="font-semibold w-full">Tool count:</span>
-                <input
-                  type="number"
-                  value={toolCount}
-                  onChange={(e) => setToolCount(parseInt(e.target.value))}
-                  className="form-input py-2 px-4 dark:bg-main-dark-bg rounded-md mt-1 w-full"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={addToolField}
-                  className="ml-2 bg-black text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-950 absolute right-0"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                </button>
-              </label>
-            </div>
-
-            {Array.from({ length: toolCount }).map((_, index) => (
-              <div className="w-[400px]" key={index}>
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold w-full">{`Tool ${index + 1}:`}</span>
-                  <select
-                    value={tools[index]?.tool || ""}
-                    onChange={(e) =>
-                      handleToolChange(index, "tool", e.target.value)
-                    }
-                    className="form-select dark:bg-main-dark-bg rounded-md py-2 px-2 mt-1 w-full"
-                    required
-                  >
-                    <option value="">Select a tool</option>
-                    {shedTools?.map((shedTool) => (
-                      <option
-                        key={shedTool.shedtool_id}
-                        value={shedTool.using_tool.instrument_no}
-                      >
-                        {shedTool.using_tool.instrument_name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold w-full">{`Remark ${index + 1}:`}</span>
-                  <input
-                    type="text"
-                    value={tools[index]?.remark || ""}
-                    onChange={(e) =>
-                      handleToolChange(index, "remark", e.target.value)
-                    }
-                    className="form-input dark:bg-main-dark-bg rounded-md py-2 px-2 mt-1 w-full"
-                    placeholder={`Remark for tool ${index + 1}`}
-                  />
-                </label>
-              </div>
+            <MenuItem value="">Select a Source Shed</MenuItem>
+            {shed_details?.map((shed) => (
+              <MenuItem key={shed.shed_id} value={shed.shed_id}>
+                {shed.name}
+              </MenuItem>
             ))}
+          </TextField>
 
-            <div className="flex flex-row justify-center items-center my-auto">
-              <button
-                type="submit"
-                className="bg-black flex mt-10 text-white font-semibold py-2 px-2 rounded-md mx-auto items-center hover:bg-gray-950"
+          <TextField
+            {...register("destinationShed", {
+              required: "Destination shed is required",
+            })}
+            select
+            label="Destination Shed"
+            fullWidth
+            margin="normal"
+            error={!!errors.destinationShed}
+            helperText={errors.destinationShed?.message}
+          >
+            <MenuItem value="">Select a Destination Shed</MenuItem>
+            {shed_details?.map((shed) => (
+              <MenuItem key={shed.shed_id} value={shed.shed_id}>
+                {shed.name}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          {Array.from({ length: toolCount }).map((_, index) => (
+            <div key={index}>
+              <TextField
+                select
+                label={`Tool ${index + 1}`}
+                value={tools[index]?.tool || ""}
+                onChange={(e) => handleToolChange(index, "tool", e.target.value)}
+                fullWidth
+                margin="normal"
+                required
               >
-                Add movement
-              </button>
+                <MenuItem value="">Select a tool</MenuItem>
+                {shedTools?.map((shedTool) => (
+                  <MenuItem
+                    key={shedTool.shedtool_id}
+                    value={shedTool.using_tool.instrument_no}
+                  >
+                    {shedTool.using_tool.instrument_name}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <TextField
+                label={`Remark ${index + 1}`}
+                value={tools[index]?.remark || ""}
+                onChange={(e) => handleToolChange(index, "remark", e.target.value)}
+                fullWidth
+                margin="normal"
+              />
             </div>
-            <ToastContainer />
-          </form>
-        </div>
-      </div>
-    </div>
+          ))}
+
+          <Button
+            onClick={addToolField}
+            variant="contained"
+            color="primary"
+            style={{ margin: "20px 0" }}
+          >
+            Add Another Tool
+          </Button>
+        </form>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="secondary">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit(submitHandler)} color="primary">
+          Submit
+        </Button>
+      </DialogActions>
+      <ToastContainer />
+    </Dialog>
   );
 };
 
