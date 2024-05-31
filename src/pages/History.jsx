@@ -54,6 +54,9 @@ const History = () => {
       {mapShedIdToName(props.destination_shed)}
     </div>;
   };
+  useEffect(()=> {
+    window.scrollTo(0,0);
+  },[])
    const transportGridColumns = [
     
     { field: "movement_id", headerText: "Movement ID", width: "150", textAlign: "Center" },
@@ -78,6 +81,7 @@ const History = () => {
         allowSelection
         allowSorting
         toolbar={['Delete']}
+         pageSettings={{ pageCount: 5 }}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
         allowPdfExport

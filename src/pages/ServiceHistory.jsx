@@ -16,7 +16,19 @@ const ServiceHistory = () => {
     },
   });
   
-   const { data: vendors } = useQuery({
+   const { data: vendors=[
+    {
+            "vendor_id": 1,
+            "name": "Pruthviraj",
+            "location": "Bengaluru",
+            "address": "S-16",
+            "phone_number": "7353647516",
+            "email": "abc@gmail.com",
+            "nabl_number": "1717171717",
+            "nabl_certificate": "/media/vendor_certificates/samplereport.txt",
+            "vendor_type": 2
+        },
+   ] } = useQuery({
     queryKey: ["vendors"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
@@ -24,10 +36,11 @@ const ServiceHistory = () => {
       return response.data.vendors;
     },
   });
-   const getVendorName = (vendorId) => {
-    const vendor = vendors.find((vendor)=> vendor.vendor_id === vendorId)
-    return vendor ? vendor.name : "Unknown vendor"
-  }
+  const getVendorName = (vendorId) => {
+  const vendor = vendors.find((vendor) => vendor.vendor_id === vendorId);
+  return vendor ? vendor.name : "Unknown vendor";
+};
+
     const vendorTemplate = (props)=> {
       return <div>
         {getVendorName(props.vendor)}
@@ -62,6 +75,7 @@ const ServiceHistory = () => {
         allowPaging
         allowSelection
         allowSorting
+         pageSettings={{ pageCount: 5 }}
         toolbar={['Delete']}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport

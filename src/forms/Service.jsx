@@ -80,7 +80,7 @@ const Service = ({ open, handleClose }) => {
   const submitHandler = async (data) => {
     const requestData = {
       date: data.date,
-      amount: parseFloat(data.amount),
+      amount: 0,
       description: data.description,
       tool_count: toolCount,
       vendor: parseInt(data.vendor),
@@ -145,7 +145,7 @@ const Service = ({ open, handleClose }) => {
               </MenuItem>
             ))}
           </TextField>
-          <TextField
+          {/* <TextField
             {...register("amount", {
               required: "Amount is required",
             })}
@@ -156,7 +156,7 @@ const Service = ({ open, handleClose }) => {
             helperText={errors.amount?.message}
             margin="normal"
             required
-          />
+          /> */}
           <TextField
             {...register("description", {
               required: "Description is required",

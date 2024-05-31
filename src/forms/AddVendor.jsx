@@ -1,314 +1,178 @@
-import React, { useState, useEffect } from "react";
-import Select from "react-select";
+import React from "react";
+import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useQuery } from '@tanstack/react-query';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  MenuItem,
+} from "@mui/material";
 
-const Dailyy = () => {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [address, setAddress] = useState();
-  const [phoneNumber, setPhonenumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [vendorType, setVendorType] = useState(["Manufacturer", "Dealer", "Calibration Agency"]);
-  const [nablNumber, setnabl_number] = useState(new Date().toISOString().split('T')[0]);
-  const [certificate, setCertificate] = useState([]);
+const CreateVendor = ({ open, handleClose }) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
-
-
- 
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const submitHandler = async (data) => {
     try {
-      const postRequests = [];
-      const shiftNumberMap = {
-        shift1: 1,
-        shift2: 2,
-        shift3: 3,
-      };
+      // Create a FormData object to handle the file upload
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("location", data.location);
+      formData.append("address", data.address);
+      formData.append("phone_number", data.phone_number);
+      formData.append("email", data.email);
+      formData.append("vendor_type", data.vendor_type);
+      if (data.nabl_number) {
+        formData.append("nabl_number", data.nabl_number);
+      }
+      if (data.certificate[0]) {
+        formData.append("certificate", data.certificate[0]);
+      }
 
-      machineData.forEach((machine) => {
-        const machineId = machine.label.split(" - ")[1];
-
-        const formData = {
-          date: date,
-          emp_ssn: employeeName.label,
-          shift_number: shiftNumberMap[selectedShift],
-          shift_duration: 8,
-          machine_id: machineId,
-          achieved: machine.achieved,
-          target: machine.target,
-          partial_shift: hours,
-          remarks: reason.label,
-          efficiency: 0,
-          incentive_received: 0,
-        };
-
-        postRequests.push(
-          axios.post(`${process.env.REACT_APP_URL}/webapp/api/submit-performance`, formData)
-        );
-      });
-
-      await Promise.all(postRequests);
-
-      toast.success("Daily entry added successfully", {
-        position: "top-center",
-        autoClose: 1000,
-        style: {
-          width: "auto",
-          style: "flex justify-center",
-        },
-        closeButton: false,
-        progress: undefined,
-      });
-
-      setTimeout(() => {
-        setSelectedShift("");
-        setEmployeeName("");
-        setSelectedMachines([]);
-        setSubmittedData(null);
-      }, 3000);
-    } catch (error) {
-      toast.error(error.message, {
-        position: "top-center",
-        autoClose: 1000,
-        style: {
-          width: "auto",
-          style: "flex justify-center",
-        },
-        closeButton: false,
-        progress: undefined,
-      });
-      console.error("Error:", error);
-    }
-  };
-
-  const handleMachineChange = async (selectedOptions) => {
-    setSelectedMachines(selectedOptions);
-    setMachineData([]);
-
-    const fetchedTargetData = {};
-    const partNumberData = {};
-    try {
-      await Promise.all(
-        selectedOptions.map(async (machine) => {
-          const machineLabelParts = machine.label.split('-');
-          const middleHyphenIndex = Math.floor(machine.label.length / 2);
-          let hyphenIndex = machine.label.lastIndexOf('-', middleHyphenIndex);
-          if (hyphenIndex === -1) {
-            hyphenIndex = machine.label.indexOf('-', middleHyphenIndex);
-          }
-          const machineLabel = machine.label.substring(hyphenIndex + 1).trim();
-
-          const response = await axios.get(`${process.env.REACT_APP_URL}/webapp/target/${encodeURIComponent(machineLabel)}/`);
-          const response1 = await axios.get(`${process.env.REACT_APP_URL}/webapp/api/machine_jobs/${encodeURIComponent(machineLabel)}/`);
-          fetchedTargetData[machine.label] = response.data.target;
-          partNumberData[machine.label] = response1.data;
-        })
+      // Make a POST request to your backend API to add a new vendor
+      const response = await axios.post(
+        `${process.env.REACT_APP_URL}/add_vendor/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      setTargetData(fetchedTargetData);
-      setPartNumber(partNumberData);
+      console.log(response);
+      // Display success message using toast
+      toast.success("Vendor added successfully");
+
+      // Close the dialog on successful submission
+      handleClose();
     } catch (error) {
-      toast.error("Error fetching target data");
+      console.log(error);
+      // Display error message using toast
+      toast.error("Failed to add vendor. Please try again later.");
     }
   };
-
-  const handleInputChange = (index, key, value) => {
-    const updatedData = [...machineData];
-    updatedData[index][key] = value;
-    setMachineData(updatedData);
-  };
-
- 
-
-
-  if (submittedData) {
-    return (
-      <div className="min-h-screen py-8 px-4">
-        <h1 className="text-3xl text-white font-bold text-center mb-8">
-          Daily Submissions
-        </h1>
-        <ToastContainer className="z-[10001]" />
-
-        <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-4">
-          {submittedData && (
-            <>
-              <p className="text-lg mb-2 font-semibold">
-                Shift: {submittedData.selectedShift}
-              </p>
-            </>
-          )}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
-              {selectedMachines.map((machine, index) => (
-                <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-md">
-                  <h3 className="text-lg font-semibold mb-2">Machine: {machine.label}</h3>
-                  <h5>Part number: {partNumber && partNumber[machine.label]?.part_no}</h5>
-                  <h5>Operation number: {partNumber && partNumber[machine.label]?.operation_no}</h5>
-
-                  <input
-                    type="number"
-                    placeholder="Achieved"
-                    value={machineData[index]?.achieved || ""}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
-                    onChange={(e) => handleInputChange(index, 'achieved', e.target.value)}
-                  />
-                  <input
-                    type="number"
-                    placeholder="Target"
-                    value={targetData[machine.label]}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
-                    onChange={(e) => handleInputChange(index, 'target', e.target.value)}
-                  />
-                </div>
-              ))}
-              <label className="flex items-center mt-2">
-                <input
-                  type="checkbox"
-                  className="mr-2"
-                  onChange={() => setShowHoursInput(!showHoursInput)}
-                />
-                Partial Shift
-              </label>
-              {showHoursInput && (
-                <input
-                  type="number"
-                  placeholder="Number of Minutes into shift"
-                  value={hours}
-                  onChange={(e) => setHours(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
-                />
-              )}
-              <div>
-                <label
-                  htmlFor="Reason"
-                  className="block text-lg font-medium text-gray-700"
-                >
-                  Remarks:
-                </label>
-                <Select
-                  options={reasonOptions}
-                  value={reason}
-                  onChange={(selectedOption) => setReason(selectedOption)}
-                  isSearchable
-                  placeholder="Select Reason"
-                />
-              </div>
-              <button type="submit" className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700">
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="max-w-md w-full px-8 py-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-3xl font-semibold mb-6 text-center">
-          Add vendor
-        </h2>
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle>Add Vendor</DialogTitle>
+      <ToastContainer />
+      <DialogContent>
+        <form onSubmit={handleSubmit(submitHandler)}>
+          <TextField
+            {...register("name", { required: "Vendor name is required" })}
+            type="text"
+            label="Vendor Name"
+            fullWidth
+            margin="normal"
+            error={!!errors.name}
+            helperText={errors.name?.message}
+          />
 
-        <form className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Name:
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-500"
-            />
-          </div>
-          <div>
-  <label
-    htmlFor="location"
-    className="block text-lg font-medium text-gray-700"
-  >
-    Location:
-  </label>
-   <input
-              type="text"
-              id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              required
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-500"
-            />
-</div>
+          <TextField
+            {...register("location", { required: "Location is required" })}
+            type="text"
+            label="Location"
+            fullWidth
+            margin="normal"
+            error={!!errors.location}
+            helperText={errors.location?.message}
+          />
 
-          <div>
-            <label className="block text-lg font-medium text-gray-700">Shift:</label>
-            <div className="flex items-center space-x-4">
-              <label htmlFor="shift1" className="flex items-center">
-                <input
-                  type="radio"
-                  id="shift1"
-                  value="Manufacturer"
-                  checked={selectedShift === "Manufacturer"}
-                  onChange={(e) => setSelectedShift(e.target.value)}
-                  className="mr-2"
-                />
-                Shift 1
-              </label>
-              <label htmlFor="shift2" className="flex items-center">
-                <input
-                  type="radio"
-                  id="shift2"
-                  value="Dealer"
-                  checked={selectedShift === "Dealer"}
-                  onChange={(e) => setSelectedShift(e.target.value)}
-                  className="mr-2"
-                />
-                Shift 2
-              </label>
-              <label htmlFor="shift3" className="flex items-center">
-                <input
-                  type="radio"
-                  id="shift3"
-                  value="Calibration Agency"
-                  checked={selectedShift === "Calibration Agency"}
-                  onChange={(e) => setSelectedShift(e.target.value)}
-                  className="mr-2"
-                />
-                Shift 3
-              </label>
-            </div>
-          </div>
-          <div>
-            <label className="block text-lg font-medium text-gray-700">
-              Email:
-            </label>
-             <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-500"
-            />
-          </div>
-          <button
-            onClick={handleData}
-            className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700"
+          <TextField
+            {...register("address", { required: "Address is required" })}
+            type="text"
+            label="Address"
+            fullWidth
+            margin="normal"
+            error={!!errors.address}
+            helperText={errors.address?.message}
+          />
+
+          <TextField
+            {...register("phone_number", { required: "Phone number is required" })}
+            type="tel"
+            label="Phone Number"
+            fullWidth
+            margin="normal"
+            error={!!errors.phone_number}
+            helperText={errors.phone_number?.message}
+          />
+
+          <TextField
+            {...register("email", { required: "Email is required" })}
+            type="email"
+            label="Email"
+            fullWidth
+            margin="normal"
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
+
+          <TextField
+            {...register("vendor_type", { required: "Vendor type is required" })}
+            select
+            label="Vendor Type"
+            fullWidth
+            margin="normal"
+            error={!!errors.vendor_type}
+            helperText={errors.vendor_type?.message}
           >
-            Submit
-          </button>
+            <MenuItem value="1">Manufacturer</MenuItem>
+            <MenuItem value="2">Dealer</MenuItem>
+            <MenuItem value="3">Calibration Agency</MenuItem>
+          </TextField>
+
+          {/* Conditionally render NABL Number field if vendor type is Calibration Agency */}
+          {watch("vendor_type") === "3" && (
+            <TextField
+              {...register("nabl_number")}
+              type="text"
+              label="NABL Number"
+              fullWidth
+              margin="normal"
+            />
+          )}
+
+          {/* Conditionally render Certificate field if vendor type is Calibration Agency */}
+          {watch("vendor_type") === "3" && (
+            <TextField
+              {...register("certificate")}
+              type="file"
+              label="Certificate"
+              fullWidth
+              margin="normal"
+              inputProps={{ accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png" }}
+            />
+          )}
+
+          <div className="flex flex-row justify-between">
+            <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ margin: "20px 0" }}
+          >
+            Add Vendor
+          </Button>
+              <Button onClick={handleClose} color="secondary">
+          Cancel
+        </Button>
+          </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+     
+      <ToastContainer />
+    </Dialog>
   );
 };
 
-export default Dailyy;
+export default CreateVendor;

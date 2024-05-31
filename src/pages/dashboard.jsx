@@ -129,7 +129,7 @@ const convertToSentenceCase = (str) => {
               </span>Instruments</p>
             <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.instruments_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
-            <p onClick={() => setRequest("")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 mx-10 flex justify-center'>View more</p>
+            <p onClick={() => setRequest("")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
           </div>
           <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
             <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
@@ -138,7 +138,7 @@ const convertToSentenceCase = (str) => {
               </span>Transport Orders</p>
             <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.transport_order_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
-            <p onClick={() => setRequest("recent_transport_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 mx-10 flex justify-center'>View more</p>
+            <p onClick={() => setRequest("recent_transport_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
           </div>
           <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
             <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
@@ -147,7 +147,7 @@ const convertToSentenceCase = (str) => {
               </span>Delivery Challan</p>
             <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.deliverychallan_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
-            <p onClick={() => setRequest("recent_service_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 mx-10 flex justify-center'>View more</p>
+            <p onClick={() => setRequest("recent_delivery_challan")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
           </div>
           <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
             <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
@@ -156,7 +156,7 @@ const convertToSentenceCase = (str) => {
               </span>Services</p>
             <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.service_order_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
-            <p onClick={() => setRequest("recent_delivery_challan")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 mx-10 flex justify-center'>View more</p>
+            <p onClick={() => setRequest("recent_service_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
           </div>
         </div>
       </div>

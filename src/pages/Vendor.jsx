@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   GridComponent,
   Inject,
@@ -13,7 +13,7 @@ import {
 } from "@syncfusion/ej2-react-grids";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import CreateVendor from "../components/CreateVendor";
+import CreateVendor from "../forms/AddVendor";
 import { Header } from "../components";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 const Vendor = () => {
   const toolbarOptions = ["Search"];
+  const [open,setOpen] = useState(false)
   const navigate = useNavigate()
   let grid;
 
@@ -72,20 +73,7 @@ const employeesGrid = [
       return vendorTypes[data.vendor_type - 1]; // Assuming vendor_type is 1, 2, or 3
     },
   },
-  {
-    field: "nabl_number",
-    headerText: "NABL Number",
-    width: "150",
-    textAlign: "Center",
-    isVisible: (data) => data.vendor_type === 3, // Only visible if vendor type is Calibration Agency
-  },
-  {
-    field: "certificate",
-    headerText: "Certificate",
-    width: "150",
-    textAlign: "Center",
-    isVisible: (data) => data.vendor_type === 3, // Only visible if vendor type is Calibration Agency
-  },
+ 
 ];
 
 
@@ -137,6 +125,12 @@ const handleActionComplete = async (args) => {
     }
   }
 }; 
+ const handleDialogClose = () => {
+        setOpen(false);
+    };
+  const handleDialogOpen = () => {
+        setOpen(true);
+    };
  const rowSelected = (args) => {
         console.log(args.data);
         const selectedRecord = args.data["vendor_id"];
@@ -145,6 +139,8 @@ const handleActionComplete = async (args) => {
   
   return (
     <div className=" m-2  pt-2  md:m-10 mt-24  md:p-10 bg-white rounded-3xl">
+          <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
+ onClick={handleDialogOpen}>Add Vendor</button>
       <Header category="Page" title="Vendors" />
       <ToastContainer/>
       <GridComponent
@@ -178,6 +174,8 @@ const handleActionComplete = async (args) => {
         </ColumnsDirective>
         <Inject services={[Search,Toolbar,Edit,Group, Page]} />
       </GridComponent>
+                        <CreateVendor open={open} handleClose={handleDialogClose} />
+
     </div>
   );
 };

@@ -5,17 +5,13 @@ import { useStateContext } from "./context/ContextProvider";
 import { useEffect } from "react";
 import { FiSettings } from "react-icons/fi";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { Navbar, Footer, Sidebar,ThemeSettings,LineChart } from "./components";
+import { Navbar, Sidebar,ThemeSettings } from "./components";
 import Dashboard from "./pages/dashboard";
 import {
-  Ecommerce,
+
   Orders,
   Calendar,
-  Employees,
-  ColorPicker,
-  Area,
-  Bar,
-  ColorMapping,
+ 
   
   
 } from "./pages";
@@ -35,6 +31,7 @@ import InstrumentGroup from "./forms/InstrumentGroup";
 import Instruments from "./pages/Instruments";
 import History from "./pages/History";
 import ServiceHistory from "./pages/ServiceHistory";
+import GenerateBill from "./pages/GenerateBill";
 function App() {
   const {
     setCurrentColor,
@@ -54,6 +51,9 @@ function App() {
       setCurrentMode(currentThemeMode);
     }
   }, []);
+  useEffect(()=> {
+    window.scrollTo(0,0);
+  },[])
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
       <BrowserRouter>
@@ -92,8 +92,7 @@ function App() {
             <div>
                {themeSettings && (<ThemeSettings />)}
               <Routes>
-                <Route exact path="/" element={<Ecommerce />}></Route>
-                 <Route path="/home" element={<Dashboard />} />
+                <Route exact path="/" element={<Dashboard />}></Route>
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/vendors" element={<Vendor />} />
                 <Route path="/shed" element={<Shed />} />
@@ -119,9 +118,12 @@ function App() {
                   path="/deliverychallan"
                   element={<DeliveryChallan />}
                 ></Route>
+                 <Route
+                  path="/generate-bill"
+                  element={<GenerateBill />}
+                ></Route>
                 <Route path="/services" element={<CreateService />}></Route>
-                <Route path="/line" element={<LineChart/>} />
-                <Route path="/pie" element="pie" />
+              
                 <Route path="/instrument-group" element={<InstrumentGroup/>}></Route>
                 <Route path="/instruments" element={<Instruments/>}></Route>
               </Routes>

@@ -1,44 +1,26 @@
-import { BsTools } from "react-icons/bs";
-import { FaUserCog } from "react-icons/fa";
+
 import { MdInventory } from "react-icons/md";
 import product from "./product.jpg";
-import avatar2 from './avatar2.jpg'
-import avatar3 from './avatar3.png'
-import avatar4 from './avatar4.jpg'
+
 import { FaWarehouse } from "react-icons/fa";
 import {
   AiOutlineCalendar,
   AiOutlineTransaction,
-  AiOutlineAreaChart,
-  AiOutlineBarChart,
-  AiOutlineStock,
+
 } from "react-icons/ai";
 import {
   FiShoppingBag,
-  FiEdit,
-  FiPieChart,
-  FiBarChart,
-  FiCreditCard,
-  FiStar,
-  FiShoppingCart,
+
 } from "react-icons/fi";
-import { TbTools } from "react-icons/tb";
 import {
   BsKanban,
-  BsBarChart,
-  BsBoxSeam,
-  BsCurrencyDollar,
-  BsShield,
-  BsChatLeft,
+
 } from "react-icons/bs";
 import avatar from "./avatar.jpg";
-import { BiColorFill } from "react-icons/bi";
 import { IoMdContacts } from "react-icons/io";
-import { RiContactsLine, RiStockLine } from "react-icons/ri";
-import { MdOutlineSupervisorAccount } from "react-icons/md";
+
 import { HiDocumentReport, HiOutlineRefresh } from "react-icons/hi";
-import { TiTick } from "react-icons/ti";
-import { GiLouvrePyramid } from "react-icons/gi";
+
 import { GrLocation } from "react-icons/gr";
 import hero from "./na_feb_10.jpg";
 export const images = { hero, avatar };
@@ -130,7 +112,7 @@ export const links = [
       {
         name: "Home",
         icon: <FiShoppingBag />,
-        link:"Home"
+        link:""
       },
     ],
   },
@@ -176,6 +158,11 @@ export const links = [
         name: "Return order",
         icon: <HiDocumentReport />,
         link:"deliverychallan"
+      },
+      {
+        name: "Generate Bill",
+        icon: <HiDocumentReport />,
+        link:"generate-bill"
       },
     ],
   },
