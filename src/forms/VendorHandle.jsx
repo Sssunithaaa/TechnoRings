@@ -12,8 +12,9 @@ import {
   Button,
   MenuItem,
 } from "@mui/material";
+import { defaultCurrencyCode } from "@syncfusion/ej2-base";
 
-const CreateVendorHandleData = ({ open, handleClose }) => {
+const CreateVendorHandleData = ({ open, handleClose, id }) => {
   const {
     register,
     handleSubmit,
@@ -23,9 +24,9 @@ const CreateVendorHandleData = ({ open, handleClose }) => {
 
   const [vendors, setVendors] = useState([]);
   const [tools, setTools] = useState([]);
+  const [defaultVendorName, setDefaultVendorName] = useState("");
 
   useEffect(() => {
-    // Fetch vendors and tools data from your backend API
     const fetchData = async () => {
       try {
         const vendorResponse = await axios.get(`${process.env.REACT_APP_URL}/vendor`);
@@ -41,22 +42,40 @@ const CreateVendorHandleData = ({ open, handleClose }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log(id.id)
+    if (id && vendors.length > 0) {
+      console.log(vendors)
+            const defaultVendors = vendors.find((vendor) => vendor.vendor_id === 1);
+
+      const defaultVendor = vendors.find((vendor) => vendor.vendor_id == id.id);
+      console.log(defaultVendor)
+      if (defaultVendor) {
+        setDefaultVendorName(defaultVendor.name);
+      }
+    }
+  }, [id, vendors]);
+  useEffect(()=> {
+
+  },[defaultVendorName])
+
   const submitHandler = async (data) => {
     try {
-      // Make a POST request to your backend API to add a new vendor handle data
+      console.log(data)
+      const vendorId = id.id;
+      const formData = {
+        ...data,
+        vendor: vendorId,
+      };
       const response = await axios.post(
         `${process.env.REACT_APP_URL}/add_vendor_handles/`,
-        data
+        formData
       );
-      console.log(response);
-      // Display success message using toast
+      console.log(response)
       toast.success("Vendor handle data added successfully");
-
-      // Close the dialog on successful submission
       handleClose();
     } catch (error) {
       console.log(error);
-      // Display error message using toast
       toast.error("Failed to add vendor handle data. Please try again later.");
     }
   };
@@ -68,20 +87,13 @@ const CreateVendorHandleData = ({ open, handleClose }) => {
       <DialogContent>
         <form onSubmit={handleSubmit(submitHandler)}>
           <TextField
-            {...register("vendor", { required: "Vendor is required" })}
-            select
+
+            value={defaultVendorName}
+            
             label="Vendor"
             fullWidth
             margin="normal"
-            error={!!errors.vendor}
-            helperText={errors.vendor?.message}
-          >
-            {vendors.map((vendor) => (
-              <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>
-                {vendor.name}
-              </MenuItem>
-            ))}
-          </TextField>
+          />
 
           <TextField
             {...register("tool", { required: "Tool is required" })}
@@ -119,7 +131,8 @@ const CreateVendorHandleData = ({ open, handleClose }) => {
             helperText={errors.cost?.message}
           />
 
-          <Button
+         <div className="flex flex-row justify-between">
+           <Button
             type="submit"
             variant="contained"
             color="primary"
@@ -127,13 +140,13 @@ const CreateVendorHandleData = ({ open, handleClose }) => {
           >
             Add Vendor Handle Data
           </Button>
-        </form>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="secondary">
+           <Button onClick={handleClose} color="secondary">
           Cancel
         </Button>
-      </DialogActions>
+         </div>
+        </form>
+      </DialogContent>
+      
       <ToastContainer />
     </Dialog>
   );

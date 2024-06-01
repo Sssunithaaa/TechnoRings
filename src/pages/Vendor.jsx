@@ -146,7 +146,7 @@ const handleActionComplete = async (args) => {
       <GridComponent
         dataSource={vendors?.vendors}
         width="auto"
-        toolbar={["Add","Search"]}
+        toolbar={["Search"]}
         allowPaging
         allowSorting
         allowAdding

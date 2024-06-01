@@ -151,7 +151,7 @@ const toolbarClick = (args) => {
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
         </GridComponent>
       </div>
-                        <CreateVendorHandleData open={open} handleClose={handleDialogClose} />
+                        <CreateVendorHandleData open={open} handleClose={handleDialogClose} id={id} />
 
           </div>
    

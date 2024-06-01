@@ -99,7 +99,9 @@ const Service = ({ open, handleClose }) => {
         autoClose: 1000,
         closeButton: false,
       });
-      handleClose();
+      setTimeout(()=> {
+        handleClose();
+      },3000)
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -218,7 +220,9 @@ const Service = ({ open, handleClose }) => {
             </div>
           ))}
           <IconButton onClick={addToolField} color="primary" aria-label="add tool">
-            
+            <p className="text-[14px]">
+              Add tool
+            </p>
           </IconButton>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">
