@@ -7,9 +7,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 
 const GenerateBill = () => {
-  const [serviceId, setServiceId] = useState("");
+  const { id } = useParams(); // Fetch the service ID from URL parameters
+  const [serviceId, setServiceId] = useState(id.id || ""); // Initialize serviceId with the value from URL params or an empty string
   const [billData, setBillData] = useState(null);
-  const id = useParams()
+
   const fetchBillData = async (id) => {
     try {
       const response = await axios.get(`https://practicehost.pythonanywhere.com/generate_bill/${id}/`);
@@ -20,12 +21,16 @@ const GenerateBill = () => {
       toast.error("Failed to fetch bill data. Please try again.");
     }
   };
-  useEffect(()=> {
-    fetchBillData(id.id)
-  },[])
-  const handleFetchBill = () => {
+
+  useEffect(() => {
     if (id) {
       fetchBillData(id.id);
+    }
+  }, [id]);
+
+  const handleFetchBill = () => {
+    if (serviceId) {
+      fetchBillData(serviceId);
     } else {
       toast.error("Please enter a service ID");
     }
@@ -43,22 +48,21 @@ const GenerateBill = () => {
       <ToastContainer />
       <div className="bg-white w-[30%] px-5 flex flex-col mx-auto my-5">
         <TextField
-        label="Service ID"
-        value={id.id}
-        disabled
-       
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleFetchBill}
-        style={{ marginBottom: "20px",paddingInline:"20px" }}
-      >
-        Generate Bill
-      </Button>
+          label="Service ID"
+          value={serviceId}
+          onChange={(e) => setServiceId(e.target.value)}
+          variant="outlined"
+          margin="normal"
+          fullWidth
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleFetchBill}
+          style={{ marginBottom: "20px", paddingInline: "20px" }}
+        >
+          Generate Bill
+        </Button>
       </div>
 
       {billData && (
@@ -95,7 +99,7 @@ const GenerateBill = () => {
             variant="contained"
             color="secondary"
             onClick={handlePrint}
-            style={{ marginTop: "20px" ,width:"150px",display:"flex",marginInline:"auto"}}
+            style={{ marginTop: "20px", width: "150px", display: "flex", marginInline: "auto" }}
           >
             Export as PDF
           </Button>

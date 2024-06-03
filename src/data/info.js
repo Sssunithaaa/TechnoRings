@@ -157,12 +157,12 @@ export const links = [
       {
         name: "Return order",
         icon: <HiDocumentReport />,
-        link:"deliverychallan"
+        link:`deliverychallan`
       },
       {
         name: "Generate Bill",
         icon: <HiDocumentReport />,
-        link:"generate-bill/"
+        link:`generate-bill/0`
       },
     ],
   },
