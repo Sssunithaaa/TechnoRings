@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import CalibrationDetailsForm from "./CalibrationDetails";
 import "react-toastify/dist/ReactToastify.css";
 
-const DeliveryChallan = ({}) => {
+const DeliveryChallan = ({open,handleClose,refetch}) => {
   const [showCalibrationModal, setShowCalibrationModal] = useState(false);
   const [details, setDetails] = useState([]);
   const { data: deliveryChllan } = useQuery({
@@ -26,8 +26,10 @@ const DeliveryChallan = ({}) => {
       return response.data;
     },
   });
+  
 
- 
+   const date=new Date().toISOString().split('T')[0]
+
   const {
     register,
     handleSubmit,
@@ -37,7 +39,7 @@ const DeliveryChallan = ({}) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      receivedDate: null,
+      receivedDate: date,
       vendor: "",
       shed: "",
       service: "",
@@ -50,7 +52,9 @@ const DeliveryChallan = ({}) => {
   const [formData, setFormData] = useState();
 const handleAddCalibrationDetails = () => {
   setShowCalibrationModal(true);
+  handleClose()
 };
+
 
 const submitHandler = async (data) => {
   try {
@@ -77,6 +81,9 @@ const submitHandler = async (data) => {
       if (tool.file) {
         formData.append(`toolData[${index}][calibration_report_file]`, tool.file);
       }
+       if (tool.file2) {
+        formData.append(`toolData[${index}][calibration_report_file2]`, tool.file2);
+      }
     });
 
     // Debug: Log formData contents
@@ -95,7 +102,7 @@ const submitHandler = async (data) => {
     const response = await axios.post(`${process.env.REACT_APP_URL}/store-delivery-challan/`, formData, config);
 
     console.log(response);
-    setShowCalibrationModal(false);
+   
 
     toast.success("Calibration details added successfully", {
       position: "top-center",
@@ -103,6 +110,11 @@ const submitHandler = async (data) => {
       closeButton: false,
       progress: undefined,
     });
+    refetch()
+    setTimeout(()=> {
+       setShowCalibrationModal(false);
+    },2000)
+     
   } catch (error) {
     console.error("Error submitting calibration details:", error);
     toast.error("Failed to add calibration details. Please try again later.");
@@ -135,118 +147,126 @@ const submitHandler = async (data) => {
 
   return (
     <>
-      <div className="w-full my-auto flex justify-center h-screen items-center">
-        <div className=" w-[500px]  flex justify-center items-center  mx-auto bg-white shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.38)]  m-2  pt-2  md:m-10 lg:mt-15  md:p-10  rounded-3xl">
-          <div className="  max-w-md  py-10 lg:py-0  flex mx-auto justfy-center items-center rounded-lg">
-            <form
-              onSubmit={handleSubmit(submitHandler)}
-              className="w-[400px] flex flex-col h-[100%] pt-4 p-0 my-auto space-y-6 mx-auto"
-            >
-              <div >
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold text-[16px] text-gray-700 w-full">Received Date:</span>
-                  <input
-                    {...register("receivedDate", {
-                      required: {
-                        value: true,
-                        message: "Received date is required",
-                      },
-                    })}
-                    type="date"
-                    name="receivedDate"
-                    className="  form-input py-2 px-2 border-[2px] focus:outline-2  rounded-md mt-1 w-full"
-                    required
-                  />
-                </label>
-              </div>
+       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle>Add New Instrument</DialogTitle>
+      <DialogContent>
+           <form
+            onSubmit={handleSubmit(submitHandler)}
+            className="w-[400px] flex flex-col h-[100%] pt-4 p-0 my-auto space-y-6 mx-auto"
+          >
+            <div>
+              <TextField
+                {...register("receivedDate", {
+                  required: {
+                    value: true,
+                    message: "Received date is required",
+                  },
+                })}
+                type="date"
+                name="receivedDate"
+                label="Received Date"
+                InputLabelProps={{ shrink: true }}
+                fullWidth
+                required
+              />
+            </div>
 
-              <div >
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold text-[16px] text-gray-700 w-full">Vendor:</span>
-                  <select
-                    {...register("vendor", {
-                      required: {
-                        value: true,
-                        message: "Vendor name is required",
-                      },
-                    })}
-                    name="vendor"
-                    className="form-select py-2 px-2 border-[2px]  rounded-md mt-1 w-full"
-                    required
-                  >
-                    <option value="">Select a vendor</option>
-                    {vendors?.map((vendor) => (
-                      <option key={vendor.vendor_id} value={vendor.vendor_id}>
-                        {vendor.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
+            <div>
+              <TextField
+                {...register("vendor", {
+                  required: {
+                    value: true,
+                    message: "Vendor name is required",
+                  },
+                })}
+                name="vendor"
+                label="Vendor"
+                select
+                fullWidth
+                required
+              >
+                <MenuItem value="">
+                  <em>Select a vendor</em>
+                </MenuItem>
+                {vendors?.map((vendor) => (
+                  <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>
+                    {vendor.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
 
-              <div >
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold text-[16px] text-gray-700 w-full">Shed:</span>
-                  <select
-                    {...register("shed", {
-                      required: {
-                        value: true,
-                        message: "Shed name is required",
-                      },
-                    })}
-                    name="shed"
-                    className="form-select py-2 px-2 border-[2px] rounded-md mt-1 w-full"
-                    required
-                  >
-                    <option value="">Select shed</option>
-                    {shed_details?.map((shed) => (
-                      <option key={shed.shed_id} value={shed.shed_id}>
-                        {shed.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
+            <div>
+              <TextField
+                {...register("shed", {
+                  required: {
+                    value: true,
+                    message: "Shed name is required",
+                  },
+                })}
+                name="shed"
+                label="Shed"
+                select
+                fullWidth
+                required
+              >
+                <MenuItem value="">
+                  <em>Select shed</em>
+                </MenuItem>
+                {shed_details?.map((shed) => (
+                  <MenuItem key={shed.shed_id} value={shed.shed_id}>
+                    {shed.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
 
-              <div >
-                <label className="flex flex-row justify-center items-center">
-                  <span className="font-semibold text-[16px] text-gray-700 w-full">Select service id</span>
-                  <select
-                    {...register("service", {
-                      required: {
-                        value: true,
-                        message: "Service is required",
-                      },
-                    })}
-                    name="service"
-                    className="form-select py-2 px-2 border-[2px] rounded-md mt-1 w-full"
-                    required
-                  >
-                    <option value="">Service: </option>
-                    {services?.map((service) => (
-                      <option key={service.service_id} value={service.service_id}>
-                        {service.service_id}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
+            <div>
+              <TextField
+                {...register("service", {
+                  required: {
+                    value: true,
+                    message: "Service is required",
+                  },
+                })}
+                name="service"
+                label="Service"
+                select
+                fullWidth
+                required
+              >
+                <MenuItem value="">
+                  <em>Select service</em>
+                </MenuItem>
+                {services?.map((service) => (
+                  <MenuItem key={service.service_id} value={service.service_id}>
+                    {service.service_id}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
 
-              <div >
-                <button
-                  type="button"
-                  onClick={handleAddCalibrationDetails}
-                  className="bg-indigo-700 text-white  font-semibold py-2 px-4 flex rounded-md mx-auto  "
-                >
-                  Add calibration details
-                </button>
-              </div>
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddCalibrationDetails}
+                fullWidth
+              >
+                Add calibration details
+              </Button>
+            </div>
 
-              <ToastContainer />
-            </form>
-          </div>
-        </div>
-      </div>
+            <ToastContainer />
+          </form>
+         </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="secondary">
+          Cancel
+        </Button>
+       
+      </DialogActions>
+    </Dialog>
 
       {showCalibrationModal && (
         <CalibrationDetailsForm

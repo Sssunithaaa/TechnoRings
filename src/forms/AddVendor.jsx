@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   TextField,
   Button,
   MenuItem,
@@ -23,7 +22,6 @@ const CreateVendor = ({ open, handleClose }) => {
 
   const submitHandler = async (data) => {
     try {
-      // Create a FormData object to handle the file upload
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("location", data.location);
@@ -34,11 +32,10 @@ const CreateVendor = ({ open, handleClose }) => {
       if (data.nabl_number) {
         formData.append("nabl_number", data.nabl_number);
       }
-      if (data.certificate[0]) {
+      if (data.certificate && data.certificate.length > 0) {
         formData.append("certificate", data.certificate[0]);
       }
 
-      // Make a POST request to your backend API to add a new vendor
       const response = await axios.post(
         `${process.env.REACT_APP_URL}/add_vendor/`,
         formData,
@@ -49,14 +46,10 @@ const CreateVendor = ({ open, handleClose }) => {
         }
       );
       console.log(response);
-      // Display success message using toast
       toast.success("Vendor added successfully");
-
-      // Close the dialog on successful submission
       handleClose();
     } catch (error) {
       console.log(error);
-      // Display error message using toast
       toast.error("Failed to add vendor. Please try again later.");
     }
   };
@@ -131,45 +124,45 @@ const CreateVendor = ({ open, handleClose }) => {
             <MenuItem value="3">Calibration Agency</MenuItem>
           </TextField>
 
-          {/* Conditionally render NABL Number field if vendor type is Calibration Agency */}
           {watch("vendor_type") === "3" && (
-            <TextField
-              {...register("nabl_number")}
-              type="text"
-              label="NABL Number"
-              fullWidth
-              margin="normal"
-            />
-          )}
-
-          {/* Conditionally render Certificate field if vendor type is Calibration Agency */}
-          {watch("vendor_type") === "3" && (
-            <TextField
-              {...register("certificate")}
-              type="file"
-              label="Certificate"
-              fullWidth
-              margin="normal"
-              inputProps={{ accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png" }}
-            />
+            <>
+              <TextField
+                {...register("nabl_number", { required: "NABL Number is required for Calibration Agency" })}
+                type="text"
+                label="NABL Number"
+                fullWidth
+                margin="normal"
+                error={!!errors.nabl_number}
+                helperText={errors.nabl_number?.message}
+              />
+              <TextField
+                {...register("certificate", { required: "Certificate is required for Calibration Agency" })}
+                type="file"
+                label="Certificate"
+                fullWidth
+                margin="normal"
+                inputProps={{ accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png" }}
+                error={!!errors.certificate}
+                helperText={errors.certificate?.message}
+              />
+            </>
           )}
 
           <div className="flex flex-row justify-between">
             <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            style={{ margin: "20px 0" }}
-          >
-            Add Vendor
-          </Button>
-              <Button onClick={handleClose} color="secondary">
-          Cancel
-        </Button>
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ margin: "20px 0" }}
+            >
+              Add Vendor
+            </Button>
+            <Button onClick={handleClose} color="secondary">
+              Cancel
+            </Button>
           </div>
         </form>
       </DialogContent>
-     
       <ToastContainer />
     </Dialog>
   );

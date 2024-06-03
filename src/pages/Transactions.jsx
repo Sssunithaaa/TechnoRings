@@ -142,7 +142,7 @@ useEffect(()=> {
     
   const handleAcknowledgment = async (props) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_URL}/transport/${props.movement_id}/acknowledge/`);
+    const response = await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${props.movement_id}/`);
     toast.success("Transport acknowledged successfully");
   } catch (error) {
     toast.error(error.message);

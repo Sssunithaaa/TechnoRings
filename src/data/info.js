@@ -162,7 +162,7 @@ export const links = [
       {
         name: "Generate Bill",
         icon: <HiDocumentReport />,
-        link:"generate-bill"
+        link:"generate-bill/"
       },
     ],
   },

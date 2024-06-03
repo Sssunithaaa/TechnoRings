@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, IconButton } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 const Service = ({ open, handleClose }) => {
   const [toolCount, setToolCount] = useState(1);
@@ -62,7 +63,9 @@ const Service = ({ open, handleClose }) => {
     setToolCount(prevCount => prevCount + 1);
     setTools(prevTools => [...prevTools, { id: toolCount + 1, tool: "", service_type: "", service_remarks: "" }]);
   };
-
+  const subtractToolField = ()=> {
+    setToolCount(prevCount => prevCount - 1);
+  }
   const {
     register,
     handleSubmit,
@@ -76,7 +79,7 @@ const Service = ({ open, handleClose }) => {
     },
     mode: "onChange",
   });
-
+const navigate = useNavigate();
   const submitHandler = async (data) => {
     const requestData = {
       date: data.date,
@@ -94,6 +97,7 @@ const Service = ({ open, handleClose }) => {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/service-order/`, requestData);
+      console.log(response)
       toast.success("Service order added successfully", {
         position: "top-center",
         autoClose: 1000,
@@ -102,6 +106,7 @@ const Service = ({ open, handleClose }) => {
       setTimeout(()=> {
         handleClose();
       },3000)
+      navigate(`/generate-bill/${response.data.serviceorder_id}`)
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -222,6 +227,9 @@ const Service = ({ open, handleClose }) => {
           <IconButton onClick={addToolField} color="primary" aria-label="add tool">
             <p className="text-[14px]">
               Add tool
+            </p>
+            <p className="text-[14px]">
+              Remove tool
             </p>
           </IconButton>
           <DialogActions>

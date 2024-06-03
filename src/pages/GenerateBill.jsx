@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, TextField, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useReactToPrint } from "react-to-print";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useParams } from "react-router-dom";
 
 const GenerateBill = () => {
   const [serviceId, setServiceId] = useState("");
   const [billData, setBillData] = useState(null);
-
+  const id = useParams()
   const fetchBillData = async (id) => {
     try {
       const response = await axios.get(`https://practicehost.pythonanywhere.com/generate_bill/${id}/`);
@@ -19,10 +20,12 @@ const GenerateBill = () => {
       toast.error("Failed to fetch bill data. Please try again.");
     }
   };
-
+  useEffect(()=> {
+    fetchBillData(id.id)
+  },[])
   const handleFetchBill = () => {
-    if (serviceId) {
-      fetchBillData(serviceId);
+    if (id) {
+      fetchBillData(id.id);
     } else {
       toast.error("Please enter a service ID");
     }
@@ -41,8 +44,9 @@ const GenerateBill = () => {
       <div className="bg-white w-[30%] px-5 flex flex-col mx-auto my-5">
         <TextField
         label="Service ID"
-        value={serviceId}
-        onChange={(e) => setServiceId(e.target.value)}
+        value={id.id}
+        disabled
+       
         variant="outlined"
         margin="normal"
         fullWidth

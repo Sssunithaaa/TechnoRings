@@ -4,9 +4,10 @@ import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
 import Service from "../forms/Service";
+import ServiceTool from "./ServiceTool";
 const ServiceHistory = () => {
         const [open, setOpen] = useState(false);
-
+  const [openn, setOpenn] = useState(false);
      const { data: serviceorders } = useQuery({
     queryKey: ["serviceorders"],
     queryFn: async () => {
@@ -47,7 +48,7 @@ const ServiceHistory = () => {
       </div>
     }
    const serviceGridColumns = [
-    { type: 'checkbox', width: '50' },
+  
     { field: "service_id", headerText: "Service ID", width: "150", textAlign: "Center" },
     { field: "vendor", headerText: "Vendor", width: "150", textAlign: "Center",template: vendorTemplate },
     { field: "date", headerText: "Date", width: "150", textAlign: "Center" },
@@ -61,6 +62,26 @@ const ServiceHistory = () => {
   const handleDialogOpen = () => {
         setOpen(true);
     };
+     const handleDialogClosee = () => {
+        setOpenn(false);
+    };
+  const handleDialogOpenn = () => {
+        setOpenn(true);
+    };
+    const [service,setService] = useState([]);
+    const handleRowClick = async (args) => {
+    const serviceId = args.data.service_id;
+    console.log(serviceId)
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_URL}/service_orders/${serviceId}/`
+      );
+      setService(response.data)
+      handleDialogOpenn();
+    } catch (error) {
+      console.error("Error fetching transport order details:", error);
+    }
+  };
     
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -80,6 +101,7 @@ const ServiceHistory = () => {
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
         allowPdfExport
+        rowSelected={handleRowClick}
         
       >
         <ColumnsDirective>
@@ -99,8 +121,10 @@ const ServiceHistory = () => {
           ]}
         />
       </GridComponent>
-                        <Service open={open} handleClose={handleDialogClose} />
+            <h2 className="mt-4 font-semibold text-[18px]">Click on records to view tools</h2>
 
+                        <Service open={open} handleClose={handleDialogClose} />
+       <ServiceTool open={openn} handleClose={handleDialogClosee} transportOrder={service}></ServiceTool>
     </div>
   );
 };

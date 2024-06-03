@@ -8,7 +8,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CalibrationDialog from "../forms/CalibrationDialog";
-
+import AddInstrumentGroupDialog from "../forms/GroupMaster";
+import { Button } from "@mui/material";
 const Calibration = () => {
     let grid;
     const { data: calibrationData } = useQuery({
@@ -88,6 +89,15 @@ const Calibration = () => {
   const handleDialogOpen = () => {
         setOpen(true);
     };
+      const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleDialogOpenn = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDialogClosee = () => {
+    setDialogOpen(false);
+  };
     const handleAddTool =async (data) => {
         console.log("New tool data:", data);
       
@@ -122,8 +132,18 @@ const Calibration = () => {
     return (
         <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
             <ToastContainer />
-            <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
+            <div className="flex justify-between">
+                <div>
+                <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
  onClick={handleDialogOpen}>Add Instrument</button>
+            </div>
+ <div>
+      <Button variant="contained" color="primary" onClick={handleDialogOpenn}>
+        Add Instrument Group
+      </Button>
+      <AddInstrumentGroupDialog open={dialogOpen} handleClose={handleDialogClosee} />
+    </div>
+            </div>
             <Header className="Page" title="Instrument details" />
             <GridComponent
                 id="gridcomp"

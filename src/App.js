@@ -32,6 +32,7 @@ import Instruments from "./pages/Instruments";
 import History from "./pages/History";
 import ServiceHistory from "./pages/ServiceHistory";
 import GenerateBill from "./pages/GenerateBill";
+import Challan from "./pages/Challan";
 function App() {
   const {
     setCurrentColor,
@@ -116,10 +117,10 @@ function App() {
                 ></Route>
                 <Route
                   path="/deliverychallan"
-                  element={<DeliveryChallan />}
+                  element={<Challan />}
                 ></Route>
                  <Route
-                  path="/generate-bill"
+                  path="/generate-bill/:id"
                   element={<GenerateBill />}
                 ></Route>
                 <Route path="/services" element={<CreateService />}></Route>

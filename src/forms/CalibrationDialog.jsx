@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem } from "@mui/material";
 import axios from "axios"
 import { ToastContainer,toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
     const date=new Date().toISOString().split('T')[0]
 
@@ -29,7 +30,18 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
     console.log(formData)
     handleAdd(formData);
   };
-
+  const { data: calibrationData } = useQuery({
+    queryKey: ["calibration"],
+    queryFn: async () => {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
+      return response.data.instrument_models;
+    },
+  });
+  
+  const getToolName = (toolId) => {
+    const tool = calibrationData?.find((tool) => tool.instrument_no === toolId);
+    return tool ? tool.instrument_name : "Unknown tool";
+  };
   const convertToSentenceCase = (str) => {
     return str
       .replace(/_/g, " ")

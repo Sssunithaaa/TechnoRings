@@ -97,8 +97,11 @@ const CreateMovement = ({ open, handleClose }) => {
         closeButton: false,
         progress: undefined,
       });
+      setTimeout(()=> {
+handleClose();
+      },3000)
 
-      handleClose(); // Close the dialog on successful submission
+       // Close the dialog on successful submission
     } catch (error) {
       console.error("Error sending data:", error);
     }

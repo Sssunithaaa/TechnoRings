@@ -4,14 +4,16 @@ import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
 import CreateMovement from "../forms/Transport";
+import ToolDialog from "./ToolDialog";
 const History = () => {
       const [open, setOpen] = useState(false);
+         const [openn, setOpenn] = useState(false);
+  const [selectedTransportOrder, setSelectedTransportOrder] = useState(null);
 
-     const { data: transportOrders } = useQuery({
+     const { data: transportOrders,refetch } = useQuery({
     queryKey: ["transportorders"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/all_transport_orders/`);
-      console.log(response);
       return response.data.transport_orders;
     },
   });
@@ -44,9 +46,17 @@ const History = () => {
   };
       const handleDialogClose = () => {
         setOpen(false);
+        refetch()
     };
   const handleDialogOpen = () => {
         setOpen(true);
+    };
+     const handleDialogClosee = () => {
+        setOpenn(false);
+        refetch()
+    };
+  const handleDialogOpenn = () => {
+        setOpenn(true);
     };
   // Template function to display destination shed name
   const destinationShedTemplate = (props) => {
@@ -66,10 +76,23 @@ const History = () => {
     { field: "destination_shed", headerText: "Destination shed", width: "150", textAlign: "Center", template: destinationShedTemplate },
     { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
   ];
+    const handleRowClick = async (args) => {
+    const movementId = args.data.movement_id;
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_URL}/transport_orders/${movementId}/`
+      );
+      setSelectedTransportOrder(response.data);
+      handleDialogOpenn();
+    } catch (error) {
+      console.error("Error fetching transport order details:", error);
+    }
+  };
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
  onClick={handleDialogOpen}>Add Tool Movement</button>
+ 
       <Header className="Page" title="Transport Orders" />
 
       <GridComponent
@@ -85,6 +108,8 @@ const History = () => {
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
         allowPdfExport
+                rowSelected={handleRowClick} // Add rowSelected event handler
+
         
       >
         <ColumnsDirective>
@@ -104,8 +129,9 @@ const History = () => {
           ]}
         />
       </GridComponent>
+      <h2 className="mt-4 font-semibold text-[18px]">Click on records to view tools</h2>
                   <CreateMovement open={open} handleClose={handleDialogClose} />
-
+<ToolDialog open={openn} handleClose={handleDialogClosee} transportOrder={selectedTransportOrder}></ToolDialog>
     </div>
   );
 };

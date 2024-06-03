@@ -2,6 +2,8 @@ import React,{useEffect, useState} from "react";
 import axios from "axios";
 const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, register,tools, reset,sendToolDetails }) => {
   const [toolCount, setToolCount] = useState(1); // State to track the number of tools
+      const date=new Date().toISOString().split('T')[0]
+
    const [toolDetails, setToolDetails] = useState([
     {
       toolName: "",
@@ -27,7 +29,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
       ...toolDetails,
       {
         toolName: "",
-        calibrationDate: "",
+        calibrationDate: date,
         calibrationReportNumber: "",
         calibrationAgency: "",
         result: "",
@@ -55,7 +57,8 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
         notification_date: '2024-05-19',
         next_calibration_date: e.target[`nextCalibrationDate${index}`].value,
         remark: e.target[`remark${index}`].value,
-        file: e.target[`file${index}`].files[0]
+        file: e.target[`file${index}`].files[0],
+        file2: e.target[`file2${index}`].files[0]
     }));
 
     console.log(toolsData);
@@ -70,7 +73,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
         for (let i = 0; i < toolCount; i++) {
             rows.push(
                 <tr key={i}>
-                    <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                    <td className="px-5 py-0 text-sm bg-white border-b border-gray-200">
                         <select
                             {...register(`toolName${i}`, {
                                 required: "Tool name is required",
@@ -80,7 +83,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
                         >
                               {tools?.map((tool) => (
                       <option key={tool.tool} value={tool.tool}>
-                        {tool.tool}
+                        {tool.tool_name}
                       </option>
                     ))}
                         </select>
@@ -91,6 +94,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
                                             required: "Calibration date is required",
                                         })}
                                         name={`calibrationDate${i}`}
+                                        value={date}
                                         type="date"
                                         className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
                                     />
@@ -165,6 +169,16 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
               className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             ></input>
             </td>
+             <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                  <input
+              {...register(`file2${i}`, {
+                required: "File is required",
+              })}
+              type="file"
+        name={`file2${i}`}
+              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
+            ></input>
+            </td>
                 </tr>
             );
         }
@@ -172,8 +186,9 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
     };
 
     return (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
-            <div className="bg-white flex mx-auto flex-col justify-center items-center rounded-lg shadow-lg p-6 w-[90%]">
+      
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-[100]">
+            <div className="bg-white flex mx-auto flex-col justify-center items-center rounded-lg shadow-lg p-6 w-[95%]">
                 <h2 className="text-lg font-semibold mb-4">Add Calibration Details</h2>
                 <form onSubmit={handleSubmit} className="space-y-4 text-md">
                     <table className="w-full">
