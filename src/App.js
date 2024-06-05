@@ -33,7 +33,7 @@ import History from "./pages/History";
 import ServiceHistory from "./pages/ServiceHistory";
 import GenerateBill from "./pages/GenerateBill";
 import Challan from "./pages/Challan";
-import Audio from "./pages/Audio";
+
 function App() {
   const {
     setCurrentColor,
@@ -107,7 +107,6 @@ function App() {
                 <Route path="/calibrationreport" element={<CalibrationDetailsForm />} />
                   <Route path="/transport-history" element={<History />} />
                               <Route path="/service-history" element={<ServiceHistory />} />
-                                            <Route path="/audio" element={<Audio />} />
 
                 <Route
                   path="/transactions"
