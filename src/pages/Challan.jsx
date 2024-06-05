@@ -79,7 +79,7 @@ const Challan = () => {
         allowPaging
         allowSelection
         allowSorting
-        pageSettings={{ pageCount: 5 }}
+        pageSettings={{ pageSize: 5 }}
         toolbar={['Delete']}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport

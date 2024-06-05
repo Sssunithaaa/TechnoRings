@@ -29,9 +29,11 @@ const CreateVendor = ({ open, handleClose }) => {
       formData.append("phone_number", data.phone_number);
       formData.append("email", data.email);
       formData.append("vendor_type", data.vendor_type);
+
       if (data.nabl_number) {
         formData.append("nabl_number", data.nabl_number);
       }
+
       if (data.certificate && data.certificate.length > 0) {
         formData.append("certificate", data.certificate[0]);
       }
@@ -45,6 +47,7 @@ const CreateVendor = ({ open, handleClose }) => {
           },
         }
       );
+
       console.log(response);
       toast.success("Vendor added successfully");
       handleClose();
@@ -127,7 +130,7 @@ const CreateVendor = ({ open, handleClose }) => {
           {watch("vendor_type") === "3" && (
             <>
               <TextField
-                {...register("nabl_number", { required: "NABL Number is required for Calibration Agency" })}
+                {...register("nabl_number")}
                 type="text"
                 label="NABL Number"
                 fullWidth
@@ -136,7 +139,7 @@ const CreateVendor = ({ open, handleClose }) => {
                 helperText={errors.nabl_number?.message}
               />
               <TextField
-                {...register("certificate", { required: "Certificate is required for Calibration Agency" })}
+                {...register("certificate")}
                 type="file"
                 label="Certificate"
                 fullWidth

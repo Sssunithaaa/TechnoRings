@@ -104,7 +104,7 @@ const History = () => {
         allowSelection
         allowSorting
         toolbar={['Delete']}
-         pageSettings={{ pageCount: 5 }}
+         pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
         allowPdfExport

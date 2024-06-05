@@ -37,20 +37,11 @@ const ServiceHistory = () => {
       return response.data.vendors;
     },
   });
-  const getVendorName = (vendorId) => {
-  const vendor = vendors.find((vendor) => vendor.vendor_id === vendorId);
-  return vendor ? vendor.name : "Unknown vendor";
-};
-
-    const vendorTemplate = (props)=> {
-      return <div>
-        {getVendorName(props.vendor)}
-      </div>
-    }
+  
    const serviceGridColumns = [
   
     { field: "service_id", headerText: "Service ID", width: "150", textAlign: "Center" },
-    { field: "vendor", headerText: "Vendor", width: "150", textAlign: "Center",template: vendorTemplate },
+    { field: "vendor_name", headerText: "Vendor", width: "150", textAlign: "Center" },
     { field: "date", headerText: "Date", width: "150", textAlign: "Center" },
     { field: "amount", headerText: "Amount", width: "150", textAlign: "Center" },
     { field: "description", headerText: "Description", width: "150", textAlign: "Center" },
@@ -96,7 +87,7 @@ const ServiceHistory = () => {
         allowPaging
         allowSelection
         allowSorting
-         pageSettings={{ pageCount: 5 }}
+         pageSettings={{ pageSize: 5 }}
         toolbar={['Delete']}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport

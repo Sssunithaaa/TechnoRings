@@ -110,6 +110,7 @@ const handleActionComplete = async (args) => {
         toast.error(errorMessage);
       } else {
         toast.success("Successfully added vendor");
+        refetch()
       }
     } catch (error) {
       console.error("Error inserting data:", error);
@@ -153,7 +154,7 @@ const handleActionComplete = async (args) => {
         allowEditing
         allowGrouping
         allowDeleting
-        pageSettings={{ pageCount: 5 }}
+        pageSettings={{ pageSize: 5 }}
         editSettings={editing}
         actionComplete={handleActionComplete}
         rowSelected={rowSelected}

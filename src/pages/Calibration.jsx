@@ -19,6 +19,7 @@ const Calibration = () => {
             return response.data;
         },
     });
+  
     const navigate = useNavigate();
     const [toolData, setToolData] = useState(null);
     const [service, setService] = useState(null);
@@ -147,16 +148,17 @@ const Calibration = () => {
             <Header className="Page" title="Instrument details" />
             <GridComponent
                 id="gridcomp"
-                dataSource={calibrationData?.instrument_models}
+                dataSource={calibrationData}
                 width="auto"
                 allowGrouping
                 allowPaging
                 allowFiltering
                 allowSorting
-                toolbar={['Delete', 'Edit', 'PdfExport', 'Add']}
-                editSettings={{ allowAdding: true, allowDeleting: true, allowEditing: true, mode: 'Dialog' }}
+                toolbar={['Delete',  'PdfExport']}
+                editSettings={{  allowDeleting: true, allowEditing: true, mode: 'Dialog' }}
                 allowExcelExport
                 allowPdfExport
+                pageSettings={{pageSize:5}}
                 actionComplete={handleActionComplete}
                 rowSelected={rowSelected}
                 pdfExportComplete={pdfExportComplete}

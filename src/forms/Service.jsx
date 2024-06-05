@@ -225,9 +225,12 @@ const navigate = useNavigate();
             </div>
           ))}
           <IconButton onClick={addToolField} color="primary" aria-label="add tool">
-            <p className="text-[14px]">
+            <p className="text-[14px] mr-4">
               Add tool
             </p>
+            
+          </IconButton>
+          <IconButton onClick={subtractToolField} color="primary" aria-label="add tool">
             <p className="text-[14px]">
               Remove tool
             </p>

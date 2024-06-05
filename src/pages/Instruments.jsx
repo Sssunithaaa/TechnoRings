@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
 import { useQuery } from "@tanstack/react-query";
+
 const Instruments = () => {
   const location = useLocation();
   const id = useParams();
@@ -16,26 +17,25 @@ const Instruments = () => {
   const [shedDetails, setShedDetails] = useState({}); // State to store shed details
   let grid;
 
-   const { data: calibrationData } = useQuery({
-        queryKey: ["instruments"],
-        queryFn: async () => {
-            const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
-            return response.data;
-        },
-    });
-    console.log(calibrationData)
+  const { data: calibrationData } = useQuery({
+    queryKey: ["instruments"],
+    queryFn: async () => {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
+      return response.data;
+    },
+  });
 
   const fetchToolData = async (toolId) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${toolId}/`);
-        const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${toolId}/`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${toolId}/`);
+      const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${toolId}/`);
 
-        setService(response1?.data?.service_history);
-        setTransportOrder(response?.data?.transport_orders);
+      setService(response1?.data?.service_history);
+      setTransportOrder(response?.data?.transport_orders);
     } catch (error) {
-        console.error("Error fetching tool data:", error);
+      console.error("Error fetching tool data:", error);
     }
-  }; 
+  };
 
   // Fetch shed details from the server
   useEffect(() => {
@@ -136,11 +136,11 @@ const Instruments = () => {
 
   const handleAcknowledgment = async (props) => {
     try {
+      console.log(props)
       const response = await axios.post(`${process.env.REACT_APP_URL}/transport/${props.movement_id}/acknowledge/`);
       toast.success("Transport acknowledged successfully");
     } catch (error) {
       toast.error(error.message);
-      console.log("Error acknowledging transport:", error);
     }
   };
 
@@ -149,41 +149,40 @@ const Instruments = () => {
     fetchToolData(toolId);
   };
 
-
   return (
     <div>
       {/* <div className="flex justify-start ml-10 mt-10">
         <BackButton />
       </div> */}
-      <div className="  w-[40%] mt-24 flex mx-auto flex-col justify-center items-center p-6 bg-white rounded-3xl">
-  <div className="w-full flex ">
-    <div className="w-full max-w-md">
-      <Header className="Page" title="Enter Tool ID" />
-      <form onSubmit={handleFormSubmit} className="mb-4">
-        <label htmlFor="toolId" className="block text-sm font-medium text-gray-700">
-          Tool ID
-        </label>
-        <select
-          id="toolId"
-          value={toolId}
-          onChange={(e) => setToolId(e.target.value)}
-          className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm"
-        >
-          <option value="" disabled>Select Tool</option>
-          {calibrationData?.instrument_models?.map((tool) => (
-            <option key={tool.instrument_no} value={tool.instrument_no}>
-              {tool.instrument_name}
-            </option>
-          ))}
-        </select>
-        <button type="submit" className="mt-4 px-4 py-2 flex mx-auto bg-blue-500 text-white rounded-md">
-          Submit
-        </button>
-      </form>
-      <ToastContainer />
-    </div>
-  </div>
-</div>
+      <div className="w-[40%] mt-24 flex mx-auto flex-col justify-center items-center p-6 bg-white rounded-3xl">
+        <div className="w-full flex">
+          <div className="w-full max-w-md">
+            <Header className="Page" title="Enter Tool ID" />
+            <form onSubmit={handleFormSubmit} className="mb-4">
+              <label htmlFor="toolId" className="block text-sm font-medium text-gray-700">
+                Tool ID
+              </label>
+              <select
+                id="toolId"
+                value={toolId}
+                onChange={(e) => setToolId(e.target.value)}
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="" disabled>Select Tool</option>
+                {calibrationData?.instrument_models?.map((tool) => (
+                  <option key={tool.instrument_no} value={tool.instrument_no}>
+                    {tool.instrument_name}
+                  </option>
+                ))}
+              </select>
+              <button type="submit" className="mt-4 px-4 py-2 flex mx-auto bg-blue-500 text-white rounded-md">
+                Submit
+              </button>
+            </form>
+            <ToastContainer />
+          </div>
+        </div>
+      </div>
 
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
         <Header className="Page" title="Service orders" />
@@ -211,6 +210,7 @@ const Instruments = () => {
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
         </GridComponent>
       </div>
+
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
         <Header className="Page" title="Transport orders" />
         <GridComponent
@@ -233,9 +233,15 @@ const Instruments = () => {
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
             <ColumnDirective headerText="Acknowledge" width="150" template={(props) => (
-              <button className="bg-blue-500 rounded-sm py-2 px-4 text-white">
-                <button onClick={() => handleAcknowledgment(props)}>Acknowledge</button>
-              </button>
+              
+              props.acknowledgment !== "true" && (
+                <button
+                  className="bg-blue-500 rounded-sm py-2 px-4 text-white"
+                  onClick={() => handleAcknowledgment(props)}
+                >
+                  Acknowledge
+                </button>
+              )
             )}></ColumnDirective>
           </ColumnsDirective>
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
