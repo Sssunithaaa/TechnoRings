@@ -40,7 +40,7 @@ const Calibration = () => {
     const handleActionComplete = async (args) => {
         if (args.requestType === "save") {
             try {
-                const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument1/`, args.data);
+               await axios.post(`${process.env.REACT_APP_URL}/add_instrument1/`, args.data);
                 toast.success("Tool added successfully", {
                     position: "top-center",
                     autoClose: 1000,

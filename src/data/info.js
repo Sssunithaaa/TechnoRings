@@ -19,7 +19,7 @@ import {
 import avatar from "./avatar.jpg";
 import { IoMdContacts } from "react-icons/io";
 
-import { HiDocumentReport, HiOutlineRefresh } from "react-icons/hi";
+import { HiDocumentReport } from "react-icons/hi";
 
 import { GrLocation } from "react-icons/gr";
 import hero from "./na_feb_10.jpg";
@@ -183,23 +183,8 @@ export const links = [
     ],
   },
 ];
-const gridEmployeeProfile = (props) => (
-  <div className="flex items-center gap-2">
-    <img
-      className="rounded-full w-10 h-10"
-      src={props.EmployeeImage}
-      alt="employee"
-    />
-    <p>{props.Name}</p>
-  </div>
-);
 
-const gridEmployeeCountry = (props) => (
-  <div className="flex items-center justify-center gap-2">
-    <GrLocation />
-    <span>{props.Country}</span>
-  </div>
-);
+
 export const employeesGrid = [
   {
     headerText: "Employee",

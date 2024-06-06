@@ -5,12 +5,9 @@ import { Header } from "../components";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import BackButton from "../components/BackButton";
 import { useQuery } from "@tanstack/react-query";
 
 const Instruments = () => {
-  const location = useLocation();
-  const id = useParams();
   const [toolId, setToolId] = useState(""); // State to store the tool ID
   const [service, setService] = useState([]);
   const [transportOrder, setTransportOrder] = useState([]);
@@ -103,7 +100,7 @@ const Instruments = () => {
   const handleActionComplete = async (args) => {
     if (args.requestType === "delete") {
       try {
-        const response = await axios.post(`${process.env.REACT_APP_URL}/transport_order/${args.data[0].movement_id}/delete/`);
+        await axios.post(`${process.env.REACT_APP_URL}/transport_order/${args.data[0].movement_id}/delete/`);
         toast.success("Transport order deleted successfully");
       } catch (error) {
         toast.error(error.message);
@@ -115,7 +112,7 @@ const Instruments = () => {
   const handleActionComplete1 = async (args) => {
     if (args.requestType === "delete") {
       try {
-        const response = await axios.post(`${process.env.REACT_APP_URL}/service_order/${args.data[0].service_id}/delete/`);
+         await axios.post(`${process.env.REACT_APP_URL}/service_order/${args.data[0].service_id}/delete/`);
         toast.success("Service order deleted successfully");
       } catch (error) {
         toast.error(error.message);
@@ -137,7 +134,7 @@ const Instruments = () => {
   const handleAcknowledgment = async (props) => {
     try {
       console.log(props)
-      const response = await axios.post(`${process.env.REACT_APP_URL}/transport/${props.movement_id}/acknowledge/`);
+       await axios.post(`${process.env.REACT_APP_URL}/transport/${props.movement_id}/acknowledge/`);
       toast.success("Transport acknowledged successfully");
     } catch (error) {
       toast.error(error.message);

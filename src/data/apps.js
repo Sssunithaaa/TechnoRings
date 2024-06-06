@@ -1,6 +1,4 @@
-import {BsCurrencyDollar,BsShield} from 'react-icons/bs'
-import { TiTick } from "react-icons/ti";
-import { FiCreditCard } from "react-icons/fi";
+
 
 export const shedToolsData = [
   { shedtool_id: 1, shed_id: 1, using_tool_id: 'Tool 1' },

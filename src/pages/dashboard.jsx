@@ -4,7 +4,6 @@ import { MdOutlineMiscellaneousServices } from "react-icons/md";
 import { FaWarehouse } from 'react-icons/fa';
 import { useQuery } from '@tanstack/react-query';
 import axios from "axios";
-import { LineChart, Stacked } from '../components';
 
 const Homepage = () => {
   const [displayedOrders, setDisplayedOrders] = useState(5);

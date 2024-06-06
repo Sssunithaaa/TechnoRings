@@ -1,5 +1,5 @@
-import React,{useEffect, useState} from "react";
-import axios from "axios";
+import React,{useState} from "react";
+
 const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, register,tools, reset,sendToolDetails }) => {
   const [toolCount, setToolCount] = useState(1); // State to track the number of tools
       const date=new Date().toISOString().split('T')[0]

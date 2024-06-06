@@ -7,18 +7,17 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
+
   TextField,
   Button,
   MenuItem,
 } from "@mui/material";
-import { defaultCurrencyCode } from "@syncfusion/ej2-base";
 
 const CreateVendorHandleData = ({ open, handleClose, id }) => {
   const {
     register,
     handleSubmit,
-    watch,
+
     formState: { errors },
   } = useForm();
 
@@ -46,9 +45,8 @@ const CreateVendorHandleData = ({ open, handleClose, id }) => {
     console.log(id.id)
     if (id && vendors.length > 0) {
       console.log(vendors)
-            const defaultVendors = vendors.find((vendor) => vendor.vendor_id === 1);
 
-      const defaultVendor = vendors.find((vendor) => vendor.vendor_id == id.id);
+      const defaultVendor = vendors.find((vendor) => vendor.vendor_id === id.id);
       console.log(defaultVendor)
       if (defaultVendor) {
         setDefaultVendorName(defaultVendor.name);

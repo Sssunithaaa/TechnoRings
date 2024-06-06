@@ -27,7 +27,7 @@ const AddShedTools = ({setClose}) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {  },
   } = useForm({
     defaultValues: {
       shed_id:shed,

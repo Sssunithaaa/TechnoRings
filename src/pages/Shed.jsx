@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Search,Inject,Edit,Toolbar,Group,Sort,Filter} from '@syncfusion/ej2-react-grids'
+import React from "react";
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,Inject,Edit,Toolbar,Group,Sort,Filter} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import {shedDetailsGrid} from '../data/apps'
 import { useQuery } from "@tanstack/react-query";
@@ -16,9 +16,7 @@ const Shed = () => {
       return response.data
     }
   })
-   const refetchData = () => {
-    refetch();
-  };
+ 
 
   console.log(shedDetailsData)
   const navigate = useNavigate()

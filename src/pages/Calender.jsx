@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ScheduleComponent, Day, Week, WorkWeek, Month, Agenda, Inject, Resize, DragAndDrop } from "@syncfusion/ej2-react-schedule";
 import { Header } from '../components';
-import { scheduleData,service_orders_data  } from '../data/apps';
+import { service_orders_data  } from '../data/apps';
 
 const Calender = () => {
   const [newEventTitle, setNewEventTitle] = useState("");

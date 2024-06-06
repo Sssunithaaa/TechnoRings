@@ -38,10 +38,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
     },
   });
   
-  const getToolName = (toolId) => {
-    const tool = calibrationData?.find((tool) => tool.instrument_no === toolId);
-    return tool ? tool.instrument_name : "Unknown tool";
-  };
+
   const convertToSentenceCase = (str) => {
     return str
       .replace(/_/g, " ")

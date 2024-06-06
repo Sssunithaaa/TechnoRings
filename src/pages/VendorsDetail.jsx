@@ -8,7 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
 import CreateVendorHandleData from "../forms/VendorHandle";
 const VendorsDetail = () => {
-    const location = useLocation();
   
        const [open, setOpen] = useState(false);
 
@@ -102,7 +101,7 @@ const toolbarClick = (args) => {
       if (args.requestType === "delete") {
     try {
       const id=args.data[0].vendorhandle_id;
-      const response= await axios.post(`${process.env.REACT_APP_URL}/vendor_handles/${id}/delete/`);
+      await axios.post(`${process.env.REACT_APP_URL}/vendor_handles/${id}/delete/`);
             toast.success("Vendor handle deleted successfully")
 
     } catch (error) {

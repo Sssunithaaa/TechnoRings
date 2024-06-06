@@ -21,10 +21,9 @@ import { useNavigate } from "react-router-dom";
 
 
 const Vendor = () => {
-  const toolbarOptions = ["Search"];
   const [open,setOpen] = useState(false)
   const navigate = useNavigate()
-  let grid;
+ 
 
 const employeesGrid = [
   {
@@ -80,7 +79,7 @@ const employeesGrid = [
 
   const fetchVendorData = async (vendor_id) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${vendor_id}/`);
+      await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${vendor_id}/`);
 
         navigate(`${vendor_id}`);
     } catch (error) {

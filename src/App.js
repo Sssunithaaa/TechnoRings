@@ -22,7 +22,6 @@ import VendorHandle from "./forms/VendorHandle";
 import Kanban from "./pages/Kanban";
 import Shed from "./pages/Shed";
 import Calibration from "./pages/Calibration";
-import DeliveryChallan from "./forms/DeliveryChallan";
 import Vendor from "./pages/Vendor";
 import Transactions from "./pages/Transactions";
 import ShedTools from "./pages/ShedTools";

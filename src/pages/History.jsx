@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter} from '@syncfusion/ej2-react-grids'
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
@@ -18,7 +18,7 @@ const History = () => {
     },
   });
   const [shedDetails, setShedDetails] = useState({}); // State to store shed details
-  let grid;
+ 
   // Fetch shed details from the server
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_URL}/shed-details/`)

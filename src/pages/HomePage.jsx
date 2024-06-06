@@ -1,9 +1,8 @@
 import React from "react";
 import { BsCurrencyDollar } from "react-icons/bs";
 import {recentTransactions} from '../data/apps'
-import { IoIosMore } from "react-icons/io";
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
-import { Stacked, Pie, Button, LineChart, SparkLine } from "../components";
+import {  Button, LineChart } from "../components";
 import { useStateContext } from "../context/ContextProvider";
 import { images } from "../data/info";
 import {FaArrowRightLong} from 'react-icons/fa6'

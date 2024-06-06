@@ -82,7 +82,7 @@ const CreateMovement = ({ open, handleClose }) => {
 
       console.log(requestData);
 
-      const response = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_URL}/add-transport-order/`,
         requestData
       );

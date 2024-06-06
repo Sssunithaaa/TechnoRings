@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
 
 const Transactions = () => {
-  const location = useLocation();
+ 
   const id= useParams()
   const [service,setService] = useState([])
   const [transportOrder,setTransportOrder] = useState([])
@@ -105,7 +105,7 @@ useEffect(()=> {
       if (args.requestType === "delete") {
     try {
       console.log(args.data[0].movement_id)
-      const response= await axios.post(`${process.env.REACT_APP_URL}/transport_order/${args.data[0].movement_id}/delete/`);
+     await axios.post(`${process.env.REACT_APP_URL}/transport_order/${args.data[0].movement_id}/delete/`);
       toast.success("Transport order deleted successfully")
     } catch (error) {
       toast.error(error.message)
@@ -117,7 +117,7 @@ useEffect(()=> {
       if (args.requestType === "delete") {
     try {
       console.log(args.data[0].service_id)
-      const response= await axios.post(`${process.env.REACT_APP_URL}/service_order/${args.data[0].service_id}/delete/`);
+     await axios.post(`${process.env.REACT_APP_URL}/service_order/${args.data[0].service_id}/delete/`);
             toast.success("Service order deleted successfully")
 
     } catch (error) {
@@ -142,7 +142,7 @@ useEffect(()=> {
     
   const handleAcknowledgment = async (props) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${props.movement_id}/`);
+     await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${props.movement_id}/`);
     toast.success("Transport acknowledged successfully");
   } catch (error) {
     toast.error(error.message);
