@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 const Vendor = () => {
   const [open,setOpen] = useState(false)
   const navigate = useNavigate()
- 
+ let grid;
 
 const employeesGrid = [
   {
