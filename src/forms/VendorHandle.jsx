@@ -13,7 +13,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const CreateVendorHandleData = ({ open, handleClose, id }) => {
+const CreateVendorHandleData = ({ open, handleClose, id ,vendorName}) => {
   const {
     register,
     handleSubmit,
@@ -41,18 +41,7 @@ const CreateVendorHandleData = ({ open, handleClose, id }) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(id.id)
-    if (id && vendors.length > 0) {
-      console.log(vendors)
 
-      const defaultVendor = vendors.find((vendor) => vendor.vendor_id === id.id);
-      console.log(defaultVendor)
-      if (defaultVendor) {
-        setDefaultVendorName(defaultVendor.name);
-      }
-    }
-  }, [id, vendors]);
   useEffect(()=> {
 
   },[defaultVendorName])
@@ -78,6 +67,7 @@ const CreateVendorHandleData = ({ open, handleClose, id }) => {
     }
   };
 
+
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>Add Vendor Handle Data</DialogTitle>
@@ -86,7 +76,7 @@ const CreateVendorHandleData = ({ open, handleClose, id }) => {
         <form onSubmit={handleSubmit(submitHandler)}>
           <TextField
 
-            value={defaultVendorName}
+            value={vendorName}
             
             label="Vendor"
             fullWidth

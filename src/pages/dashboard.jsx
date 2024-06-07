@@ -57,8 +57,8 @@ const Homepage = () => {
     { label: "Movement Date", key: "movement_date" },
     { label: "Acknowledgment", key: "acknowledgment" },
     { label: "Tool count", key: "tool_count" },
-    { label: "Source shed", key: "source_shed" },
-    { label: "Destination shed", key: "destination_shed" }
+    { label: "Source shed", key: "source_shed_name" },
+    { label: "Destination shed", key: "destination_shed_name" }
   ];
 
   const serviceOrdersHeaders = [
@@ -67,14 +67,14 @@ const Homepage = () => {
     { label: "Amount", key: "amount" },
     { label: "Description", key: "description" },
     { label: "Tool count", key: "tool_count" },
-    { label: "Vendor", key: "vendor" }
+    { label: "Vendor", key: "vendor_name" }
   ];
 
   const deliveryChallanHeaders = [
     { label: "ID", key: "deliverychallan_id" },
     { label: "Received date", key: "received_date" },
     { label: "Vendor", key: "vendor" },
-    { label: "Shed", key: "shed" },
+    { label: "Shed", key: "shed_name" },
     { label: "Service ID", key: "service" }
   ];
 
@@ -175,11 +175,9 @@ const convertToSentenceCase = (str) => {
     <tr key={index} className="border-b bg-gray-800 text-white border-gray-700">
       {headers.map((header, colIndex) => (
         <td key={colIndex} className="px-6 py-4 text-center">
-          {header.key === 'source_shed' || header.key === 'destination_shed' || header.key === "shed"
-            ? getShedName(row[header.key])
-            : header.key === "vendor"
-            ? getVendorName(row[header.key])
-            : header.key === "acknowledgment"
+        {
+          
+            header.key === "acknowledgment"
             ? row[header.key] ? "Acknowledged" : "Not Acknowledged"
             : row[header.key]}
         </td>

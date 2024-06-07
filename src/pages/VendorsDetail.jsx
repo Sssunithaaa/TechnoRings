@@ -10,7 +10,7 @@ import CreateVendorHandleData from "../forms/VendorHandle";
 const VendorsDetail = () => {
   
        const [open, setOpen] = useState(false);
-
+      const [vendorName,setVendorname] = useState("")
   const id=useParams()
   const [vendorHandle,setVendorHandle] = useState([])
   const fetchVendorData = async (vendor_id) => {
@@ -18,7 +18,7 @@ const VendorsDetail = () => {
         const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${vendor_id}/`);
         console.log(response.data)
         setVendorHandle(response?.data?.vendor_handles)
-        
+        setVendorname(response?.data?.vendor?.name)
 
         
     } catch (error) {
@@ -88,6 +88,7 @@ const toolbarClick = (args) => {
     grid.hideSpinner();
   };
   const vendor_id = id["id"]
+
   const handleDelete = async ()=> {
      try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/vendor/${vendor_id}/delete/`);
@@ -138,6 +139,7 @@ const toolbarClick = (args) => {
           editSettings={{allowDeleting:true}}
           toolbar={['PdfExport','Delete']}
           allowPdfExport
+      pageSettings={{pageSize: 5}}
           pdfExportComplete={pdfExportComplete}
           toolbarClick={toolbarClick}
           actionComplete={handleActionComplete}
@@ -150,7 +152,7 @@ const toolbarClick = (args) => {
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
         </GridComponent>
       </div>
-                        <CreateVendorHandleData open={open} handleClose={handleDialogClose} id={id} />
+                        <CreateVendorHandleData open={open} handleClose={handleDialogClose} id={id} vendorName={vendorName} />
 
           </div>
    

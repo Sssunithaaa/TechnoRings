@@ -145,12 +145,12 @@ export const links = [
       },
      
       {
-        name: "Transport history",
+        name: "Transport orders",
         icon: <AiOutlineTransaction />,
         link:"transport-history"
       },
        {
-        name: "Service history",
+        name: "Service orders",
         icon: <AiOutlineTransaction />,
         link:"service-history"
       },
