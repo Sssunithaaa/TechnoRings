@@ -25,11 +25,20 @@ const Homepage = () => {
       return response.data;
     },
   });
+
   const { data: vendors } = useQuery({
     queryKey: ["vendor"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
       return response.data.vendors;
+    },
+  });
+
+  const { data: notificationData } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      const response = await axios.get("https://practicehost.pythonanywhere.com/instrument-service-tools/");
+      return response.data.instrument_models;
     },
   });
 
@@ -40,10 +49,12 @@ const Homepage = () => {
     const shed = shed_details.find((shed) => shed.shed_id === shedId);
     return shed ? shed.name : "Unknown Shed";
   };
+
   const getVendorName = (vendorId) => {
-    const vendor = vendors.find((vendor)=> vendor.vendor_id === vendorId)
-    return vendor ? vendor.name : "Unknown vendor"
-  }
+    const vendor = vendors.find((vendor) => vendor.vendor_id === vendorId);
+    return vendor ? vendor.name : "Unknown vendor";
+  };
+
   const handleLoadMore = () => {
     setDisplayedOrders((prevCount) => prevCount + 5);
   };
@@ -91,15 +102,16 @@ const Homepage = () => {
         });
     }
   }, [request]);
-const convertToSentenceCase = (str) => {
-  if (!str) return str;
-  
-  // Replace underscores with spaces
-  const spacedStr = str.replace(/_/g, ' ');
-  
-  // Convert to sentence case
-  return spacedStr.charAt(0).toUpperCase() + spacedStr.slice(1).toLowerCase();
-};
+
+  const convertToSentenceCase = (str) => {
+    if (!str) return str;
+
+    // Replace underscores with spaces
+    const spacedStr = str.replace(/_/g, ' ');
+
+    // Convert to sentence case
+    return spacedStr.charAt(0).toUpperCase() + spacedStr.slice(1).toLowerCase();
+  };
 
   const getHeaders = () => {
     switch (request) {
@@ -120,9 +132,34 @@ const convertToSentenceCase = (str) => {
     <div className='bg-main-dark-bg m-10 flex flex-col gap-y-8 mt-24'>
       <div className='w-full flex flex-col gap-x-5 gap-y-2'>
         <p className='font-bold text-3xl text-white'>Dashboard</p>
+          {notificationData && notificationData.length > 0 && (
+          <div className='bg-gray-700 my-5 w-[60%] flex mx-auto flex-col text-black p-4 rounded-md'>
+            <p className='font-bold text-white uppercase text-xl mb-2'>Notifications</p>
+            <div className='overflow-x-auto'>
+              <table className='min-w-full  bg-white'>
+                <thead className='bg-gray-900 text-white'>
+                  <tr>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Name</th>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Manufacturer</th>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Service Status</th>
+                  </tr>
+                </thead>
+                <tbody className='text-gray-700'>
+                  {notificationData.map((notification, index) => (
+                    <tr key={index} className='bg-gray-200'>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.manufacturer_name}</td>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.service_status ? "In Service" : "Out of Service"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
         <div className='flex lg:flex-row flex-col gap-y-5 gap-x-5'>
           <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
-            <p className='text-light-gray-500  flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
+            <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
                 <BsPersonWorkspace color='#2e1cc9'/>
               </span>Instruments</p>
@@ -170,22 +207,19 @@ const convertToSentenceCase = (str) => {
               ))}
             </tr>
           </thead>
-        <tbody>
-  {table?.slice(0, displayedOrders).map((row, index) => (
-    <tr key={index} className="border-b bg-gray-800 text-white border-gray-700">
-      {headers.map((header, colIndex) => (
-        <td key={colIndex} className="px-6 py-4 text-center">
-        {
-          
-            header.key === "acknowledgment"
-            ? row[header.key] ? "Acknowledged" : "Not Acknowledged"
-            : row[header.key]}
-        </td>
-      ))}
-    </tr>
-  ))}
-</tbody>
-
+          <tbody>
+            {table?.slice(0, displayedOrders).map((row, index) => (
+              <tr key={index} className="border-b bg-gray-800 text-white border-gray-700">
+                {headers.map((header, colIndex) => (
+                  <td key={colIndex} className="px-6 py-4 text-center">
+                    {header.key === "acknowledgment"
+                      ? row[header.key] ? "Acknowledged" : "Not Acknowledged"
+                      : row[header.key]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 
