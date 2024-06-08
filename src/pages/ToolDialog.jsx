@@ -25,7 +25,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
 
   useEffect(() => {
     if (transportOrder) {
-      const allToolIds = transportOrder.transport_tools.map(tool => tool.transporttool_id);
+      const allToolIds = transportOrder.transport_tools.map(tool => tool.tool);
       setSelectedToolIds(allToolIds);
     }
   }, [transportOrder]);
@@ -42,7 +42,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
     if (allSelected) {
       setSelectedToolIds([]);
     } else {
-      const allToolIds = transportOrder.transport_tools.map(tool => tool.transporttool_id);
+      const allToolIds = transportOrder.transport_tools.map(tool => tool.tool);
       setSelectedToolIds(allToolIds);
     }
     setAllSelected(!allSelected);
@@ -51,8 +51,9 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
   const acknowledgeTools = async () => {
     if (!transportOrder) return;
     console.log(selectedToolIds)
+    console.log(transportOrder.transport_order.movement_id)
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/transport/${transportOrder.transport_order.movement_id}/acknowledge/`, {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${transportOrder.transport_order.movement_id}/`, {
         tool_ids: selectedToolIds,
       });
       console.log(response);
@@ -63,7 +64,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} width="lg">
       <DialogTitle>Transport Order Details</DialogTitle>
       <DialogContent>
         {transportOrder ? (
@@ -77,12 +78,12 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
             <h3>Transport Tools</h3>
            
             {transportOrder.transport_tools.map((tool) => (
-              <div key={tool.transporttool_id}>
+              <div key={tool.tool}>
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={selectedToolIds.includes(tool.transporttool_id)}
-                      onChange={() => handleCheckboxChange(tool.transporttool_id)}
+                      checked={selectedToolIds.includes(tool.tool)}
+                      onChange={() => handleCheckboxChange(tool.tool)}
                     />
                   }
                   label={<><strong>Tool ID:</strong> {tool.tool_name}</>}
@@ -105,7 +106,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
         {
           !transportOrder?.transport_order.acknowledgment && (
             <Button onClick={acknowledgeTools} color="primary">
-              Submit
+              Acknowledge
             </Button>
           )
         }

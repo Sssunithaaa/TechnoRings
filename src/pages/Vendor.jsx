@@ -63,7 +63,7 @@ const employeesGrid = [
     textAlign: "Center",
   },
   {
-    field: "vendor_type",
+    field: "vendor_type_name",
     headerText: "Vendor Type",
     width: "150",
     textAlign: "Center",

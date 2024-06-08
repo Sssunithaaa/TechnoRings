@@ -66,12 +66,12 @@ const VendorsDetail = () => {
   
   const vendorGridColumns = [
     {type:"checkbox",width:"50"},
-  { field: "vendorhandle_id", headerText: "Vendor Handle ID", width: "150", textAlign: "Center" },
+      { field: "tool_name", headerText: "Tool Name", width: "150", textAlign: "Center" },
+        { field: "vendor", headerText: "Vendor", width: "150", textAlign: "Center",template:vendorTemplate },
   { field: "turnaround_time", headerText: "Turnaround Time", width: "150", textAlign: "Center" },
   { field: "cost", headerText: "Cost", width: "150", textAlign: "Center" },
-  { field: "vendor", headerText: "Vendor", width: "150", textAlign: "Center",template:vendorTemplate },
-  { field: "tool", headerText: "Tool", width: "150", textAlign: "Center" },
-  { field: "tool_name", headerText: "Tool Name", width: "150", textAlign: "Center" }
+
+
 ];
 
 

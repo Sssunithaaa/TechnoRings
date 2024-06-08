@@ -43,19 +43,7 @@ useEffect(()=> {
       headerText:"Tool name",
       width:"150",
       textAlign:"Center"
-    },
-    {
-      field: "year_of_purchase", // Access nested field
-      headerText: "Year of purchase",
-      width: "150",
-      textAlign: "Center",
-    },
-    {
-      field: "calibration_frequency", // Access nested field
-      headerText: "Calibration frequency",
-      width: "150",
-      textAlign: "Center",
-    },
+    }
   ];
  
     const toolbarClick = (args) => {
@@ -97,7 +85,7 @@ useEffect(()=> {
             <Header className="Page" title="Shed tools" />
             <div className="flex flex-row justify-between gap-x-5 my-4">
               <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={addShedTools}>Add shed tools</button>
-        <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold"  onClick={handleDelete}>Delete shed</button>
+        <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold"  onClick={handleDelete}>Delete shed</button>
             </div>
             <GridComponent
                 id="gridcomp"

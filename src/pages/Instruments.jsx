@@ -229,7 +229,7 @@ const Instruments = () => {
             {transportGridColumns.map((item, index) => (
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
-            <ColumnDirective headerText="Acknowledge" width="150" template={(props) => (
+            {/* <ColumnDirective headerText="Acknowledge" width="150" template={(props) => (
               
               props.acknowledgment !== "true" && (
                 <button
@@ -239,7 +239,7 @@ const Instruments = () => {
                   Acknowledge
                 </button>
               )
-            )}></ColumnDirective>
+            )}></ColumnDirective> */}
           </ColumnsDirective>
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
         </GridComponent>

@@ -159,11 +159,11 @@ export const links = [
         icon: <HiDocumentReport />,
         link:`deliverychallan`
       },
-      {
-        name: "Generate Bill",
-        icon: <HiDocumentReport />,
-        link:`generate-bill/0`
-      },
+      // {
+      //   name: "Generate Bill",
+      //   icon: <HiDocumentReport />,
+      //   link:`generate-bill/0`
+      // },
     ],
   },
   {

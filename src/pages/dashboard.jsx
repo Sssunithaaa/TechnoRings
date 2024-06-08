@@ -133,14 +133,13 @@ const Homepage = () => {
       <div className='w-full flex flex-col gap-x-5 gap-y-2'>
         <p className='font-bold text-3xl text-white'>Dashboard</p>
           {notificationData && notificationData.length > 0 && (
-          <div className='bg-gray-700 my-5 w-[60%] flex mx-auto flex-col text-black p-4 rounded-md'>
+          <div className='bg-gray-700 my-5 w-[50%] flex mx-auto flex-col text-black p-4 rounded-md'>
             <p className='font-bold text-white uppercase text-xl mb-2'>Notifications</p>
             <div className='overflow-x-auto'>
               <table className='min-w-full  bg-white'>
                 <thead className='bg-gray-900 text-white'>
                   <tr>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Name</th>
-                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Manufacturer</th>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Service Status</th>
                   </tr>
                 </thead>
@@ -148,8 +147,7 @@ const Homepage = () => {
                   {notificationData.map((notification, index) => (
                     <tr key={index} className='bg-gray-200'>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
-                      <td className='w-1/3 text-center py-3 px-4'>{notification.manufacturer_name}</td>
-                      <td className='w-1/3 text-center py-3 px-4'>{notification.service_status ? "In Service" : "Out of Service"}</td>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.service_status ? "To be sent" : "Out of Service"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -158,7 +156,7 @@ const Homepage = () => {
           </div>
         )}
         <div className='flex lg:flex-row flex-col gap-y-5 gap-x-5'>
-          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
+          {/* <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
             <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
                 <BsPersonWorkspace color='#2e1cc9'/>
@@ -166,7 +164,7 @@ const Homepage = () => {
             <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.instruments_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
             <p onClick={() => setRequest("")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
-          </div>
+          </div> */}
           <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
             <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
