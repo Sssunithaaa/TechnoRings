@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 const AddInstrumentGroupDialog = ({ open, handleClose }) => {
   const [toolGroupName, setToolGroupName] = useState('');
   const [toolGroupCode, setToolGroupCode] = useState('');
@@ -14,14 +15,21 @@ const AddInstrumentGroupDialog = ({ open, handleClose }) => {
       instrumentType,
     };
     console.log(data);
-    const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument_group_master/`,)
-    // After saving, close the dialog
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument_group_master/`,data)
+    toast.success("Instrument group master added successfully");
+    setTimeout(()=>{
     handleClose();
+    },2000)
+    } catch (error) {
+      toast.error("Unknown error!")
+    }
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Add Instrument Group</DialogTitle>
+      <ToastContainer/>
       <DialogContent>
         <TextField
           autoFocus
