@@ -75,14 +75,14 @@ const ShedTools = () => {
     { field: "instrument_no", headerText: "Tool Number", width: "150", textAlign: "Center" },
     { field: "instrument_name", headerText: "Tool Name", width: "150", textAlign: "Center" },
     { field: "manufacturer_name", headerText: "Manufacturer", width: "150", textAlign: "Center" },
+    { field: "calibration_frequency", headerText: "Calibration Frequency", width: "150", textAlign: "Center" },
+    { field: "type_of_tool_name", headerText: "Type of Tool", width: "150", textAlign: "Center" },
     { field: "year_of_purchase", headerText: "Year of Purchase", width: "150", textAlign: "Center" },
     { field: "gst", headerText: "GST", width: "150", textAlign: "Center" },
     { field: "description", headerText: "Description", width: "150", textAlign: "Center" },
     { field: "instrument_range", headerText: "Range", width: "150", textAlign: "Center" },
     { field: "least_count", headerText: "Least Count", width: "150", textAlign: "Center" },
-    { field: "calibration_frequency", headerText: "Calibration Frequency", width: "150", textAlign: "Center" },
-    { field: "service_status", headerText: "Service Status", width: "150", textAlign: "Center" },
-    { field: "type_of_tool_name", headerText: "Type of Tool", width: "150", textAlign: "Center" }
+    
   ];
 
   let grid;

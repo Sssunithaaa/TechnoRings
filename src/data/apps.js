@@ -83,12 +83,25 @@ export const CalibrationGrid = [
     width: "150",
     textAlign: "Center",
   },
-  {
-    field: "manufacturer_name",
-    headerText: "Group Name",
+    {
+    field: "type_of_tool_name",
+    headerText: "Type of tool",
     width: "150",
     textAlign: "Center",
   },
+  {
+    field: "current_shed",
+    headerText: "Shed",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+    field: "manufacturer_name",
+    headerText: "Manufacturer Name",
+    width: "150",
+    textAlign: "Center",
+  },
+ 
   {
     field: "year_of_purchase",
     headerText: "Year of purchase",
@@ -126,12 +139,7 @@ export const CalibrationGrid = [
     width: "150",
     textAlign: "Center",
   },
-  {
-    field: "type_of_tool",
-    headerText: "Type of tool",
-    width: "150",
-    textAlign: "Center",
-  },
+ 
 
 ];
 export const recentTransactions = [

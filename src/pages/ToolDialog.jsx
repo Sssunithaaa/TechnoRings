@@ -56,7 +56,6 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
       const response = await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${transportOrder.transport_order.movement_id}/`, {
         tool_ids: selectedToolIds,
       });
-      console.log(response);
       handleClose();
     } catch (error) {
       console.error("Failed to acknowledge tools:", error);

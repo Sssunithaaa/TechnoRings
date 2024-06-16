@@ -101,7 +101,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
               margin="normal"
             >
               {masters.map((tool) => (
-                <MenuItem key={tool.tool_id} value={tool.tool_id}>
+                <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
                   {tool.tool_group_name}
                 </MenuItem>
               ))}

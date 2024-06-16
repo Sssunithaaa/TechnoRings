@@ -33,10 +33,9 @@ const GroupMaster = () => {
   },[])
    const transportGridColumns = [
     
-    { field: "tool_id", headerText: "Tool ID", width: "150", textAlign: "Center" },
+    { field: "tool_group_id", headerText: "Tool Group ID", width: "150", textAlign: "Center" },
     { field: "tool_group_name", headerText: "Tool group name", width: "150", textAlign: "Center" },
     { field: "tool_group_code", headerText: "Tool group code", width: "150", textAlign: "Center" },
-    { field: "instrument_type", headerText: "Instrument type", width: "150", textAlign: "Center" },
   
   ];
 //     const handleRowClick = async (args) => {
@@ -72,7 +71,7 @@ const GroupMaster = () => {
          pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
-          sortSettings={{ columns: [{ field: 'tool_id', direction: 'Descending' }] }} 
+          sortSettings={{ columns: [{ field: 'tool_group_id', direction: 'Descending' }] }} 
         allowPdfExport
                 // rowSelected={handleRowClick} // Add rowSelected event handler
 

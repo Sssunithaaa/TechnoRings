@@ -6,12 +6,16 @@ import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
-
+import { useNavigate } from "react-router-dom";
 const Transactions = () => {
  
   const id= useParams()
   const [service,setService] = useState([])
   const [transportOrder,setTransportOrder] = useState([])
+  const location = useLocation();  
+  const { state } = location;  
+  const { instrument } = state || {}; 
+  console.log(instrument) 
   const fetchToolData = async (id) => {
     try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${id}/`);
@@ -150,10 +154,43 @@ useEffect(()=> {
     console.log("Error acknowledging transport:", error);
   }
 };
+const navigate=useNavigate()
+const handleDelete =async () => {
+  try {
+    const response = await axios.post(`${process.env.REACT_APP_URL}/instrument/${instrument.instrument_no}/delete/`);
+  console.log(response);
+      toast.success("Instrument deleted successfully");
+    setTimeout(()=> {
+      navigate(-1);
+    },3000)
+  } catch (error) {
+        toast.error("Error deleting tool!! Try again!!");
+
+  }
+}
+ const renderInstrumentDetails = (instrument) => {
+    return (
+      <div className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
+        <p><strong>Instrument No:</strong> {instrument.instrument_no}</p>
+        <p><strong>Instrument Name:</strong> {instrument.instrument_name}</p>
+        <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
+        <p><strong>Type of Tool Name:</strong> {instrument.type_of_tool_name}</p>
+                  <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete tool</button>
+
+      </div>
+    );
+  };
   return (
     <div>
      <div className="flex justify-start ml-10 mt-10">
        <BackButton/>
+     </div>
+     <div>
+
+     </div>
+     <div className="bg-white p-5 flex flex-col mx-auto w-[30%]">
+        <Header className="Page" title="Instrument Details" />
+        {instrument && renderInstrumentDetails(instrument)}
      </div>
       <div className="m-2 md:m-10 mt-20 p-2 md:p-10 bg-white rounded-3xl">
         <Header className="Page" title="Service orders" />

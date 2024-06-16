@@ -24,49 +24,24 @@ const Calibration = () => {
     const [service, setService] = useState(null);
     const [open, setOpen] = useState(false);
 
-    const fetchToolData = async (instrument_no) => {
+    const fetchToolData = async (instrument_no,instrument) => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${instrument_no}/`);
             const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${instrument_no}/`);
             setToolData(response.data);
             setService(response1.data);
-            navigate(`${instrument_no}`, { state: { service: response1.data, transport_order: response.data } });
+            navigate(`${instrument_no}`, { state: { service: response1.data, transport_order: response.data,instrument: instrument } });
         } catch (error) {
             console.error("Error fetching tool data:", error);
         }
     };
    
-    const handleActionComplete = async (args) => {
-        if (args.requestType === "save") {
-            try {
-               await axios.post(`${process.env.REACT_APP_URL}/add_instrument1/`, args.data);
-                toast.success("Tool added successfully", {
-                    position: "top-center",
-                    autoClose: 1000,
-                    style: { width: "auto", style: "flex justify-center" },
-                    closeButton: false,
-                    progress: undefined,
-                });
-            } catch (error) {
-                console.error("Error inserting data:", error);
-            }
-        } else if (args.requestType === "delete") {
-            try {
-                await axios.delete(`your-backend-endpoint/${args.data[0].id}`);
-            } catch (error) {
-                console.error("Error deleting data:", error);
-            }
-        }
-    };
-
-    const handleViewTransportHistory = (props) => {
-        const instrument_no = props["instrument_no"];
-        fetchToolData(instrument_no);
-    };
+  
+ 
 
     const rowSelected = (args) => {
         const selectedRecord = args.data["instrument_no"];
-        fetchToolData(selectedRecord);
+        fetchToolData(selectedRecord,args.data);
     };
 
     const toolbarClick = (args) => {
@@ -107,6 +82,9 @@ const Calibration = () => {
                     closeButton: false,
                     progress: undefined,
                 });
+                setTimeout(()=> {
+                    setOpen(false)
+                },3000)
             } else{
             toast.success("Tool added successfully", {
                     position: "top-center",
@@ -117,7 +95,7 @@ const Calibration = () => {
                 });
                 setTimeout(()=> {
                      setOpen(false);
-                 },2000)
+                 },3000)
                  refetch()
                 }
             } catch (error) {
@@ -151,7 +129,6 @@ const Calibration = () => {
                 allowExcelExport
                 allowPdfExport
                 pageSettings={{pageSize:5}}
-                actionComplete={handleActionComplete}
                 rowSelected={rowSelected}
                 pdfExportComplete={pdfExportComplete}
                           sortSettings={{ columns: [{ field: 'instrument_no', direction: 'Descending' }] }} 
@@ -163,11 +140,11 @@ const Calibration = () => {
                     {CalibrationGrid.map((item, index) => (
                         <ColumnDirective key={index} {...item}></ColumnDirective>
                     ))}
-                    <ColumnDirective headerText="View Transport History" width="150" template={(props) => (
+                  {/*  <ColumnDirective headerText="View Transport History" width="150" template={(props) => (
                         <button className="bg-blue-500 rounded-sm py-2 px-4 text-white" onClick={() => handleViewTransportHistory(props)}>
                             View History
                         </button>
-                    )}></ColumnDirective>
+                    )}></ColumnDirective>*/}
                 </ColumnsDirective>
                 <Inject
                     services={[

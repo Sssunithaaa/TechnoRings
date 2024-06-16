@@ -1,6 +1,6 @@
 import React,{useState} from "react";
-
-const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, register,tools, reset,sendToolDetails }) => {
+import { ToastContainer } from "react-toastify";
+const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, reset,sendToolDetails }) => {
   const [toolCount, setToolCount] = useState(1); // State to track the number of tools
       const date=new Date().toISOString().split('T')[0]
 
@@ -55,7 +55,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
         result: e.target[`result${index}`].value,
         action: e.target[`action${index}`].value,
         notification_date: '2024-05-19',
-        next_calibration_date: e.target[`nextCalibrationDate${index}`].value,
+        next_calibration_date: '2024-05-19',
         remark: e.target[`remark${index}`].value,
         file: e.target[`file${index}`].files[0],
         file2: e.target[`file2${index}`].files[0]
@@ -141,7 +141,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
               className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             />
                                 </td>
-                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
+                                {/* <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
                                   <input
               {...register(`nextCalibrationDate${i}`, {
                 required: "Next calibration date is required",
@@ -150,7 +150,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
         name={`nextCalibrationDate${i}`}
               className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             />
-                                </td>
+                                </td> */}
                                 <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
                                    <textarea
               {...register(`remark${i}`)}
@@ -189,6 +189,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
       
         <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-[100]">
             <div className="bg-white flex mx-auto flex-col justify-center items-center rounded-lg shadow-lg p-6 w-[95%]">
+              <ToastContainer/>
                 <h2 className="text-lg font-semibold mb-4">Add Calibration Details</h2>
                 <form onSubmit={handleSubmit} className="space-y-4 text-md">
                     <table className="w-full">
@@ -206,8 +207,8 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
                         class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Result</th> 
                         <th  scope="col"
                         class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Action</th> 
-                        <th  scope="col"
-                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Next Calibration Date</th>
+                        {/* <th  scope="col"
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Next Calibration Date</th> */}
                          <th  scope="col"
                         class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Remark</th>
                         <th  scope="col"

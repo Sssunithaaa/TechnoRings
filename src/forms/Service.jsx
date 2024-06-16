@@ -83,12 +83,13 @@ const Service = ({ open, handleClose }) => {
     },
     mode: "onChange",
   });
+
 const navigate = useNavigate();
   const submitHandler = async (data) => {
     const requestData = {
       date: data.date,
       amount: 0,
-      description: data.description,
+      description: data.description || "",
       tool_count: toolCount,
       vendor: parseInt(data.vendor),
       tools: tools.map(tool => ({
@@ -109,8 +110,7 @@ const navigate = useNavigate();
       });
       setTimeout(()=> {
         handleClose();
-      },3000)
-      navigate(`/generate-bill/${response.data.serviceorder_id}`)
+      },2000)
     } catch (error) {
       console.error('Error sending data:', error);
     }
@@ -169,16 +169,12 @@ const navigate = useNavigate();
             required
           /> */}
           <TextField
-            {...register("description", {
-              required: "Description is required",
-            })}
+            {...register("description")}
             label="Description"
             type="text"
             fullWidth
-            error={!!errors.description}
-            helperText={errors.description?.message}
             margin="normal"
-            required
+            
           />
           {tools.map((_, index) => (
             <div key={index}>

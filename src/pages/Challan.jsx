@@ -52,7 +52,7 @@ const Challan = () => {
   };
 
   const handleRowClick = async (args) => {
-    const challanId = args.data.deliverychallan_id;
+    const challanId = args.data?.deliverychallan_id;
     console.log(challanId);
     try {
       const response = await axios.get(

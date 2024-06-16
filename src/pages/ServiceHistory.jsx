@@ -8,7 +8,7 @@ import ServiceTool from "./ServiceTool";
 const ServiceHistory = () => {
         const [open, setOpen] = useState(false);
   const [openn, setOpenn] = useState(false);
-     const { data: serviceorders } = useQuery({
+     const { data: serviceorders,refetch } = useQuery({
     queryKey: ["serviceorders"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/all_service_orders/`);
@@ -49,12 +49,14 @@ const ServiceHistory = () => {
   ];
    const handleDialogClose = () => {
         setOpen(false);
+        refetch()
     };
   const handleDialogOpen = () => {
         setOpen(true);
     };
      const handleDialogClosee = () => {
         setOpenn(false);
+        refetch()
     };
   const handleDialogOpenn = () => {
         setOpenn(true);
@@ -88,9 +90,11 @@ const ServiceHistory = () => {
         allowSelection
         allowSorting
          pageSettings={{ pageSize: 5 }}
-        toolbar={['Delete']}
+      
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
+        sortSettings={{ columns: [{ field: 'service_id', direction: 'Descending' }] }} 
+
         allowPdfExport
         rowSelected={handleRowClick}
         

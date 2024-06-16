@@ -17,9 +17,8 @@ const History = () => {
       return response.data.transport_orders;
     },
   });
-  const [shedDetails, setShedDetails] = useState({}); // State to store shed details
+  const [shedDetails, setShedDetails] = useState({}); 
  
-  // Fetch shed details from the server
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_URL}/shed-details/`)
       .then(response => {

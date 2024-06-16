@@ -12,7 +12,7 @@ const AddInstrumentGroupDialog = ({ open, handleClose }) => {
     const data = {
       toolGroupName,
       toolGroupCode,
-      instrumentType,
+  
     };
     console.log(data);
     try {
@@ -50,15 +50,7 @@ const AddInstrumentGroupDialog = ({ open, handleClose }) => {
           value={toolGroupCode}
           onChange={(e) => setToolGroupCode(e.target.value)}
         />
-        <TextField
-          margin="dense"
-          label="Instrument Type"
-          type="text"
-          fullWidth
-          variant="outlined"
-          value={instrumentType}
-          onChange={(e) => setInstrumentType(e.target.value)}
-        />
+      
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>

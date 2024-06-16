@@ -121,10 +121,10 @@ function App() {
                   path="/deliverychallan"
                   element={<Challan />}
                 ></Route>
-                 <Route
+                 {/* <Route
                   path="/generate-bill/:id"
                   element={<GenerateBill />}
-                ></Route>
+                ></Route> */}
                 <Route path="/services" element={<CreateService />}></Route>
               
                 <Route path="/instrument-group" element={<InstrumentGroup/>}></Route>
