@@ -82,6 +82,7 @@ const Challan = () => {
         toolbar={['Delete']}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
+          sortSettings={{ columns: [{ field: 'deliverychallan_id', direction: 'Descending' }] }} 
         allowPdfExport
         rowSelected={handleRowClick}
       >

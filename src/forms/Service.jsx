@@ -63,9 +63,13 @@ const Service = ({ open, handleClose }) => {
     setToolCount(prevCount => prevCount + 1);
     setTools(prevTools => [...prevTools, { id: toolCount + 1, tool: "", service_type: "", service_remarks: "" }]);
   };
-  const subtractToolField = ()=> {
-    setToolCount(prevCount => prevCount - 1);
-  }
+    const subtractToolField = () => {
+    if (toolCount > 1) {
+      setToolCount(prevCount => prevCount - 1);
+      setTools(prevTools => prevTools.slice(0, -1));
+    }
+  };
+
   const {
     register,
     handleSubmit,

@@ -62,11 +62,9 @@ const Shed = () => {
     try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
 
-        // Set toolData and service
         
         console.log(response.data)
-        // Navigate after setting state
-      navigate(`${shed_id}`, { state: { shed_tools: response.data } });
+      navigate(`${shed_id}`);
     } catch (error) {
         console.error("Error fetching tool data:", error);
     }

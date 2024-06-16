@@ -126,7 +126,7 @@ const toolbarClick = (args) => {
          <div className="flex flex-row justify-between mb-3">
           <button       className="bg-blue-500 font-semibold py-2 my-2 px-4 rounded-md text-white" 
  onClick={handleDialogOpen}>Add Vendor Handle</button>
-        <button type="button" className="px-5 py-2 bg-red-500 rounded-md my-2 text-white font-semibold hover:bg-blue-600" onClick={handleDelete}>Delete vendor</button>
+        <button type="button" className="px-5 py-2 bg-red-500 rounded-md my-2 text-white font-semibold hover:bg-red-600" onClick={handleDelete}>Delete vendor</button>
          </div>
         <ToastContainer/>
         <GridComponent

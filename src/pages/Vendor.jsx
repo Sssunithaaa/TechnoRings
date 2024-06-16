@@ -119,7 +119,7 @@ const handleActionComplete = async (args) => {
   } else if (args.requestType === "delete") {
     try {
       console.log(args.vendor_id)
-      await axios.delete(`your-backend-endpoint/${args.data[0].id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/${args.data[0].id}`);
     } catch (error) {
       console.error("Error deleting data:", error);
     }
@@ -151,10 +151,12 @@ const handleActionComplete = async (args) => {
         allowSorting
         allowAdding
         allowEditing
+   
         allowGrouping
         allowDeleting
         pageSettings={{ pageSize: 5 }}
         editSettings={editing}
+          sortSettings={{ columns: [{ field: 'vendor_id', direction: 'Descending' }] }} 
         actionComplete={handleActionComplete}
         rowSelected={rowSelected}
          ref={g => grid = g}

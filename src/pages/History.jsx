@@ -107,6 +107,7 @@ const History = () => {
          pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
+          sortSettings={{ columns: [{ field: 'movement_id', direction: 'Descending' }] }} 
         allowPdfExport
                 rowSelected={handleRowClick} // Add rowSelected event handler
 

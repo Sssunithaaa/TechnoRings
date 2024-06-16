@@ -195,6 +195,7 @@ useEffect(()=> {
           allowDeleting
           toolbar={['PdfExport','Delete']}
           allowPdfExport
+            sortSettings={{ columns: [{ field: 'movement_id', direction: 'Descending' }] }} 
           pdfExportComplete={pdfExportComplete}
                             actionComplete={handleActionComplete}
                     editSettings={{allowDeleting:true}}

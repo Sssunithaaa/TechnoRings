@@ -124,7 +124,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, formData, getValues, regist
               {...register(`result${i}`, {
                 required: "Result is required",
               })}
-              type="number"
+              type="text"
               name={`result${i}`}  
               className="form-input border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             >

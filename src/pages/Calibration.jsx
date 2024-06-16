@@ -8,11 +8,10 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CalibrationDialog from "../forms/CalibrationDialog";
-import AddInstrumentGroupDialog from "../forms/GroupMaster";
-import { Button } from "@mui/material";
+
 const Calibration = () => {
     let grid;
-    const { data: calibrationData } = useQuery({
+    const { data: calibrationData ,refetch} = useQuery({
         queryKey: ["calibration"],
         queryFn: async () => {
             const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
@@ -74,6 +73,9 @@ const Calibration = () => {
         if (args.item.id === 'gridcomp_pdfexport') {
             grid.showSpinner();
             grid.pdfExport();
+        } else if(args.item.id === 'gridcomp_excelexport') {
+            grid.showSpinner();
+            grid.excelExport();
         }
         if (args.item.id === 'Add') {
             setOpen(true);
@@ -90,15 +92,7 @@ const Calibration = () => {
   const handleDialogOpen = () => {
         setOpen(true);
     };
-      const [dialogOpen, setDialogOpen] = useState(false);
-
-  const handleDialogOpenn = () => {
-    setDialogOpen(true);
-  };
-
-  const handleDialogClosee = () => {
-    setDialogOpen(false);
-  };
+     
     const handleAddTool =async (data) => {
         console.log("New tool data:", data);
       
@@ -123,7 +117,8 @@ const Calibration = () => {
                 });
                 setTimeout(()=> {
                      setOpen(false);
-                 },3000)
+                 },2000)
+                 refetch()
                 }
             } catch (error) {
                 console.log("Error inserting data:", error);
@@ -139,10 +134,7 @@ const Calibration = () => {
  onClick={handleDialogOpen}>Add Instrument</button>
             </div>
  <div>
-      <Button variant="contained" color="primary" onClick={handleDialogOpenn}>
-        Add Instrument Group
-      </Button>
-      <AddInstrumentGroupDialog open={dialogOpen} handleClose={handleDialogClosee} />
+      
     </div>
             </div>
             <Header className="Page" title="Instrument details" />
@@ -154,7 +146,7 @@ const Calibration = () => {
                 allowPaging
                 allowFiltering
                 allowSorting
-                toolbar={['Delete',  'PdfExport']}
+                toolbar={['Delete',  'PdfExport','ExcelExport']}
                 editSettings={{  allowDeleting: true, allowEditing: true, mode: 'Dialog' }}
                 allowExcelExport
                 allowPdfExport
@@ -162,6 +154,8 @@ const Calibration = () => {
                 actionComplete={handleActionComplete}
                 rowSelected={rowSelected}
                 pdfExportComplete={pdfExportComplete}
+                          sortSettings={{ columns: [{ field: 'instrument_no', direction: 'Descending' }] }} 
+
                 toolbarClick={toolbarClick}
                 ref={g => grid = g}
             >

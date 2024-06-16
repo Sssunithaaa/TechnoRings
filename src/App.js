@@ -32,6 +32,7 @@ import History from "./pages/History";
 import ServiceHistory from "./pages/ServiceHistory";
 import GenerateBill from "./pages/GenerateBill";
 import Challan from "./pages/Challan";
+import GroupMaster from "./pages/InstrumentGroupMaster";
 
 function App() {
   const {
@@ -106,7 +107,8 @@ function App() {
                 <Route path="/calibrationreport" element={<CalibrationDetailsForm />} />
                   <Route path="/transport-history" element={<History />} />
                               <Route path="/service-history" element={<ServiceHistory />} />
-
+                              <Route path="/service-history" element={<ServiceHistory />} />
+                <Route path="/instrument-group-master" element={<GroupMaster/>}/>
                 <Route
                   path="/transactions"
                   element={<CreateMovement />}
