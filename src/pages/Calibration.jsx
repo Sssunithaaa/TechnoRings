@@ -30,7 +30,7 @@ const Calibration = () => {
             const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${instrument_no}/`);
             setToolData(response.data);
             setService(response1.data);
-            navigate(`${instrument_no}`, { state: { service: response1.data, transport_order: response.data,instrument: instrument } });
+            navigate(`${instrument_no}`);
         } catch (error) {
             console.error("Error fetching tool data:", error);
         }

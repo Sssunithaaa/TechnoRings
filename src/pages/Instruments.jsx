@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
 import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 
 const Instruments = () => {
-  const [toolId, setToolId] = useState(""); // State to store the tool ID
   const [service, setService] = useState([]);
   const [transportOrder, setTransportOrder] = useState([]);
   const [shedDetails, setShedDetails] = useState({}); // State to store shed details
+  const [instrument, setInstrument] = useState(null); // State to store instrument details
   let grid;
+
+  const { register, handleSubmit, watch } = useForm();
+  const toolId = watch("toolId");
 
   const { data: calibrationData } = useQuery({
     queryKey: ["instruments"],
@@ -24,11 +27,15 @@ const Instruments = () => {
 
   const fetchToolData = async (toolId) => {
     try {
+       const instrumentDetail = await axios.get(`${process.env.REACT_APP_URL}/instrument-calibration-history/${toolId}`);
+       
+      setInstrument(instrumentDetail?.data?.instrument);
       const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${toolId}/`);
       const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${toolId}/`);
-
       setService(response1?.data?.service_history);
       setTransportOrder(response?.data?.transport_orders);
+      console.log(service)
+      console.log(instrument)
     } catch (error) {
       console.error("Error fetching tool data:", error);
     }
@@ -50,18 +57,7 @@ const Instruments = () => {
       });
   }, []);
 
-  // Function to map shed IDs to shed names
-  const mapShedIdToName = (id) => {
-    return shedDetails[id] || 'Unknown'; // Return the shed name or 'Unknown' if not found
-  };
 
-  const sourceShedTemplate = (props) => {
-    return <div>{mapShedIdToName(props.source_shed)}</div>;
-  };
-
-  const destinationShedTemplate = (props) => {
-    return <div>{mapShedIdToName(props.destination_shed)}</div>;
-  };
 
   // Columns configuration for the service grid
   const serviceGridColumns = [
@@ -79,8 +75,8 @@ const Instruments = () => {
     { field: "movement_id", headerText: "Movement ID", width: "150", textAlign: "Center" },
     { field: "movement_date", headerText: "Movement date", width: "150", textAlign: "Center" },
     { field: "acknowledgment", headerText: "Acknowledgment", width: "150", textAlign: "Center" },
-    { field: "source_shed", headerText: "Source shed", width: "150", textAlign: "Center", template: sourceShedTemplate },
-    { field: "destination_shed", headerText: "Destination shed", width: "150", textAlign: "Center", template: destinationShedTemplate },
+    { field: "source_shed_name", headerText: "Source shed", width: "150", textAlign: "Center" },
+    { field: "destination_shed_name", headerText: "Destination shed", width: "150", textAlign: "Center" },
     { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
   ];
 
@@ -141,28 +137,25 @@ const Instruments = () => {
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    fetchToolData(toolId);
-  };
+ 
 
+  const submitHandler= async (data)=> {
+     fetchToolData(data.toolId)
+   
+  }
   return (
     <div>
-      {/* <div className="flex justify-start ml-10 mt-10">
-        <BackButton />
-      </div> */}
       <div className="w-[40%] mt-24 flex mx-auto flex-col justify-center items-center p-6 bg-white rounded-3xl">
-        <div className="w-full flex">
+        <div className="w-full flex flex-row gap-x-5 mx-auto">
           <div className="w-full max-w-md">
             <Header className="Page" title="Enter Tool ID" />
-            <form onSubmit={handleFormSubmit} className="mb-4">
+            <form onSubmit={handleSubmit(submitHandler)} className="mb-4">
               <label htmlFor="toolId" className="block text-sm font-medium text-gray-700">
                 Tool ID
               </label>
               <select
                 id="toolId"
-                value={toolId}
-                onChange={(e) => setToolId(e.target.value)}
+                {...register("toolId")}
                 className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm"
               >
                 <option value="" disabled>Select Tool</option>
@@ -172,15 +165,23 @@ const Instruments = () => {
                   </option>
                 ))}
               </select>
-              <button type="submit" className="mt-4 px-4 py-2 flex mx-auto bg-blue-500 text-white rounded-md">
-                Submit
-              </button>
+                          <button type="submit" className="bg-blue-500 px-4 mt-3 text-white font-semibold py-2 rounded-md flex mx-auto">Submit</button>
+
             </form>
             <ToastContainer />
           </div>
           
         </div>
+          <div className="w-full flex mx-auto">
+            {instrument && <div className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
+        <p><strong>Instrument No:</strong> {instrument.instrument_no}</p>
+        <p><strong>Instrument Name:</strong> {instrument.instrument_name}</p>
+        <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
+        <p><strong>Type of Tool Name:</strong> {instrument.type_of_tool_name}</p>
+      </div>}
+          </div>
       </div>
+    
 
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
         <Header className="Page" title="Service orders" />
@@ -230,17 +231,6 @@ const Instruments = () => {
             {transportGridColumns.map((item, index) => (
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
-            {/* <ColumnDirective headerText="Acknowledge" width="150" template={(props) => (
-              
-              props.acknowledgment !== "true" && (
-                <button
-                  className="bg-blue-500 rounded-sm py-2 px-4 text-white"
-                  onClick={() => handleAcknowledgment(props)}
-                >
-                  Acknowledge
-                </button>
-              )
-            )}></ColumnDirective> */}
           </ColumnsDirective>
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
         </GridComponent>

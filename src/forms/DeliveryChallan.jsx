@@ -124,6 +124,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_URL}/pending-service-orders/vendor/${selectedVendorId}`);
           setServices(response.data?.pending_service_orders);
+          console.log(services)
         } catch (error) {
           console.error("Error fetching pending service orders:", error);
         }
@@ -242,11 +243,18 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
                 </MenuItem>
                 {services?.map((service) => (
                   <MenuItem key={service.service_id} value={service.service_id}>
-                    {service.service_id}
+                    {service.service_id} - Date: {service.date}
                   </MenuItem>
                 ))}
               </TextField>
             </div>
+            {serviceTools && serviceTools?.map((tool)=> (
+              <div className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
+    
+        <p><strong>Tool Name:</strong> {tool.tool_name}</p>
+       
+      </div>
+))}
 
             <div>
               <Button
