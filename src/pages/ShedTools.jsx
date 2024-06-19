@@ -5,18 +5,22 @@ import { Header } from "../components";
 import AddShedTools from "../forms/AddShedTool";
 import axios from "axios";
 import BackButton from "../components/BackButton";
+import UpdateShed from "../forms/UpdateShed";
 
 const ShedTools = () => {
   const location = useLocation();
   const [shedTools, setShedTools] = useState([]);
   const [tools, setTools] = useState([]);
-  const [name, setName] = useState()
+  const [name, setName] = useState();
+  const [shed,setShed] = useState();
   const state = location.state;
   const id = useParams();
-
+const [open,setOpen] = useState(false)
   const fetchToolData = async (shed_id) => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
+      setShed(response?.data.shed)
+      console.log(shed)
       setName(response?.data?.shed?.name)
       setShedTools(response?.data?.shed_tools);
     } catch (error) {
@@ -86,6 +90,15 @@ const ShedTools = () => {
   ];
 
   let grid;
+  const handleDialogOpen = ()=> {
+    setOpen(true);
+  }
+   const handleDialogClose = ()=> {
+    setOpen(false);
+  }
+  const updateShed = () => {
+    
+  }
 
   return (
     <div>
@@ -94,9 +107,12 @@ const ShedTools = () => {
       </div>
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
         {showAddShedTools && <AddShedTools setClose={setShowAddShedTools} />}
+
         <Header className={`Shed tools`} title={name}/>
         <div className="flex flex-row justify-between gap-x-5 my-4">
           <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={addShedTools}>Add shed tools</button>
+          <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={handleDialogOpen}>Update shed</button>
+
           <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete shed</button>
         </div>
         <GridComponent
@@ -121,6 +137,8 @@ const ShedTools = () => {
             services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]}
           />
         </GridComponent>
+                    <UpdateShed open={open} handleClose={handleDialogClose} shed={shed} />
+
       </div>
     </div>
   );
