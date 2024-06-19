@@ -28,7 +28,7 @@ const UpdateShed = ({ open, handleClose,shed }) => {
 
     console.log(data);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/update_shed/${shedId}`, data);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/update_shed/${shedId}/`, data);
       toast.success("Shed details updated successfully");
       setTimeout(() => {
         handleClose();
