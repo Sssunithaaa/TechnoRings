@@ -63,17 +63,17 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} width="lg">
-      <DialogTitle>Transport Order Details</DialogTitle>
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
+      <DialogTitle className="text-center">Transport Order Details</DialogTitle>
       <DialogContent>
         {transportOrder ? (
-          <div>
+          <div className="px-10">
             <p><strong>Movement ID:</strong> {transportOrder.transport_order.movement_id}</p>
             <p><strong>Movement Date:</strong> {transportOrder.transport_order.movement_date}</p>
             <p><strong>Acknowledgment:</strong> {transportOrder.transport_order.acknowledgment ? "Yes" : "No"}</p>
             <p><strong>Tool Count:</strong> {transportOrder.transport_order.tool_count}</p>
-            <p><strong>Source Shed:</strong> {transportOrder.transport_order.source_shed}</p>
-            <p><strong>Destination Shed:</strong> {transportOrder.transport_order.destination_shed}</p>
+            <p><strong>Source Shed:</strong> {transportOrder.transport_order.source_shed_name}</p>
+            <p><strong>Destination Shed:</strong> {transportOrder.transport_order.destination_shed_name}</p>
             <h3>Transport Tools</h3>
            
             {transportOrder.transport_tools.map((tool) => (

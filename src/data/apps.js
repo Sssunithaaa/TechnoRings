@@ -42,6 +42,12 @@ export const shedDetailsGrid = [
     width: "150",
     textAlign: "Center",
   },
+  {
+    field: "phone_number",
+    headerText: "Phone number",
+    width: "150",
+    textAlign: "Center",
+  },
 ]
 
 export const shedVendorsGrid = [
@@ -90,7 +96,7 @@ export const CalibrationGrid = [
     textAlign: "Center",
   },
   {
-    field: "current_shed",
+    field: "current_shed_name",
     headerText: "Shed",
     width: "150",
     textAlign: "Center",
