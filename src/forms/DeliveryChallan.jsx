@@ -12,9 +12,11 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
   const [details, setDetails] = useState([]);
   const [services, setServices] = useState([]);
   const [serviceTools, setServiceTools] = useState([]);
+  const [vendorTypes, setVendorTypes] = useState([]);
+  const [vendors, setVendors] = useState([]);
   const date = new Date().toISOString().split('T')[0];
 
-  const { data: deliveryChllan } = useQuery({
+  const { data: deliveryChallan } = useQuery({
     queryKey: ["delivery"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/service-order/`);
@@ -22,14 +24,28 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
       return response.data;
     },
   });
+
   const { data: shedDetails } = useQuery({
     queryKey: ["shed"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
-      console.log(response.data);
       return response.data;
     },
   });
+
+  useEffect(() => {
+    const fetchVendorTypes = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_types/`);
+        setVendorTypes(response.data.vendor_types);
+      } catch (error) {
+        console.error("Error fetching vendor types:", error);
+        toast.error("Failed to fetch vendor types.");
+      }
+    };
+
+    fetchVendorTypes();
+  }, []);
 
   const {
     register,
@@ -41,12 +57,57 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
   } = useForm({
     defaultValues: {
       receivedDate: date,
+      vendorType: "",
       vendor: "",
       shed: "",
       service: "",
     },
     mode: "onChange",
   });
+
+  const selectedVendorTypeId = watch("vendorType");
+  const selectedServiceId = watch("service");
+  const selectedVendor = watch("vendor");
+
+  useEffect(() => {
+    if (selectedVendorTypeId) {
+      const fetchVendorsByType = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_URL}/pending-service-orders/vendor/${selectedVendorTypeId}/`);
+          setVendors(response.data);
+        } catch (error) {
+          console.error("Error fetching vendors by type:", error);
+        }
+      };
+      fetchVendorsByType();
+    }
+  }, [selectedVendorTypeId]);
+
+  useEffect(() => {
+    if (selectedServiceId) {
+      const fetchServiceTools = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_URL}/service_orders/${selectedServiceId}/`);
+          setServiceTools(response.data.service_tools);
+        } catch (error) {
+          console.error("Error fetching service tools:", error);
+        }
+      };
+      fetchServiceTools();
+    }
+  }, [selectedServiceId]);
+  useEffect(() => {
+    if (selectedVendor) {
+      const fetchVendorsByType = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/${selectedVendor}/`);
+        } catch (error) {
+          console.error("Error fetching services:", error);
+        }
+      };
+      fetchVendorsByType();
+    }
+  }, [selectedVendor]);
 
   const handleAddCalibrationDetails = () => {
     setShowCalibrationModal(true);
@@ -113,40 +174,8 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
   const handleToolDetails = (toolDetails) => {
   };
 
-  const vendors = details?.vendors;
   const shed_details = shedDetails?.shed_details;
-  const selectedServiceId = watch("service");
-  const selectedVendorId = watch("vendor");
-
-  useEffect(() => {
-    if (selectedVendorId) {
-      const fetchPendingServiceOrders = async () => {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_URL}/pending-service-orders/vendor/${selectedVendorId}`);
-          setServices(response.data?.pending_service_orders);
-          console.log(services)
-        } catch (error) {
-          console.error("Error fetching pending service orders:", error);
-        }
-      };
-      fetchPendingServiceOrders();
-    }
-  }, [selectedVendorId]);
-
-  useEffect(() => {
-    if (selectedServiceId) {
-      const fetchServiceTools = async () => {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_URL}/service_orders/${selectedServiceId}/`);
-          setServiceTools(response.data.service_tools);
-        } catch (error) {
-          console.error("Error fetching service tools:", error);
-        }
-      };
-      fetchServiceTools();
-    }
-  }, [selectedServiceId]);
-
+  
   return (
     <>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -176,6 +205,31 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
 
             <div>
               <TextField
+                {...register("vendorType", {
+                  required: {
+                    value: true,
+                    message: "Vendor type is required",
+                  },
+                })}
+                name="vendorType"
+                label="Vendor Type"
+                select
+                fullWidth
+                required
+              >
+                <MenuItem value="">
+                  <em>Select a vendor type</em>
+                </MenuItem>
+                {vendorTypes?.map((vendorType) => (
+                  <MenuItem key={vendorType.vendortype_id} value={vendorType.vendortype_id}>
+                    {vendorType.vendor_type}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+
+            <div>
+              <TextField
                 {...register("vendor", {
                   required: {
                     value: true,
@@ -192,8 +246,8 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
                   <em>Select a vendor</em>
                 </MenuItem>
                 {vendors?.map((vendor) => (
-                  <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>
-                    {vendor.name}
+                  <MenuItem key={vendor.vendor_id} value={vendor.vendor}>
+                    {vendor.vendor}
                   </MenuItem>
                 ))}
               </TextField>

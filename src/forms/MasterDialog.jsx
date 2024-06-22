@@ -5,17 +5,21 @@ import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
+import AddInstrumentGroupDialog from "./GroupMaster";
+import { ToastContainer, toast } from "react-toastify";
 const MasterToolsDialog = ({  }) => {
   const {id} = useParams();
+  const [toolGroup,setToolGroup] = useState()
    const { data: tools, refetch } = useQuery({
     queryKey: ["tools"],
     queryFn: async () => {
       console.log(id)
       const response = await axios.get(`${process.env.REACT_APP_URL}/instruments_by_tool_group/${id}/`);
+      setToolGroup(response.data.tool_group)
       return response.data.instruments;
     },
   });
-  
+   const [open,setOpen] = useState(false)
    const CalibrationGrid = [
 
   {
@@ -73,14 +77,40 @@ const MasterToolsDialog = ({  }) => {
  
 
 ];
+const handleDialogOpen = ()=> {
+  setOpen(true);
+  setInstrumentGroup(true);
+}
+const handleDialogClose=()=> {
+  setOpen(false)
+}
+const handleDelete=()=> {
+  try {
+    const response = axios.get(`${process.env.REACT_APP_URL}/instrument_group/${id}/delete/`);
+    console.log(response);
+    toast.success("Instrument group master deleted successfully!!");
+  } catch (error) {
+    console.log(error);
+    toast.error("Unknown error! Try again later");
+  }
+}
+const [instrumentGroup,setInstrumentGroup] = useState(false)
    return (
     <div>
        <div className="flex justify-start ml-10 mt-10">
        <BackButton/>
      </div>
-    <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
      
+    <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+      <div>
+        <strong>Tool group name: </strong>{toolGroup}
+      </div>
+       <div className="flex flex-row justify-between gap-x-5 my-4">
+          <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={handleDialogOpen}>Update instrument group master</button>
 
+          <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete instrument group masters</button>
+        </div>
+    <ToastContainer/>
       <Header className="Page" title="Instrument group masters tools" />
 
       <GridComponent
@@ -114,6 +144,7 @@ const MasterToolsDialog = ({  }) => {
           ]}
         />
       </GridComponent>
+          <AddInstrumentGroupDialog open={open} handleClose={handleDialogClose} instrumentGroup={id} />
 
     </div>
     </div>
