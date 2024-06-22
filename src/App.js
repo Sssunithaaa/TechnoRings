@@ -33,6 +33,7 @@ import ServiceHistory from "./pages/ServiceHistory";
 import GenerateBill from "./pages/GenerateBill";
 import Challan from "./pages/Challan";
 import GroupMaster from "./pages/InstrumentGroupMaster";
+import MasterToolsDialog from "./forms/MasterDialog";
 
 function App() {
   const {
@@ -127,7 +128,8 @@ function App() {
                 ></Route> */}
                 <Route path="/services" element={<CreateService />}></Route>
               
-                <Route path="/instrument-group" element={<InstrumentGroup/>}></Route>
+                                <Route path="/instrument-group-master/:id" element={<MasterToolsDialog/>}></Route>
+
                 <Route path="/instruments" element={<Instruments/>}></Route>
               </Routes>
             </div>

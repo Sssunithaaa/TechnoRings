@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,13 +12,29 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const CreateVendor = ({ open, handleClose }) => {
+const CreateVendor = ({ open, handleClose, vendorData }) => {
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    if (vendorData) {
+      setValue("name", vendorData.name);
+      setValue("location", vendorData.location);
+      setValue("address", vendorData.address);
+      setValue("phone_number", vendorData.phone_number);
+      setValue("email", vendorData.email);
+      setValue("vendor_type", vendorData.vendor_type);
+      setValue("nabl_number", vendorData.nabl_number);
+    } else {
+      reset();
+    }
+  }, [vendorData, setValue, reset]);
 
   const submitHandler = async (data) => {
     try {
@@ -38,28 +54,43 @@ const CreateVendor = ({ open, handleClose }) => {
         formData.append("certificate", data.certificate[0]);
       }
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_URL}/add_vendor/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      let response;
+      if (vendorData) {
+        // Update existing vendor
+        response = await axios.post(
+          `${process.env.REACT_APP_URL}/update_vendor/${vendorData.vendor_id}/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        toast.success("Vendor updated successfully");
+      } else {
+        // Create new vendor
+        response = await axios.post(
+          `${process.env.REACT_APP_URL}/add_vendor/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        toast.success("Vendor added successfully");
+      }
 
-      console.log(response);
-      toast.success("Vendor added successfully");
       handleClose();
     } catch (error) {
       console.log(error);
-      toast.error("Failed to add vendor. Please try again later.");
+      toast.error("Failed to save vendor. Please try again later.");
     }
   };
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Add Vendor</DialogTitle>
+      <DialogTitle>{vendorData ? "Update Vendor" : "Add Vendor"}</DialogTitle>
       <ToastContainer />
       <DialogContent>
         <form onSubmit={handleSubmit(submitHandler)}>
@@ -158,7 +189,7 @@ const CreateVendor = ({ open, handleClose }) => {
               color="primary"
               style={{ margin: "20px 0" }}
             >
-              Add Vendor
+              {vendorData ? "Update Vendor" : "Add Vendor"}
             </Button>
             <Button onClick={handleClose} color="secondary">
               Cancel

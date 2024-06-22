@@ -4,7 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 
-const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
+const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrument }) => {
   const date = new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
@@ -21,6 +21,35 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
 
   const [calibrationFrequencyUnit, setCalibrationFrequencyUnit] = useState("days");
 
+  useEffect(() => {
+    if (instrument) {
+      setFormData({
+        instrument_name: instrument.instrument_name || "",
+        manufacturer_name: instrument.manufacturer_name || "",
+        year_of_purchase: instrument.year_of_purchase || date,
+        gst: instrument.gst || "",
+        description: instrument.description || "",
+        least_count: instrument.least_count || "",
+        instrument_range: instrument.instrument_range || "",
+        calibration_frequency: instrument.calibration_frequency || "",
+        type_of_tool_id: instrument.type_of_tool_id || ""
+      });
+      // Infer unit from the calibration_frequency value if possible
+      const days = parseInt(instrument.calibration_frequency, 10);
+      if (!isNaN(days)) {
+        if (days % 365 === 0) {
+          setCalibrationFrequencyUnit("years");
+          setFormData(prevFormData => ({ ...prevFormData, calibration_frequency: days / 365 }));
+        } else if (days % 30 === 0) {
+          setCalibrationFrequencyUnit("months");
+          setFormData(prevFormData => ({ ...prevFormData, calibration_frequency: days / 30 }));
+        } else {
+          setCalibrationFrequencyUnit("days");
+        }
+      }
+    }
+  }, [instrument, date]);
+
   const handleChange = (field, value) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -28,12 +57,16 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
     }));
   };
 
-  const handleFormAdd = () => {
+  const handleFormAddOrUpdate = () => {
     const convertedFormData = {
       ...formData,
       calibration_frequency: convertToDays(formData.calibration_frequency, calibrationFrequencyUnit)
     };
-    handleAdd(convertedFormData);
+    if (instrument) {
+      handleUpdate(instrument.id, convertedFormData);
+    } else {
+      handleAdd(convertedFormData);
+    }
   };
 
   const convertToDays = (frequency, unit) => {
@@ -84,7 +117,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Add New Instrument</DialogTitle>
+      <DialogTitle>{instrument ? "Update Instrument" : "Add New Instrument"}</DialogTitle>
       <DialogContent>
         <ToastContainer />
         {Object.keys(formData).map((field) => (
@@ -127,7 +160,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
                 variant="outlined"
                 fullWidth
                 size="large"
-                sx={{flex:1}}
+                sx={{ flex: 1 }}
               />
               <TextField
                 select
@@ -136,7 +169,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
                 onChange={(e) => setCalibrationFrequencyUnit(e.target.value)}
                 variant="outlined"
                 size="medium"
-                sx={{minWidth:120}}
+                sx={{ minWidth: 120 }}
               >
                 <MenuItem value="days">Days</MenuItem>
                 <MenuItem value="months">Months</MenuItem>
@@ -161,8 +194,8 @@ const CalibrationDialog = ({ open, handleClose, handleAdd }) => {
         <Button onClick={handleClose} color="secondary">
           Cancel
         </Button>
-        <Button onClick={handleFormAdd} color="primary">
-          Add
+        <Button onClick={handleFormAddOrUpdate} color="primary">
+          {instrument ? "Update" : "Add"}
         </Button>
       </DialogActions>
     </Dialog>

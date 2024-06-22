@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
 import { useNavigate } from "react-router-dom";
+import CalibrationDialog from "../forms/CalibrationDialog";
 const Transactions = () => {
  
   const id= useParams()
@@ -36,39 +37,10 @@ useEffect(()=> {
   const [shedDetails, setShedDetails] = useState({}); // State to store shed details
   let grid;
   // Fetch shed details from the server
-  useEffect(() => {
-    axios.get(`${process.env.REACT_APP_URL}/shed-details/`)
-      .then(response => {
-        const shedMap = {};
-        console.log(response.data.shed_details)
-        response.data?.shed_details?.forEach(shed => {
-          shedMap[shed.shed_id] = shed.name;
-        });
-        console.log(shedMap)
-        // Set the shed details state
-        setShedDetails(shedMap);
-      })
-      .catch(error => {
-        console.error('Error fetching shed details:', error);
-      });
-  }, []);
+  
 
-  // Function to map shed IDs to shed names
-  const mapShedIdToName = (id) => {
-    return shedDetails[id] || 'Unknown'; // Return the shed name or 'Unknown' if not found
-  };
-   const sourceShedTemplate = (props) => {
-    return <div>
-      {mapShedIdToName(props.source_shed)}
-    </div>;
-  };
 
-  // Template function to display destination shed name
-  const destinationShedTemplate = (props) => {
-    return <div>
-      {mapShedIdToName(props.destination_shed)}
-    </div>;
-  };
+   
   // Columns configuration for the service grid
   const serviceGridColumns = [
     { type: 'checkbox', width: '50' },
@@ -86,8 +58,8 @@ useEffect(()=> {
     { field: "movement_id", headerText: "Movement ID", width: "150", textAlign: "Center" },
     { field: "movement_date", headerText: "Movement date", width: "150", textAlign: "Center" },
     { field: "acknowledgment", headerText: "Acknowledgment", width: "150", textAlign: "Center" },
-    { field: "source_shed", headerText: "Source shed", width: "150", textAlign: "Center", template: sourceShedTemplate },
-    { field: "destination_shed", headerText: "Destination shed", width: "150", textAlign: "Center", template: destinationShedTemplate },
+    { field: "source_shed_name", headerText: "Source shed", width: "150", textAlign: "Center" },
+    { field: "destination_shed_name", headerText: "Destination shed", width: "150", textAlign: "Center" },
     { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
   ];
 
@@ -175,18 +147,60 @@ const handleDelete =async () => {
         <p><strong>Instrument Name:</strong> {instrument.instrument_name}</p>
         <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
         <p><strong>Type of Tool Name:</strong> {instrument.type_of_tool_name}</p>
+        <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
+ onClick={handleDialogOpen}>Update Instrument</button>
                   <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete tool</button>
 
       </div>
     );
   };
+      const [open, setOpen] = useState(false);
+
+    const handleDialogClose = () => {
+        setOpen(false);
+    };
+  const handleDialogOpen = () => {
+        setOpen(true);
+    };
+      const handleUpdateTool =async (data) => {
+      
+        try {
+                const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument/${instrument.instrument_no}`, data);
+                if(response.data.success === false){
+                toast.error("An error occured! Try again..", {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: { width: "auto", style: "flex justify-center" },
+                    closeButton: false,
+                    progress: undefined,
+                });
+                setTimeout(()=> {
+                    setOpen(false)
+                },3000)
+            } else{
+            toast.success("Tool added successfully", {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: { width: "auto", style: "flex justify-center" },
+                    closeButton: false,
+                    progress: undefined,
+                });
+                setTimeout(()=> {
+                     setOpen(false);
+                 },3000)
+              
+                }
+            } catch (error) {
+                console.log("Error inserting data:", error);
+            }
+    };
   return (
     <div>
      <div className="flex justify-start ml-10 mt-10">
        <BackButton/>
      </div>
      <div>
-
+     
      </div>
      <div className="bg-white p-5 flex flex-col mx-auto w-[30%]">
         <Header className="Page" title="Instrument Details" />
@@ -247,7 +261,9 @@ const handleDelete =async () => {
           </ColumnsDirective>
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
         </GridComponent>
-      </div>
+      </div> 
+                  <CalibrationDialog open={open} handleClose={handleDialogClose} handleUpdate={handleUpdateTool} instrument={instrument} />
+
     </div>
   );
 };

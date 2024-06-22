@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import CreateVendor from "../forms/AddVendor";
 import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from 'axios';
@@ -10,16 +11,19 @@ import CreateVendorHandleData from "../forms/VendorHandle";
 const VendorsDetail = () => {
   
        const [open, setOpen] = useState(false);
+         const [openn,setOpenn] = useState(false)
+
       const [vendorName,setVendorname] = useState("")
   const id=useParams()
   const [vendorHandle,setVendorHandle] = useState([])
+    const [vendor,setVendor] = useState([])
+
   const fetchVendorData = async (vendor_id) => {
     try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${vendor_id}/`);
-        console.log(response.data)
         setVendorHandle(response?.data?.vendor_handles)
         setVendorname(response?.data?.vendor?.name)
-
+        setVendor(response?.data?.vendor)
         
     } catch (error) {
         console.error("Error fetching tool data:", error);
@@ -36,12 +40,10 @@ const VendorsDetail = () => {
     axios.get(`${process.env.REACT_APP_URL}/vendor/`)
       .then(response => {
         const vendorMap = {};
-        console.log(response.data.vendors)
         response.data?.vendors?.forEach(vendor => {
           vendorMap[vendor.vendor_id] = vendor.name;
         });
-        console.log(vendorMap)
-        // Set the shed details state
+       
         setVendorDetails(vendorMap);
       })
       .catch(error => {
@@ -62,6 +64,13 @@ const VendorsDetail = () => {
     };
   const handleDialogOpen = () => {
         setOpen(true);
+    };
+
+     const handleDialogClosee = () => {
+        setOpenn(false);
+    };
+  const handleDialogOpenn = () => {
+        setOpenn(true);
     };
   
   const vendorGridColumns = [
@@ -93,7 +102,6 @@ const toolbarClick = (args) => {
      try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/vendor/${vendor_id}/delete/`);
       toast.success("Vendor deleted successfully")
-      console.log(response)
     } catch (error) {
       console.error("Error deleting data:", error);
     }
@@ -112,6 +120,7 @@ const toolbarClick = (args) => {
     }
   }
      }
+
   return (
   
           <div>
@@ -123,9 +132,14 @@ const toolbarClick = (args) => {
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
               
         <Header className="Page" title="Vendor handle" />
+        <div className="text-[20px]">
+                <strong>Vendor name: </strong>{vendorName}
+              </div>
          <div className="flex flex-row justify-between mb-3">
           <button       className="bg-blue-500 font-semibold py-2 my-2 px-4 rounded-md text-white" 
  onClick={handleDialogOpen}>Add Vendor Handle</button>
+  <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
+ onClick={handleDialogOpenn}>Update Vendor</button>
         <button type="button" className="px-5 py-2 bg-red-500 rounded-md my-2 text-white font-semibold hover:bg-red-600" onClick={handleDelete}>Delete vendor</button>
          </div>
         <ToastContainer/>
@@ -153,6 +167,7 @@ const toolbarClick = (args) => {
         </GridComponent>
       </div>
                         <CreateVendorHandleData open={open} handleClose={handleDialogClose} id={id} vendorName={vendorName} />
+                                      <CreateVendor open={openn} handleClose={handleDialogClosee} vendorData={vendor} />
 
           </div>
    

@@ -85,13 +85,13 @@ export const CalibrationGrid = [
   
   {
     field: "instrument_name",
-    headerText: "Instrument Name",
+    headerText: "Instrument Code",
     width: "150",
     textAlign: "Center",
   },
     {
     field: "type_of_tool_name",
-    headerText: "Type of tool",
+    headerText: "Instrument Name",
     width: "150",
     textAlign: "Center",
   },

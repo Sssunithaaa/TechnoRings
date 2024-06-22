@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import AddInstrumentGroupDialog from "../forms/GroupMaster";
 import { Button } from "@mui/material";
 import ToolsDialog from "../forms/MasterDialog";
+import { Navigate, useNavigate } from "react-router-dom";
 const GroupMaster = () => {
   const [open, setOpen] = useState(false);
   const [tools, setTools] = useState([]);
@@ -27,16 +28,11 @@ const GroupMaster = () => {
   const handleDialogOpen = () => {
     setOpen(true);
   };
+  const navigate = useNavigate();
 
   const handleRowClick = async (args) => {
-    const toolGroupId = args.data.tool_group_id;
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/instruments_by_tool_group/${toolGroupId}/`);
-      setTools(response.data.instruments); // Assuming the response contains an array of tools in response.data.tools
-      setToolsDialogOpen(true);
-    } catch (error) {
-      console.error("Error fetching tools for tool group:", error);
-    }
+    const id = args.data.tool_group_id;
+    navigate(`${id}`)
   };
 
   useEffect(() => {
@@ -91,7 +87,6 @@ const GroupMaster = () => {
         />
       </GridComponent>
 
-      <ToolsDialog open={toolsDialogOpen} tools={tools} onClose={() => setToolsDialogOpen(false)} />
     </div>
   );
 };
