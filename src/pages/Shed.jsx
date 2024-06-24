@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   GridComponent,
   ColumnsDirective,
@@ -20,6 +20,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import UpdateShed from "../forms/UpdateShed";
 
 const Shed = () => {
   const { data: shedDetailsData, refetch } = useQuery({
@@ -110,7 +111,7 @@ const Shed = () => {
     allowEditing: true,
     mode: "Dialog",
   };
-
+  const [open,setOpen] = useState(false);
   const fetchToolData = async (shed_id) => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
@@ -121,6 +122,12 @@ const Shed = () => {
     }
   };
 
+   const handleDialogOpen = ()=> {
+    setOpen(true);
+  }
+   const handleDialogClose = ()=> {
+    setOpen(false);
+  }
   const rowSelected = (args) => {
     console.log(args.data);
     const selectedRecord = args.data["shed_id"];
@@ -140,8 +147,9 @@ const Shed = () => {
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       <Header className="Page" title="Shed" />
       <ToastContainer className="z-[10001]" />
+      <button type="button" onClick={handleDialogOpen}  className="bg-blue-500 rounded-sm py-2 px-4 text-white" >Add Shed</button>
       <div className="my-5">
-        <h2 className="font-bold text-xl my-2">Shed Details</h2>
+        
         <GridComponent
           id="gridcomp"
           dataSource={shedDetailsData?.shed_details}
@@ -160,6 +168,8 @@ const Shed = () => {
         >
           <ColumnsDirective>
             {shedDetailsGrid.map((item, index) => (
+              item.field === "password" ? <ColumnDirective field="password" headerText="Password" width="150" textAlign="Center" visible={false} edit={{ type: 'string', params: { validationRules: { required: true } } }} />
+:
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>
@@ -176,6 +186,8 @@ const Shed = () => {
             ]}
           />
         </GridComponent>
+                            <UpdateShed open={open} handleClose={handleDialogClose} mode="add" />
+
       </div>
     </div>
   );

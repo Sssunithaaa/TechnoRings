@@ -17,7 +17,6 @@ export const shedVendorsData = [
 ];
 
 export const shedDetailsGrid = [
-  { type: 'checkbox', width: '50' },
   {
     field: "shed_id",
     headerText: "ID",
@@ -43,8 +42,8 @@ export const shedDetailsGrid = [
     textAlign: "Center",
   },
   {
-    field: "phone_number",
-    headerText: "Phone number",
+    field: "password",
+    headerText: "Password",
     width: "150",
     textAlign: "Center",
   },
