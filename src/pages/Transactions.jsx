@@ -164,7 +164,7 @@ const handleDelete =async () => {
       const handleUpdateTool =async (data) => {
       
         try {
-                const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument/${instrument.instrument_no}`, data);
+                const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument/${instrument.instrument_no}/`, data);
                 if(response.data.success === false){
                 toast.error("An error occured! Try again..", {
                     position: "top-center",

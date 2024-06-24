@@ -58,13 +58,18 @@ const GroupMaster = () => {
   const handleDelete=async ()=> {
     
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument_family/${id}/delete/ `);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/instrument_family/${id}/delete/ `);
+      console.log(response)
       if(response.data.success){
         toast.success(response.data.message)
         setTimeout(()=> {
           navigate(-1);
         },2000)
-    } } catch (error) {
+    } else {
+            toast.error("Error deleting instrument family ")
+
+    }
+   } catch (error) {
       toast.error("Error deleting instrument family ")
     }
   }

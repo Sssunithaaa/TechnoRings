@@ -1,6 +1,7 @@
 import React,{useState} from "react";
 import { ToastContainer } from "react-toastify";
-const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, reset,sendToolDetails }) => {
+import Select from "react-select";
+const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, reset,sendToolDetails,caVendors }) => {
   const [toolCount, setToolCount] = useState(1); // State to track the number of tools
       const date=new Date().toISOString().split('T')[0]
 
@@ -114,16 +115,17 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, 
               className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
             />
                                 </td>
-                                <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
-                                   <input
-              {...register(`calibrationAgency${i}`, {
-                required: "Calibration agency is required",
-              })}
+                            <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
+            <Select
+              options={caVendors.map(vendor => ({
+                value: vendor.vendor_id,
+                label: vendor.vendor_name
+              }))}
               name={`calibrationAgency${i}`}
-              type="text"
-              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
+              placeholder="Calibration Agency"
+              className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
             />
-                                </td>
+          </td>
                                 <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
                                     <input
               {...register(`result${i}`, {

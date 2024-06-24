@@ -3,7 +3,7 @@ import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,I
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import AddInstrumentGroupDialog from "./GroupMaster";
 import { ToastContainer, toast } from "react-toastify";
@@ -83,12 +83,20 @@ const handleDialogOpen = ()=> {
 }
 const handleDialogClose=()=> {
   setOpen(false)
-}
+} 
+const navigate = useNavigate();
 const handleDelete=async ()=> {
   try {
-    const response =await axios.get(`${process.env.REACT_APP_URL}/instrument_group/${id}/delete/`);
-    console.log(response);
-    toast.success("Instrument group master deleted successfully!!");
+    const response =await axios.post(`${process.env.REACT_APP_URL}/instrument_group/${id}/delete/`);
+   if(response.data.success){
+     toast.success("Instrument group master deleted successfully!!");
+     setTimeout(()=> {
+      navigate(-1)
+     },2000)
+   } else {
+        toast.error("Unknown error! Try again later");
+
+   }
   } catch (error) {
     console.log(error);
     toast.error("Unknown error! Try again later");

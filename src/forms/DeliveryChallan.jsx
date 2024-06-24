@@ -69,13 +69,28 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
   const selectedVendorTypeId = watch("vendorType");
   const selectedServiceId = watch("service");
   const selectedVendor = watch("vendor");
-
+  const [caVendors,setCaVendors] = useState([])
   useEffect(() => {
     if (selectedVendorTypeId) {
       const fetchVendorsByType = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_URL}/pending_service_orders/vendor/${selectedVendorTypeId}/`);
+          setCaVendors()
           setVendors(response.data);
+        } catch (error) {
+          console.error("Error fetching vendors by type:", error);
+        }
+      };
+      fetchVendorsByType();
+    }
+  }, [selectedVendorTypeId]);
+  useEffect(() => {
+    if (selectedVendorTypeId) {
+      const fetchVendorsByType = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_URL}/pending_service_orders/vendor/1/`);
+        
+          setCaVendors(response.data);
         } catch (error) {
           console.error("Error fetching vendors by type:", error);
         }
@@ -332,6 +347,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
           getValues={getValues}
           reset={reset}
           tools={serviceTools}
+          caVendors={caVendors}
           sendToolDetails={handleToolDetails}
         />
       )}
