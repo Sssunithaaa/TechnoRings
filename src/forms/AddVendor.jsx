@@ -36,57 +36,63 @@ const CreateVendor = ({ open, handleClose, vendorData }) => {
     }
   }, [vendorData, setValue, reset]);
 
-  const submitHandler = async (data) => {
-    try {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("location", data.location);
-      formData.append("address", data.address);
-      formData.append("phone_number", data.phone_number);
-      formData.append("email", data.email);
-      formData.append("vendor_type", data.vendor_type);
+const submitHandler = async (data) => {
+  try {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("location", data.location);
+    formData.append("address", data.address);
+    formData.append("phone_number", data.phone_number);
+    formData.append("email", data.email);
+    formData.append("vendor_type", data.vendor_type);
 
-      if (data.nabl_number) {
-        formData.append("nabl_number", data.nabl_number);
-      }
-
-      if (data.certificate && data.certificate.length > 0) {
-        formData.append("certificate", data.certificate[0]);
-      }
-
-      let response;
-      if (vendorData) {
-        // Update existing vendor
-        response = await axios.post(
-          `${process.env.REACT_APP_URL}/update_vendor/${vendorData.vendor_id}/`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        toast.success("Vendor updated successfully");
-      } else {
-        // Create new vendor
-        response = await axios.post(
-          `${process.env.REACT_APP_URL}/add_vendor/`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        toast.success("Vendor added successfully");
-      }
-
-      handleClose();
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to save vendor. Please try again later.");
+    if (data.nabl_number) {
+      formData.append("nabl_number", data.nabl_number);
     }
-  };
+
+    if (data.certificate && data.certificate.length > 0) {
+      formData.append("certificate", data.certificate[0]);
+    }
+
+    // Log FormData content
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    let response;
+    if (vendorData) {
+      // Update existing vendor
+      response = await axios.post(
+        `${process.env.REACT_APP_URL}/update_vendor/${vendorData.vendor_id}/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Vendor updated successfully");
+    } else {
+      // Create new vendor
+      response = await axios.post(
+        `${process.env.REACT_APP_URL}/add_vendor/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Vendor added successfully");
+    }
+
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to save vendor. Please try again later.");
+  }
+};
+
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">

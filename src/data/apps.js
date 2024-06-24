@@ -74,7 +74,7 @@ export const shedVendorsGrid = [
 
 
 export const CalibrationGrid = [
-  { type: 'checkbox', width: '50' },
+
   {
     field: "instrument_no",
     headerText: "Instrument Number",
@@ -147,6 +147,41 @@ export const CalibrationGrid = [
  
 
 ];
+
+export const calibrationHistoryGrid = [
+    {
+    field: "calibration_report_no",
+    headerText: "Report Number",
+    width: "150",
+    textAlign: "Center",
+  },
+  {
+   field: "calibration_date",
+    headerText: "Calibration Date",
+    width: "150",
+    textAlign: "Center", 
+  },
+   {
+   field: "next_calibration_date",
+    headerText: "Next Calibration Date",
+    width: "150",
+    textAlign: "Center", 
+  },
+   {
+   field: "notification_date",
+    headerText: "Notification Date",
+    width: "150",
+    textAlign: "Center", 
+  },
+  
+ 
+  {
+ field: "remark",
+    headerText: "Remark",
+    width: "150",
+    textAlign: "Center",
+  }
+]
 export const recentTransactions = [
   {
       MovementDate: "2022-03-17",

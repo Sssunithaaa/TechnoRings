@@ -6,12 +6,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-
+import { CalibrationGrid, calibrationHistoryGrid } from "../data/apps";
 const Instruments = () => {
   const [service, setService] = useState([]);
   const [transportOrder, setTransportOrder] = useState([]);
   const [shedDetails, setShedDetails] = useState({}); // State to store shed details
   const [instrument, setInstrument] = useState(null); // State to store instrument details
+    const [instrumentDetails, setInstrumentDetails] = useState(null); // State to store instrument details
+
   let grid;
 
   const { register, handleSubmit, watch } = useForm();
@@ -28,14 +30,14 @@ const Instruments = () => {
   const fetchToolData = async (toolId) => {
     try {
        const instrumentDetail = await axios.get(`${process.env.REACT_APP_URL}/instrument-calibration-history/${toolId}`);
-       
       setInstrument(instrumentDetail?.data?.instrument);
+      setInstrumentDetails(instrumentDetail?.data?.calibration_history)
+      console.log(instrumentDetails)
       const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${toolId}/`);
       const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${toolId}/`);
       setService(response1?.data?.service_history);
       setTransportOrder(response?.data?.transport_orders);
-      console.log(service)
-      console.log(instrument)
+      
     } catch (error) {
       console.error("Error fetching tool data:", error);
     }
@@ -229,6 +231,31 @@ const Instruments = () => {
         >
           <ColumnsDirective>
             {transportGridColumns.map((item, index) => (
+              <ColumnDirective key={index} {...item}></ColumnDirective>
+            ))}
+          </ColumnsDirective>
+          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
+        </GridComponent>
+      </div>
+      <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+        <Header className="Page" title="Calibration History" />
+        <GridComponent
+          dataSource={instrumentDetails}
+          width="auto"
+          allowGrouping
+          allowPaging
+          allowFiltering
+          allowSorting
+          allowDeleting
+          toolbar={['PdfExport']}
+          allowPdfExport
+          pdfExportComplete={pdfExportComplete}
+          actionComplete={handleActionComplete}
+          editSettings={{ allowDeleting: true }}
+          toolbarClick={toolbarClick}
+        >
+          <ColumnsDirective>
+            {calibrationHistoryGrid?.map((item, index) => (
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>

@@ -28,7 +28,7 @@ const UpdateShed = ({ open, handleClose, shed, mode }) => {
       name: name,
       location: location,
       phone_number: phoneNumber,
-      ...(mode === 'add' && { password }), // Include password only in add mode
+      ...(mode === 'add' && { password1: password }), // Include password only in add mode
     };
 
     console.log(data);

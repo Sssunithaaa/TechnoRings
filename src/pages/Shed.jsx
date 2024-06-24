@@ -27,14 +27,12 @@ const Shed = () => {
     queryKey: ["shed"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
-      console.log(response);
       return response.data;
     },
   });
 
   let grid;
 
-  console.log(shedDetailsData);
   const navigate = useNavigate();
 
   const handleActionComplete = async (args) => {
@@ -57,15 +55,12 @@ const Shed = () => {
           });
           refetch();
         } catch (error) {
-          console.error("Error inserting data:", error);
           toast.error("Error inserting data");
         }
       } else if (args.action === "edit") {
         // Update operation
         try {
-          console.log(args.data);
-          const response = await axios.put(`${process.env.REACT_APP_URL}/update_shed/${args.data.shed_id}/`, args.data);
-          console.log(response);
+           await axios.put(`${process.env.REACT_APP_URL}/update_shed/${args.data.shed_id}/`, args.data);
           toast.success("Shed updated successfully", {
             position: "top-center",
             autoClose: 1000,
@@ -85,7 +80,6 @@ const Shed = () => {
     } else if (args.requestType === "delete") {
       // Delete operation
       try {
-        console.log(args.data[0].shed_id);
         await axios.delete(`${process.env.REACT_APP_URL}/delete_shed/${args.data[0].shed_id}/`);
         toast.success("Shed deleted successfully", {
           position: "top-center",
@@ -99,23 +93,16 @@ const Shed = () => {
         });
         refetch();
       } catch (error) {
-        console.error("Error deleting data:", error);
         toast.error("Error deleting data");
       }
     }
   };
 
-  const editing = {
-    allowAdding: true,
-    allowDeleting: true,
-    allowEditing: true,
-    mode: "Dialog",
-  };
+
   const [open,setOpen] = useState(false);
   const fetchToolData = async (shed_id) => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
-      console.log(response.data);
       navigate(`${shed_id}`);
     } catch (error) {
       console.error("Error fetching tool data:", error);
@@ -129,13 +116,11 @@ const Shed = () => {
     setOpen(false);
   }
   const rowSelected = (args) => {
-    console.log(args.data);
     const selectedRecord = args.data["shed_id"];
     fetchToolData(selectedRecord);
   };
 
   const toolbarClick = (args) => {
-    console.log(args.item.id)
     if (args.item.id === "gridcomp_pdfexport") {
       grid.pdfExport();
     } else if (args.item.id === "gridcomp_excelexport") {
@@ -159,8 +144,7 @@ const Shed = () => {
           allowSelection
           allowSorting
           toolbarClick={toolbarClick}
-          toolbar={["Add", "PdfExport","ExcelExport"]}
-          editSettings={editing}
+          toolbar={[ "PdfExport","ExcelExport"]}
           rowSelected={rowSelected}
           allowPdfExport
           actionComplete={handleActionComplete}
@@ -168,8 +152,7 @@ const Shed = () => {
         >
           <ColumnsDirective>
             {shedDetailsGrid.map((item, index) => (
-              item.field === "password" ? <ColumnDirective field="password" headerText="Password" width="150" textAlign="Center" visible={false} edit={{ type: 'string', params: { validationRules: { required: true } } }} />
-:
+             
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>

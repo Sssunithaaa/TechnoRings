@@ -40,7 +40,12 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, 
       },
     ]);
     };
-    
+    const handleRemoveTool = () => {
+        setToolCount(toolCount - 1);
+        setToolDetails([
+      ...toolDetails.slice(0, toolCount - 1),
+        ])
+    };
    const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -225,9 +230,17 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, 
                        <button
                             type="button"
                             onClick={handleAddTool}
-                            className="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600"
+                            className="bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 "
                         >
                             Add Tool
+
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleRemoveTool}
+                            className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-600 "
+                        >
+                            Remove Tool
                         </button>
                         <button
                             type="submit"
@@ -242,7 +255,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, 
                                 onClose();
                                 reset();
                             }}
-                            className=" bg-red-600 text-yellow-200 font-semibold py-2 px-4 rounded-md hover:text-white focus:outline-none"
+                            className=" bg-red-600 text-gray-200 font-semibold py-2 px-4 rounded-md hover:text-white focus:outline-none"
                         >
                             Cancel
                         </button>

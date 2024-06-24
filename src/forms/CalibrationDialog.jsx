@@ -20,7 +20,8 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
   });
 
   const [calibrationFrequencyUnit, setCalibrationFrequencyUnit] = useState("days");
-      console.log(instrument)
+  const [typeOfToolName, setTypeOfToolName] = useState("");
+  const [masters, setMasters] = useState([]);
 
   useEffect(() => {
     if (instrument) {
@@ -35,7 +36,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         calibration_frequency: instrument.calibration_frequency || "",
         type_of_tool_id: instrument.type_of_tool_id || ""
       });
-      // Infer unit from the calibration_frequency value if possible
+      setTypeOfToolName(instrument.type_of_tool_name || "");
       const days = parseInt(instrument.calibration_frequency, 10);
       if (!isNaN(days)) {
         if (days % 365 === 0) {
@@ -48,6 +49,19 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
           setCalibrationFrequencyUnit("days");
         }
       }
+    } else {
+      setFormData({
+        instrument_name: "",
+        manufacturer_name: "",
+        year_of_purchase: date,
+        gst: "",
+        description: "",
+        least_count: "",
+        instrument_range: "",
+        calibration_frequency: "",
+        type_of_tool_id: ""
+      });
+      setTypeOfToolName("");
     }
   }, [instrument, date]);
 
@@ -56,6 +70,11 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
       ...prevFormData,
       [field]: value
     }));
+
+    if (field === "type_of_tool_id") {
+      const selectedTool = masters.find(tool => tool.tool_group_id === value);
+      setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
+    }
   };
 
   const handleFormAddOrUpdate = () => {
@@ -101,7 +120,6 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
       .replace(/(?:^|\s)\S/g, function (a) { return a.toUpperCase(); });
   };
 
-  const [masters, setMasters] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {

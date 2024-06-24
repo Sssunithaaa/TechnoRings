@@ -152,16 +152,16 @@ useEffect( ()=> {
                 <thead className='bg-gray-900 text-white'>
                   <tr>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Name</th>
-                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Service Status</th>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Shed name</th>
                                         <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Notification date</th>
 
                   </tr>
                 </thead>
                 <tbody className='text-gray-700'>
-                  {count.tools_to_notify.map((notification, index) => (
+                  {count && count.tools_to_notify.map((notification, index) => (
                     <tr key={index} className='bg-gray-200'>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
-                      <td className='w-1/3 text-center py-3 px-4'>{notification.service_status ? "To be sent" : "Out of Service"}</td>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.current_shed}</td>
                                             <td className='w-1/3 text-center py-3 px-4'>{notification.notification_date}</td>
 
                     </tr>

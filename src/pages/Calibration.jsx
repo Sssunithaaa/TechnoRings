@@ -123,7 +123,7 @@ const Calibration = () => {
                 allowFiltering
                 allowSorting
                 toolbar={[ 'PdfExport','ExcelExport']}
-                editSettings={{  allowDeleting: true, allowEditing: true, mode: 'Dialog' }}
+              
                 allowExcelExport
                 allowPdfExport
                 pageSettings={{pageSize:5}}

@@ -143,11 +143,13 @@ export const links = [
         icon: <AiOutlineTransaction />,
         link:"instruments"
       },
-        {
-        name: "Instrument Group Masters",
+       
+       {
+        name: "Instrument Family",
         icon: <AiOutlineTransaction />,
-        link:"instrument-group-master"
+        link:"instrument-family"
       },
+        
      
       {
         name: "Transport orders",

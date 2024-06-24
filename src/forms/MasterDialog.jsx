@@ -84,9 +84,9 @@ const handleDialogOpen = ()=> {
 const handleDialogClose=()=> {
   setOpen(false)
 }
-const handleDelete=()=> {
+const handleDelete=async ()=> {
   try {
-    const response = axios.get(`${process.env.REACT_APP_URL}/instrument_group/${id}/delete/`);
+    const response =await axios.get(`${process.env.REACT_APP_URL}/instrument_group/${id}/delete/`);
     console.log(response);
     toast.success("Instrument group master deleted successfully!!");
   } catch (error) {

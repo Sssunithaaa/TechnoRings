@@ -1,22 +1,24 @@
-import React,{useState,useEffect} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter} from '@syncfusion/ej2-react-grids'
+import React, { useState, useEffect } from "react";
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, ContextMenu, Inject, Edit, Toolbar, Sort, Filter } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
-import axios from "axios"
+import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import AddInstrumentGroupDialog from "../forms/GroupMaster";
 import { Button } from "@mui/material";
-import ToolsDialog from "../forms/MasterDialog";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
+import BackButton from "../components/BackButton";
+import { toast,ToastContainer } from "react-toastify";
 const GroupMaster = () => {
+  const { id } = useParams();  // Extracting the id from URL params
   const [open, setOpen] = useState(false);
-  const [tools, setTools] = useState([]);
-  const [toolsDialogOpen, setToolsDialogOpen] = useState(false);
-
-  const { data: masters, refetch } = useQuery({
-    queryKey: ["masters"],
+  const navigate = useNavigate();
+  const [name,setName] = useState()
+  const { data, refetch } = useQuery({
+    queryKey: ["masters", id],  // Adding id to the query key
     queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-group-master-tools/`);
-      return response.data.instrument_group_masters;
+      const response = await axios.get(`${process.env.REACT_APP_URL}/instruments_by_instrument_family/${id}/`);
+      setName(response.data.tool_family)
+      return response.data.tools;
     },
   });
 
@@ -28,11 +30,10 @@ const GroupMaster = () => {
   const handleDialogOpen = () => {
     setOpen(true);
   };
-  const navigate = useNavigate();
 
-  const handleRowClick = async (args) => {
+  const handleRowClick = (args) => {
     const id = args.data.tool_group_id;
-    navigate(`${id}`)
+    navigate(`/instrument-family/master/tools/${id}`);
   };
 
   useEffect(() => {
@@ -41,44 +42,77 @@ const GroupMaster = () => {
 
   const transportGridColumns = [
     { field: "tool_group_id", headerText: "Tool Group ID", width: "150", textAlign: "Center" },
-    { field: "tool_group_name", headerText: "Tool group name", width: "150", textAlign: "Center" },
-    { field: "tool_group_code", headerText: "Tool group code", width: "150", textAlign: "Center" },
+    { field: "tool_group_name", headerText: "Tool Group Name", width: "150", textAlign: "Center" },
+    { field: "tool_group_code", headerText: "Tool Group Code", width: "150", textAlign: "Center" },
   ];
-   const toolbarClick = (args) => {
-    console.log(args.item.id)
-        if (args.item.id === 'gridcomp_pdfexport') {
-            grid.pdfExport();
-        } else if(args.item.id === 'gridcomp_excelexport') {
-            grid.excelExport();
-        }
-        
-    };
+
+  const toolbarClick = (args) => {
+    console.log(args.item.id);
+    if (args.item.id === 'gridcomp_pdfexport') {
+      grid.pdfExport();
+    } else if (args.item.id === 'gridcomp_excelexport') {
+      grid.excelExport();
+    }
+  };
+
+  const handleDelete=async ()=> {
+    
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument_family/${id}/delete/ `);
+      if(response.data.success){
+        toast.success(response.data.message)
+        setTimeout(()=> {
+          navigate(-1);
+        },2000)
+    } } catch (error) {
+      toast.error("Error deleting instrument family ")
+    }
+  }
+
+
   let grid;
   return (
+    <div>
+       <div className="flex justify-start ml-10 mt-10">
+        <BackButton />
+      </div>
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-      <Button variant="contained" color="primary" onClick={handleDialogOpen}>
-        Add Instrument Group
-      </Button>
+       <div className="my-3 text-[22px] flex justify-between">
+    <div>
+      <strong>Family name: </strong>{name}
+    </div>
+    <div>
+      
+                <button className="px-5 py-2 bg-red-500 text-[18px] rounded-md text-white font-semibold" onClick={handleDelete}>   Delete instrument family
+</button>
+    
+    </div>
+  </div>
+                <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={handleDialogOpen}>        Add Instrument Group
+</button>
+<ToastContainer/>
+    
+
       <AddInstrumentGroupDialog open={open} handleClose={handleDialogClose} />
 
-      <Header className="Page" title="Instrument group masters" />
+      <Header className="Page" title="Instrument Group Masters" />
 
       <GridComponent
         id="gridcomp"
-        dataSource={masters}
+        dataSource={data}
         width="auto"
         allowPaging
         allowSelection
         allowSorting
         toolbarClick={toolbarClick}
-        toolbar={['Delete',"ExcelExport","PdfExport"]}
+        toolbar={['Delete', "ExcelExport", "PdfExport"]}
         pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
         sortSettings={{ columns: [{ field: 'tool_group_id', direction: 'Descending' }] }}
         allowPdfExport
-        rowSelected={handleRowClick} // Add rowSelected event handler
-           ref={g => grid = g}
+        rowSelected={handleRowClick}
+        ref={g => grid = g}
       >
         <ColumnsDirective>
           {transportGridColumns.map((item, index) => (
@@ -97,7 +131,7 @@ const GroupMaster = () => {
           ]}
         />
       </GridComponent>
-
+    </div>
     </div>
   );
 };

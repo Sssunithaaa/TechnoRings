@@ -34,6 +34,7 @@ import GenerateBill from "./pages/GenerateBill";
 import Challan from "./pages/Challan";
 import GroupMaster from "./pages/InstrumentGroupMaster";
 import MasterToolsDialog from "./forms/MasterDialog";
+import InstrumentFamily from "./pages/InstrumentFamily";
 
 function App() {
   const {
@@ -109,7 +110,6 @@ function App() {
                   <Route path="/transport-history" element={<History />} />
                               <Route path="/service-history" element={<ServiceHistory />} />
                               <Route path="/service-history" element={<ServiceHistory />} />
-                <Route path="/instrument-group-master" element={<GroupMaster/>}/>
                 <Route
                   path="/transactions"
                   element={<CreateMovement />}
@@ -127,8 +127,10 @@ function App() {
                   element={<GenerateBill />}
                 ></Route> */}
                 <Route path="/services" element={<CreateService />}></Route>
-              
-                                <Route path="/instrument-group-master/:id" element={<MasterToolsDialog/>}></Route>
+                <Route path="/instrument-family" element={<InstrumentFamily/>}></Route>
+                                <Route path="/instrument-family/master/:id" element={<GroupMaster/>}></Route>
+
+                                <Route path="/instrument-family/master/tools/:id" element={<MasterToolsDialog/>}></Route>
 
                 <Route path="/instruments" element={<Instruments/>}></Route>
               </Routes>

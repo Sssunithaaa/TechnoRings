@@ -14,6 +14,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
   const [serviceTools, setServiceTools] = useState([]);
   const [vendorTypes, setVendorTypes] = useState([]);
   const [vendors, setVendors] = useState([]);
+  const [pendingServiceOrders, setPendingServiceOrders] = useState([]);
   const date = new Date().toISOString().split('T')[0];
 
   const { data: deliveryChallan } = useQuery({
@@ -96,18 +97,13 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
       fetchServiceTools();
     }
   }, [selectedServiceId]);
+
   useEffect(() => {
     if (selectedVendor) {
-      const fetchVendorsByType = async () => {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/${selectedVendor}/`);
-        } catch (error) {
-          console.error("Error fetching services:", error);
-        }
-      };
-      fetchVendorsByType();
+      const vendor = vendors.find((v) => v.vendor_id === selectedVendor);
+      setPendingServiceOrders(vendor?.pending_service_orders || []);
     }
-  }, [selectedVendor]);
+  }, [selectedVendor, vendors]);
 
   const handleAddCalibrationDetails = () => {
     setShowCalibrationModal(true);
@@ -171,16 +167,15 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
     }
   };
 
-  const handleToolDetails = (toolDetails) => {
-  };
+  const handleToolDetails = (toolDetails) => {};
 
   const shed_details = shedDetails?.shed_details;
-  
+
   return (
     <>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle>Add New Instrument</DialogTitle>
-        <ToastContainer/>
+        <ToastContainer />
         <DialogContent>
           <form
             onSubmit={handleSubmit(submitHandler)}
@@ -247,7 +242,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
                 </MenuItem>
                 {vendors?.map((vendor) => (
                   <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>
-                    {vendor.vendor}
+                    {vendor.vendor_name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -295,20 +290,18 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
                 <MenuItem value="">
                   <em>Select service</em>
                 </MenuItem>
-                {services?.map((service) => (
+                {pendingServiceOrders?.map((service) => (
                   <MenuItem key={service.service_id} value={service.service_id}>
                     {service.service_id} - Date: {service.date}
                   </MenuItem>
                 ))}
               </TextField>
             </div>
-            {serviceTools && serviceTools?.map((tool)=> (
-              <div className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
-    
-        <p><strong>Tool Name:</strong> {tool.tool_name}</p>
-       
-      </div>
-))}
+            {serviceTools && serviceTools?.map((tool) => (
+              <div key={tool.tool_id} className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
+                <p><strong>Tool Name:</strong> {tool.tool_name}</p>
+              </div>
+            ))}
 
             <div>
               <Button
