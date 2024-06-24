@@ -128,11 +128,10 @@ const Shed = () => {
   };
 
   const toolbarClick = (args) => {
+    console.log(args.item.id)
     if (args.item.id === "gridcomp_pdfexport") {
-      grid.showSpinner();
       grid.pdfExport();
     } else if (args.item.id === "gridcomp_excelexport") {
-      grid.showSpinner();
       grid.excelExport();
     }
   };
@@ -152,12 +151,12 @@ const Shed = () => {
           allowSelection
           allowSorting
           toolbarClick={toolbarClick}
-          toolbar={["Add", "PdfExport"]}
+          toolbar={["Add", "PdfExport","ExcelExport"]}
           editSettings={editing}
           rowSelected={rowSelected}
           allowPdfExport
           actionComplete={handleActionComplete}
-          ref={(g) => (grid = g)}
+          ref={g => grid = g}
         >
           <ColumnsDirective>
             {shedDetailsGrid.map((item, index) => (

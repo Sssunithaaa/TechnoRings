@@ -17,32 +17,9 @@ const History = () => {
       return response.data.transport_orders;
     },
   });
-  const [shedDetails, setShedDetails] = useState({}); 
  
-  useEffect(() => {
-    axios.get(`${process.env.REACT_APP_URL}/shed-details/`)
-      .then(response => {
-        const shedMap = {};
-        console.log(response.data.shed_details)
-        response.data?.shed_details?.forEach(shed => {
-          shedMap[shed.shed_id] = shed.name;
-        });
-        console.log(shedMap)
-        // Set the shed details state
-        setShedDetails(shedMap);
-      })
-      .catch(error => {
-        console.error('Error fetching shed details:', error);
-      });
-  }, []);
-  const mapShedIdToName = (id) => {
-    return shedDetails[id] || 'Unknown'; // Return the shed name or 'Unknown' if not found
-  };
-   const sourceShedTemplate = (props) => {
-    return <div>
-      {mapShedIdToName(props.source_shed)}
-    </div>;
-  };
+
+ 
       const handleDialogClose = () => {
         setOpen(false);
         refetch()
@@ -57,12 +34,7 @@ const History = () => {
   const handleDialogOpenn = () => {
         setOpenn(true);
     };
-  // Template function to display destination shed name
-  const destinationShedTemplate = (props) => {
-    return <div>
-      {mapShedIdToName(props.destination_shed)}
-    </div>;
-  };
+ 
   useEffect(()=> {
     window.scrollTo(0,0);
   },[])
@@ -71,8 +43,8 @@ const History = () => {
     { field: "movement_id", headerText: "Movement ID", width: "150", textAlign: "Center" },
     { field: "movement_date", headerText: "Movement date", width: "150", textAlign: "Center" },
     { field: "acknowledgment", headerText: "Acknowledgment", width: "150", textAlign: "Center" },
-    { field: "source_shed", headerText: "Source shed", width: "150", textAlign: "Center", template: sourceShedTemplate },
-    { field: "destination_shed", headerText: "Destination shed", width: "150", textAlign: "Center", template: destinationShedTemplate },
+    { field: "source_shed_name", headerText: "Source shed", width: "150", textAlign: "Center" },
+    { field: "destination_shed_name", headerText: "Destination shed", width: "150", textAlign: "Center" },
     { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
   ];
     const handleRowClick = async (args) => {
@@ -87,6 +59,16 @@ const History = () => {
       console.error("Error fetching transport order details:", error);
     }
   };
+   const toolbarClick = (args) => {
+    console.log(args.item.id)
+        if (args.item.id === 'gridcomp_pdfexport') {
+            grid.pdfExport();
+        } else if(args.item.id === 'gridcomp_excelexport') {
+            grid.excelExport();
+        }
+        
+    };
+  let grid;
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
@@ -102,14 +84,15 @@ const History = () => {
         allowPaging
         allowSelection
         allowSorting
-        toolbar={['Delete']}
+        toolbar={['Delete',"ExcelExport","PdfExport"]}
          pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting:true,allowEditing:true}}
+        toolbarClick={toolbarClick}
         allowExcelExport
           sortSettings={{ columns: [{ field: 'movement_id', direction: 'Descending' }] }} 
         allowPdfExport
                 rowSelected={handleRowClick} // Add rowSelected event handler
-
+           ref={g => grid = g}
         
       >
         <ColumnsDirective>

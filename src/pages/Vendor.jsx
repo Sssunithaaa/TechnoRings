@@ -76,6 +76,17 @@ const employeesGrid = [
 ];
 
 
+ const toolbarClick = (args) => {
+        if (args.item.id === 'gridcomp_pdfexport') {
+    
+            grid.pdfExport();
+        } else if(args.item.id === 'gridcomp_excelexport') {
+
+            grid.excelExport();
+        }
+        
+    };
+
 
   const fetchVendorData = async (vendor_id) => {
     try {
@@ -146,12 +157,14 @@ const handleActionComplete = async (args) => {
       <GridComponent
         dataSource={vendors?.vendors}
         width="auto"
-        toolbar={["Search"]}
+        toolbar={["Search","ExcelExport","PdfExport"]}
         allowPaging
         allowSorting
         allowAdding
         allowEditing
-   
+        allowExcelExport
+        toolbarClick={toolbarClick}
+        allowPdfExport
         allowGrouping
         allowDeleting
         pageSettings={{ pageSize: 5 }}

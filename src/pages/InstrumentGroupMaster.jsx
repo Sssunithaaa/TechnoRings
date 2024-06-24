@@ -44,7 +44,16 @@ const GroupMaster = () => {
     { field: "tool_group_name", headerText: "Tool group name", width: "150", textAlign: "Center" },
     { field: "tool_group_code", headerText: "Tool group code", width: "150", textAlign: "Center" },
   ];
-
+   const toolbarClick = (args) => {
+    console.log(args.item.id)
+        if (args.item.id === 'gridcomp_pdfexport') {
+            grid.pdfExport();
+        } else if(args.item.id === 'gridcomp_excelexport') {
+            grid.excelExport();
+        }
+        
+    };
+  let grid;
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       <Button variant="contained" color="primary" onClick={handleDialogOpen}>
@@ -61,13 +70,15 @@ const GroupMaster = () => {
         allowPaging
         allowSelection
         allowSorting
-        toolbar={['Delete']}
+        toolbarClick={toolbarClick}
+        toolbar={['Delete',"ExcelExport","PdfExport"]}
         pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
         sortSettings={{ columns: [{ field: 'tool_group_id', direction: 'Descending' }] }}
         allowPdfExport
         rowSelected={handleRowClick} // Add rowSelected event handler
+           ref={g => grid = g}
       >
         <ColumnsDirective>
           {transportGridColumns.map((item, index) => (

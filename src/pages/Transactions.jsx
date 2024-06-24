@@ -16,7 +16,6 @@ const Transactions = () => {
   const location = useLocation();  
   const { state } = location;  
   const { instrument } = state || {}; 
-  console.log(instrument) 
   const fetchToolData = async (id) => {
     try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${id}/`);

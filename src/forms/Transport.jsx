@@ -49,6 +49,12 @@ const CreateMovement = ({ open, handleClose }) => {
       { id: toolCount + 1, tool: "", remark: "" },
     ]);
   };
+   const subtractToolField = () => {
+    if (toolCount > 1) {
+      setToolCount(prevCount => prevCount - 1);
+      setTools(prevTools => prevTools.slice(0, -1));
+    }
+  };
   const date=new Date().toISOString().split('T')[0]
 
   const {
@@ -213,7 +219,8 @@ handleClose();
             </div>
           ))}
 
-          <Button
+          <div className="flex justify-between">
+            <Button
             onClick={addToolField}
             variant="contained"
             color="primary"
@@ -221,6 +228,15 @@ handleClose();
           >
             Add Another Tool
           </Button>
+           <Button
+            onClick={subtractToolField}
+            variant="contained"
+            color="secondary"
+            style={{ margin: "20px 0" }}
+          >
+            Remove Tool
+          </Button>
+          </div>
         </form>
       </DialogContent>
       <DialogActions>

@@ -9,6 +9,7 @@ const Homepage = () => {
   const [displayedOrders, setDisplayedOrders] = useState(5);
   const [request, setRequest] = useState("");
   const [table, setTable] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Current month as default
 
   const { data: toolsData } = useQuery({
     queryKey: ["tools"],
@@ -17,14 +18,25 @@ const Homepage = () => {
       return response.data;
     },
   });
+  const [count,setCount] = useState();
 
-  const { data: count } = useQuery({
-    queryKey: ["counts"],
-    queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/count_of/`);
-      return response.data;
-    },
-  });
+useEffect( ()=> {
+  console.log(selectedMonth)
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/count_of/${selectedMonth}/`);
+        console.log(response.data["data"])
+        if (response.data["data"]) {
+      setCount(response.data["data"])
+      }
+    } catch(error){
+
+    }
+  }
+  fetchData()
+  
+
+},[selectedMonth]);
 
   const { data: vendors } = useQuery({
     queryKey: ["vendor"],
@@ -141,13 +153,17 @@ const Homepage = () => {
                   <tr>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Name</th>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Service Status</th>
+                                        <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Notification date</th>
+
                   </tr>
                 </thead>
                 <tbody className='text-gray-700'>
-                  {notificationData.map((notification, index) => (
+                  {count.tools_to_notify.map((notification, index) => (
                     <tr key={index} className='bg-gray-200'>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.service_status ? "To be sent" : "Out of Service"}</td>
+                                            <td className='w-1/3 text-center py-3 px-4'>{notification.notification_date}</td>
+
                     </tr>
                   ))}
                 </tbody>
@@ -155,16 +171,20 @@ const Homepage = () => {
             </div>
           </div>
         )}
+         <div className='text-center'>
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(Number(e.target.value))}
+          className='  px-6 py-3  text-lg bg-[#2e1cc9] text-gray-300 rounded-md my-2'
+        >
+          {Array.from({ length: 12 }, (_, index) => (
+            <option key={index + 1} value={index + 1}>
+              {new Date(0, index).toLocaleString('default', { month: 'long' })}
+            </option>
+          ))}
+        </select>
+      </div>
         <div className='flex lg:flex-row flex-col gap-y-5 gap-x-5'>
-          {/* <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
-            <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
-              <span className='p-1 bg-[#8177d5] rounded-md'>
-                <BsPersonWorkspace color='#2e1cc9'/>
-              </span>Instruments</p>
-            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.instruments_count}</p>
-            <p className='text-sm text-gray-500'>Active</p>
-            <p onClick={() => setRequest("")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
-          </div> */}
           <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
             <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
@@ -191,6 +211,15 @@ const Homepage = () => {
             <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.service_order_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
             <p onClick={() => setRequest("recent_service_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
+          </div>
+          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
+            <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
+              <span className='p-1 bg-[#8177d5] rounded-md'>
+                <MdOutlineMiscellaneousServices color='#2e1cc9'/>
+              </span>Instruments</p>
+            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.instruments_count}</p>
+            <p className='text-sm text-gray-500'>Active</p>
+            <p onClick={() => setRequest("recent_instruments")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
           </div>
         </div>
       </div>
@@ -233,6 +262,8 @@ const Homepage = () => {
           </button>
         )}
       </div>
+
+     
     </div>
   );
 };

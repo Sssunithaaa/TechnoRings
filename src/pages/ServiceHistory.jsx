@@ -75,6 +75,16 @@ const ServiceHistory = () => {
       console.error("Error fetching transport order details:", error);
     }
   };
+   const toolbarClick = (args) => {
+    console.log(args.item.id)
+        if (args.item.id === 'gridcomp_pdfexport') {
+            grid.pdfExport();
+        } else if(args.item.id === 'gridcomp_excelexport') {
+            grid.excelExport();
+        }
+        
+    };
+  let grid;
     
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -85,19 +95,20 @@ const ServiceHistory = () => {
         id="gridcomp"
         dataSource={serviceorders}
         width="auto"
-        
+          toolbar={['Delete',"ExcelExport","PdfExport"]}
+
         allowPaging
         allowSelection
         allowSorting
          pageSettings={{ pageSize: 5 }}
-      
+        toolbarClick={toolbarClick}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
         sortSettings={{ columns: [{ field: 'service_id', direction: 'Descending' }] }} 
 
         allowPdfExport
         rowSelected={handleRowClick}
-        
+           ref={g => grid = g}
       >
         <ColumnsDirective>
           {serviceGridColumns.map((item, index) => (

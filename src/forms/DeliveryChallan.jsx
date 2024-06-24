@@ -73,7 +73,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
     if (selectedVendorTypeId) {
       const fetchVendorsByType = async () => {
         try {
-          const response = await axios.get(`${process.env.REACT_APP_URL}/pending-service-orders/vendor/${selectedVendorTypeId}/`);
+          const response = await axios.get(`${process.env.REACT_APP_URL}/pending_service_orders/vendor/${selectedVendorTypeId}/`);
           setVendors(response.data);
         } catch (error) {
           console.error("Error fetching vendors by type:", error);
@@ -246,7 +246,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
                   <em>Select a vendor</em>
                 </MenuItem>
                 {vendors?.map((vendor) => (
-                  <MenuItem key={vendor.vendor_id} value={vendor.vendor}>
+                  <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>
                     {vendor.vendor}
                   </MenuItem>
                 ))}

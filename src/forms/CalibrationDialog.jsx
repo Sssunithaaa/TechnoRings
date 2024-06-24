@@ -20,6 +20,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
   });
 
   const [calibrationFrequencyUnit, setCalibrationFrequencyUnit] = useState("days");
+      console.log(instrument)
 
   useEffect(() => {
     if (instrument) {
