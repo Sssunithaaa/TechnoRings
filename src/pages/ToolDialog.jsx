@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import CreateMovement from "../forms/Transport";
 
 const ToolDialog = ({ open, handleClose, transportOrder }) => {
   const [selectedToolIds, setSelectedToolIds] = useState([]);
@@ -61,7 +62,13 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
       console.error("Failed to acknowledge tools:", error);
     }
   };
-
+  const [openn,setOpenn] = useState(false);
+  const handleDialogOpenn=()=> {
+    setOpenn(true)
+  }
+  const handleDialogClosee=()=> {
+    setOpenn(false)
+  }
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle className="text-center">Transport Order Details</DialogTitle>
@@ -97,19 +104,25 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
         ) : (
           <p>Loading...</p>
         )}
+              <div className="flex mx-auto justify-center items-center">
+                   <button className="px-5 py-2 bg-blue-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn}>Update transport order details
+</button>
+              </div>
       </DialogContent>
+
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <button className="px-5 py-2 bg-red-500 text-[14px] rounded-md text-white font-semibold" onClick={handleClose}>
           Close
-        </Button>
+        </button>
         {
           !transportOrder?.transport_order.acknowledgment && (
-            <Button onClick={acknowledgeTools} color="primary">
+            <button className="px-5 py-2 bg-blue-500 text-[14px] rounded-md text-white font-semibold" onClick={acknowledgeTools}>
               Acknowledge
-            </Button>
+            </button>
           )
         }
       </DialogActions>
+      <CreateMovement open={openn} handleClose={handleDialogClosee} transportOrder={transportOrder}/>
     </Dialog>
   );
 };

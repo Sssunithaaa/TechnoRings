@@ -8,15 +8,21 @@ import { Button } from "@mui/material";
 import {  useNavigate, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import { toast,ToastContainer } from "react-toastify";
+import AddInstrumentFamilyDialog from "../forms/InstrumentGroup";
 const GroupMaster = () => {
   const { id } = useParams();  // Extracting the id from URL params
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [name,setName] = useState()
+  const [instrumentGroup,setInstrumentGroup] = useState()
   const { data, refetch } = useQuery({
     queryKey: ["masters", id],  // Adding id to the query key
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/instruments_by_instrument_family/${id}/`);
+      setInstrumentGroup({
+        instrument_family_id:id,
+        instrument_family_name: response.data.tool_family
+      })
       setName(response.data.tool_family)
       return response.data.tools;
     },
@@ -73,7 +79,14 @@ const GroupMaster = () => {
       toast.error("Error deleting instrument family ")
     }
   }
-
+  const [openn,setOpenn] = useState(false);
+ const handleDialogOpenn = ()=> {
+  setOpenn(true);
+ }
+  const handleDialogClosee = ()=> {
+  setOpenn(false);
+  refetch();
+ }
 
   let grid;
   return (
@@ -85,6 +98,10 @@ const GroupMaster = () => {
        <div className="my-3 text-[22px] flex justify-between">
     <div>
       <strong>Family name: </strong>{name}
+    </div>
+    <div>
+               <button className="px-5 py-2 bg-blue-500 text-[18px] rounded-md text-white font-semibold" onClick={handleDialogOpenn}>   Update instrument family
+</button>
     </div>
     <div>
       
@@ -138,6 +155,7 @@ const GroupMaster = () => {
           ]}
         />
       </GridComponent>
+      <AddInstrumentFamilyDialog open={openn} handleClose={handleDialogClosee} instrumentGroup={instrumentGroup}/>
     </div>
     </div>
   );

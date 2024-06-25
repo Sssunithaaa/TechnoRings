@@ -13,13 +13,17 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const CreateMovement = ({ open, handleClose }) => {
-  const [toolCount, setToolCount] = useState(1);
-  const [tools, setTools] = useState([{ id: 1, tool: "", remark: "" }]);
+const CreateMovement = ({ open, handleClose, transportOrder }) => {
+  const [toolCount, setToolCount] = useState(transportOrder ? transportOrder?.transport_tools?.length : 1);
+  const [tools, setTools] = useState(transportOrder ? transportOrder?.transport_tools?.map((tool, index) => ({
+    id: index + 1,
+    tool: tool.tool,
+    remark: tool.tool_movement_remarks
+  })) : [{ id: 1, tool: "", remark: "" }]);
   const [shedTools, setShedTools] = useState([]);
-  const [selectedShed, setSelectedShed] = useState(null);
+  const [selectedShed, setSelectedShed] = useState(transportOrder ? transportOrder?.transport_order?.source_shed : null);
   const [sheds, setSheds] = useState([]);
-
+ 
   useEffect(() => {
     if (selectedShed) {
       axios
@@ -49,31 +53,34 @@ const CreateMovement = ({ open, handleClose }) => {
       { id: toolCount + 1, tool: "", remark: "" },
     ]);
   };
-   const subtractToolField = () => {
+  
+  const subtractToolField = () => {
     if (toolCount > 1) {
       setToolCount(prevCount => prevCount - 1);
       setTools(prevTools => prevTools.slice(0, -1));
     }
   };
-  const date=new Date().toISOString().split('T')[0]
+
+  const date = new Date().toISOString().split('T')[0];
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {
-      movementDate: date,
-      sourceShed: 0,
-      destinationShed: 0,
+      movementDate: transportOrder ? transportOrder.transport_order.movement_date : date,
+      sourceShed: transportOrder ? transportOrder.transport_order.source_shed : 0,
+      destinationShed: transportOrder ? transportOrder.transport_order.destination_shed : 0,
     },
     mode: "onChange",
   });
-  
+  const [dshed,setDshed] = useState();
 
   const submitHandler = async (data) => {
     try {
-      const toolsArray = tools.map((tool) => ({
+      const toolsArray = tools && tools?.map((tool) => ({
         tool: tool.tool,
         tool_movement_remarks: tool.remark,
       }));
@@ -86,28 +93,36 @@ const CreateMovement = ({ open, handleClose }) => {
         tools: toolsArray,
       };
 
-      console.log(requestData);
-
-      await axios.post(
-        `${process.env.REACT_APP_URL}/add-transport-order/`,
-        requestData
-      );
-
-      toast.success("Tool movement added successfully", {
-        position: "top-center",
-        autoClose: 1000,
-        style: {
-          width: "auto",
-          style: "flex justify-center",
-        },
-        closeButton: false,
-        progress: undefined,
-      });
-      setTimeout(()=> {
-handleClose();
-      },3000)
-
-       // Close the dialog on successful submission
+      if (transportOrder) {
+        // Update existing transport order
+        await axios.post(`${process.env.REACT_APP_URL}/update_transport_tools/${transportOrder.transport_order.movement_id}/`, requestData);
+        toast.success("Tool movement updated successfully", {
+          position: "top-center",
+          autoClose: 1000,
+          style: {
+            width: "auto",
+            style: "flex justify-center",
+          },
+          closeButton: false,
+          progress: undefined,
+        });
+      } else {
+        // Create new transport order
+        await axios.post(`${process.env.REACT_APP_URL}/add-transport-order/`, requestData);
+        toast.success("Tool movement added successfully", {
+          position: "top-center",
+          autoClose: 1000,
+          style: {
+            width: "auto",
+            style: "flex justify-center",
+          },
+          closeButton: false,
+          progress: undefined,
+        });
+      }
+      setTimeout(() => {
+        handleClose();
+      }, 3000);
     } catch (error) {
       console.error("Error sending data:", error);
     }
@@ -116,9 +131,7 @@ handleClose();
   useEffect(() => {
     const fetchSheds = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_URL}/shed-details/`
-        );
+        const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
         setSheds(response.data);
       } catch (error) {
         console.error("Error fetching sheds:", error);
@@ -128,11 +141,21 @@ handleClose();
     fetchSheds();
   }, []);
 
+  useEffect(() => {
+    if (transportOrder) {
+      reset({
+        movementDate: transportOrder.transport_order.movement_date,
+        sourceShed: transportOrder.transport_order.source_shed,
+        destinationShed: transportOrder.transport_order.destination_shed,
+      });
+    }
+  }, [transportOrder, reset]);
+
   const shed_details = sheds?.shed_details;
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Add Tool Movement</DialogTitle>
+      <DialogTitle>{transportOrder ? "Update Tool Movement" : "Add Tool Movement"}</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(submitHandler)}>
           <TextField
@@ -159,6 +182,7 @@ handleClose();
             onChange={(e) => setSelectedShed(e.target.value)}
             error={!!errors.sourceShed}
             helperText={errors.sourceShed?.message}
+            value={transportOrder ? transportOrder.transport_order.source_shed : ''}
           >
             <MenuItem value="">Select a Source Shed</MenuItem>
             {shed_details?.map((shed) => (
@@ -177,7 +201,9 @@ handleClose();
             fullWidth
             margin="normal"
             error={!!errors.destinationShed}
+            onChange = {(e)=> setDshed(e.target.value)}
             helperText={errors.destinationShed?.message}
+            value={transportOrder ? dshed : ''}
           >
             <MenuItem value="">Select a Destination Shed</MenuItem>
             {shed_details?.map((shed) => (
@@ -198,7 +224,8 @@ handleClose();
                 margin="normal"
                 required
               >
-                <MenuItem value="">Select a tool</MenuItem>
+                <MenuItem value="">Select a tool
+</MenuItem>
                 {shedTools?.map((shedTool) => (
                   <MenuItem
                     key={shedTool.shedtool_id}
@@ -221,21 +248,21 @@ handleClose();
 
           <div className="flex justify-between">
             <Button
-            onClick={addToolField}
-            variant="contained"
-            color="primary"
-            style={{ margin: "20px 0" }}
-          >
-            Add Another Tool
-          </Button>
-           <Button
-            onClick={subtractToolField}
-            variant="contained"
-            color="secondary"
-            style={{ margin: "20px 0" }}
-          >
-            Remove Tool
-          </Button>
+              onClick={addToolField}
+              variant="contained"
+              color="primary"
+              style={{ margin: "20px 0" }}
+            >
+              Add Another Tool
+            </Button>
+            <Button
+              onClick={subtractToolField}
+              variant="contained"
+              color="secondary"
+              style={{ margin: "20px 0" }}
+            >
+              Remove Tool
+            </Button>
           </div>
         </form>
       </DialogContent>
@@ -244,7 +271,7 @@ handleClose();
           Cancel
         </Button>
         <Button onClick={handleSubmit(submitHandler)} color="primary">
-          Submit
+          {transportOrder ? "Update" : "Submit"}
         </Button>
       </DialogActions>
       <ToastContainer />

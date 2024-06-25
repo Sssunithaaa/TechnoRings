@@ -146,7 +146,7 @@ const handleDelete =async () => {
         <p><strong>Instrument Name:</strong> {instrument.instrument_name}</p>
         <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
         <p><strong>Type of Tool Name:</strong> {instrument.type_of_tool_name}</p>
-        <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
+        <button       className="bg-blue-500 rounded-md py-2 px-4 text-white" 
  onClick={handleDialogOpen}>Update Instrument</button>
                   <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete tool</button>
 
@@ -161,10 +161,13 @@ const handleDelete =async () => {
   const handleDialogOpen = () => {
         setOpen(true);
     };
-      const handleUpdateTool =async (data) => {
+      const handleUpdate =async (data) => {
       
         try {
+          console.log(`${process.env.REACT_APP_URL}update_instrument/${instrument.instrument_no}/`)
+          console.log(data)
                 const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument/${instrument.instrument_no}/`, data);
+                console.log(response)
                 if(response.data.success === false){
                 toast.error("An error occured! Try again..", {
                     position: "top-center",
@@ -261,7 +264,7 @@ const handleDelete =async () => {
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
         </GridComponent>
       </div> 
-                  <CalibrationDialog open={open} handleClose={handleDialogClose} handleUpdate={handleUpdateTool} instrument={instrument} />
+                  <CalibrationDialog open={open} handleClose={handleDialogClose} handleUpdate={handleUpdate} instrument={instrument} />
 
     </div>
   );

@@ -10,14 +10,11 @@ const AddInstrumentFamilyDialog = ({ open, handleClose, instrumentGroup }) => {
   useEffect(() => {
     const fetchInstrumentGroupData = async () => {
       if (instrumentGroup) {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_URL}/update_instrument_group/${instrumentGroup}/`);
-          const data = response.data.data;
-          setFamilyID(data.tool_group_name || '');
-          setFamilyName(data.tool_group_code || '');
-        } catch (error) {
-          toast.error("Failed to fetch instrument group data.");
-        }
+        
+          
+          setFamilyID(instrumentGroup.instrument_family_id || '');
+          setFamilyName(instrumentGroup.instrument_family_name || '');
+       
       }
     };
 
@@ -34,7 +31,7 @@ const AddInstrumentFamilyDialog = ({ open, handleClose, instrumentGroup }) => {
     try {
       if (instrumentGroup) {
         // Update existing instrument group
-        const response = await axios.put(`${process.env.REACT_APP_URL}/update_instrument_family/${instrumentGroup.id}/`, data);
+        const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument_family/${instrumentGroup.instrument_family_id}/`, data);
         console.log(response)
         toast.success("Instrument family updated successfully");
       } else {

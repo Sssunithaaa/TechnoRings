@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id }) => {
   const [toolGroupName, setToolGroupName] = useState('');
   const [toolGroupCode, setToolGroupCode] = useState('');
+
   const [instrumentFamilyGroups, setInstrumentFamilyGroups] = useState([]);
   const [selectedFamilyGroup, setSelectedFamilyGroup] = useState(family);
   useEffect(() => {
@@ -17,6 +18,7 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
         try {
           const response = await axios.get(`${process.env.REACT_APP_URL}/update_instrument_group/${instrumentGroup}/`);
           const data = response.data.data;
+         
           setToolGroupName(data.tool_group_name || '');
           setToolGroupCode(data.tool_group_code || '');
           setSelectedFamilyGroup(data.instrument_family_id || '');
@@ -38,8 +40,9 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
 
     try {
       if (instrumentGroup) {
-        // Update existing instrument group
-        await axios.put(`${process.env.REACT_APP_URL}/update_instrument_group_master/${instrumentGroup.id}/`, data);
+       
+        const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument_group/${instrumentGroup}/`, data);
+        console.log(response)
         toast.success("Instrument group master updated successfully");
       } else {
         // Add new instrument group
@@ -83,7 +86,7 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
           value={toolGroupCode}
           onChange={(e) => setToolGroupCode(e.target.value)}
         />
-       <TextField
+      {family &&  <TextField
   type="text"
   margin="dense"
   label="Instrument Family Group"
@@ -92,7 +95,7 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
   
   value={family}
   InputLabelProps={{ shrink: true }}
-/>
+/>}
 
       </DialogContent>
       <DialogActions>

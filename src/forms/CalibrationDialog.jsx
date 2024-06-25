@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, M
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
-
+import { Select } from '@mui/material';
 const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrument }) => {
   const date = new Date().toISOString().split('T')[0];
 
@@ -34,9 +34,12 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         least_count: instrument.least_count || "",
         instrument_range: instrument.instrument_range || "",
         calibration_frequency: instrument.calibration_frequency || "",
-        type_of_tool_id: instrument.type_of_tool_id || ""
+        type_of_tool_id: instrument.type_of_tool || ""
       });
-      setTypeOfToolName(instrument.type_of_tool_name || "");
+      
+      const selectedTool = masters.find(tool => tool.tool_group_id === instrument.type_of_tool);
+      setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
+
       const days = parseInt(instrument.calibration_frequency, 10);
       if (!isNaN(days)) {
         if (days % 365 === 0) {
@@ -82,8 +85,9 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
       ...formData,
       calibration_frequency: convertToDays(formData.calibration_frequency, calibrationFrequencyUnit)
     };
+    console.log(convertedFormData)
     if (instrument) {
-      handleUpdate(instrument.id, convertedFormData);
+      handleUpdate(convertedFormData);
     } else {
       handleAdd(convertedFormData);
     }
@@ -141,23 +145,25 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         <ToastContainer />
         {Object.keys(formData).map((field) => (
           field === "type_of_tool_id" ? (
-            <TextField
-              key={field}
-              select
-              label={convertToSentenceCase(field)}
-              value={formData[field]}
-              onChange={(e) => handleChange(field, e.target.value)}
-              variant="outlined"
-              fullWidth
-              size="large"
-              margin="normal"
-            >
-              {masters.map((tool) => (
-                <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
-                  {tool.tool_group_name}
-                </MenuItem>
-              ))}
-            </TextField>
+             <Select
+          label="Type of Tool"
+          value={formData.type_of_tool_id}
+          onChange={(e) => handleChange("type_of_tool_id", e.target.value)}
+          variant="outlined"
+          fullWidth
+         
+          displayEmpty
+          margin="normal"
+        >
+          <MenuItem value="" disabled>
+            <em>Select Type of Tool</em>
+          </MenuItem>
+          {masters.map((tool) => (
+            <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
+              {tool.tool_group_name}
+            </MenuItem>
+          ))}
+        </Select>
           ) : field === "year_of_purchase" ? (
             <TextField
               type="date"

@@ -165,16 +165,11 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
 
       const response = await axios.post(`${process.env.REACT_APP_URL}/store-delivery-challan/`, formData, config);
 
-      toast.success("Calibration details added successfully", {
-        position: "top-center",
-        autoClose: 2000,
-        closeButton: false,
-        progress: undefined,
-      });
+      toast.success("Calibration details added successfully");
       refetch();
       setTimeout(() => {
         setShowCalibrationModal(false);
-      }, 3000);
+      }, 2000);
 
     } catch (error) {
       console.error("Error submitting calibration details:", error);
