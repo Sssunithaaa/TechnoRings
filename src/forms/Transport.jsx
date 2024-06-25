@@ -92,6 +92,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
         tool_count: toolCount,
         tools: toolsArray,
       };
+      console.log(requestData)
 
       if (transportOrder) {
         // Update existing transport order
