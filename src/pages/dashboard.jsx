@@ -18,25 +18,21 @@ const Homepage = () => {
       return response.data;
     },
   });
-  const [count,setCount] = useState();
+  const [count, setCount] = useState();
 
-useEffect( ()=> {
-  console.log(selectedMonth)
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/count_of/${selectedMonth}/`);
-        console.log(response.data["data"])
         if (response.data["data"]) {
-      setCount(response.data["data"])
+          setCount(response.data["data"]);
+        }
+      } catch (error) {
+        console.error('Error fetching count data:', error);
       }
-    } catch(error){
-
-    }
-  }
-  fetchData()
-  
-
-},[selectedMonth]);
+    };
+    fetchData();
+  }, [selectedMonth]);
 
   const { data: vendors } = useQuery({
     queryKey: ["vendor"],
@@ -142,40 +138,11 @@ useEffect( ()=> {
 
   return (
     <div className='bg-main-dark-bg m-10 flex flex-col gap-y-8 mt-24'>
-      <div className='w-full flex flex-col gap-x-5 gap-y-2'>
-        <p className='font-bold text-3xl text-white'>Dashboard</p>
-          {notificationData && notificationData.length > 0 && (
-          <div className='bg-gray-700 my-5 w-[50%] flex mx-auto flex-col text-black p-4 rounded-md'>
-            <p className='font-bold text-white uppercase text-xl mb-2'>Notifications</p>
-            <div className='overflow-x-auto'>
-              <table className='min-w-full  bg-white'>
-                <thead className='bg-gray-900 text-white'>
-                  <tr>
-                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Name</th>
-                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Shed name</th>
-                                        <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Notification date</th>
-
-                  </tr>
-                </thead>
-                <tbody className='text-gray-700'>
-                  {count && count.tools_to_notify.map((notification, index) => (
-                    <tr key={index} className='bg-gray-200'>
-                      <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
-                      <td className='w-1/3 text-center py-3 px-4'>{notification.current_shed}</td>
-                                            <td className='w-1/3 text-center py-3 px-4'>{notification.notification_date}</td>
-
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-         <div className='text-center'>
+      <div className='text-center mb-4'>
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(Number(e.target.value))}
-          className='  px-6 py-3  text-lg bg-[#2e1cc9] text-gray-300 rounded-md my-2'
+          className='px-6 py-3 text-lg bg-[#2e1cc9] text-gray-300 rounded-md'
         >
           {Array.from({ length: 12 }, (_, index) => (
             <option key={index + 1} value={index + 1}>
@@ -184,9 +151,10 @@ useEffect( ()=> {
           ))}
         </select>
       </div>
-        <div className='flex lg:flex-row flex-col gap-y-5 gap-x-5'>
-          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
-            <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
+      <div className='flex flex-col lg:flex-row gap-5 gap-x-3'>
+        <div className='grid grid-cols-1 lg:grid-cols-1 gap-5 lg:w-1/4'>
+          <div className='bg-gray-800 p-8'>
+            <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
                 <BsPersonWorkspace color='#2e1cc9'/>
               </span>Transport Orders</p>
@@ -194,8 +162,8 @@ useEffect( ()=> {
             <p className='text-sm text-gray-500'>Active</p>
             <p onClick={() => setRequest("recent_transport_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
           </div>
-          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
-            <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
+          <div className='bg-gray-800 p-8'>
+            <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
                 <FaWarehouse color='#2e1cc9'/>
               </span>Delivery Challan</p>
@@ -203,8 +171,8 @@ useEffect( ()=> {
             <p className='text-sm text-gray-500'>Active</p>
             <p onClick={() => setRequest("recent_delivery_challan")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
           </div>
-          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
-            <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
+          <div className='bg-gray-800 p-8'>
+            <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
                 <MdOutlineMiscellaneousServices color='#2e1cc9'/>
               </span>Services</p>
@@ -212,16 +180,43 @@ useEffect( ()=> {
             <p className='text-sm text-gray-500'>Active</p>
             <p onClick={() => setRequest("recent_service_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
           </div>
-          <div className='bg-gray-800 p-8 lg:w-[26%] w-[100%]'>
-            <p className='text-light-gray-500 flex flex-row  h-10 items-center gap-x-3 text-xl text-white'>
+          {/* <div className='bg-gray-800 p-8'>
+            <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
                 <MdOutlineMiscellaneousServices color='#2e1cc9'/>
               </span>Instruments</p>
             <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.instruments_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
             <p onClick={() => setRequest("recent_instruments")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
-          </div>
+          </div> */}
         </div>
+        {notificationData && notificationData.length > 0 && (
+          <div className='bg-gray-700 p-4 h-auto rounded-md lg:w-3/4'>
+            <p className='font-bold text-white uppercase text-xl text-center mb-2'>Notifications</p>
+            <div className='overflow-x-auto'>
+              <table className='min-w-full bg-white'>
+                <thead className='bg-gray-900 text-white'>
+                  <tr>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Name</th>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Shed name</th>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Notification date</th>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Remaining days</th>
+                  </tr>
+                </thead>
+                <tbody className='text-gray-700'>
+                  {count && count.tools_to_notify.map((notification, index) => (
+                    <tr key={index} className='bg-gray-200'>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.current_shed}</td>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.notification_date}</td>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.remaining_days}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+    )}
       </div>
 
       <div className="relative overflow-x-auto">
@@ -262,8 +257,6 @@ useEffect( ()=> {
           </button>
         )}
       </div>
-
-     
     </div>
   );
 };
