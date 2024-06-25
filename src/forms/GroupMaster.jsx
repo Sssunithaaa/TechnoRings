@@ -83,21 +83,17 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
           value={toolGroupCode}
           onChange={(e) => setToolGroupCode(e.target.value)}
         />
-        <TextField
-          type="text"
-          margin="dense"
-          label="Instrument Family Group"
-          fullWidth
-          variant="outlined"
-          disabled
-          value={family}
-        >
-          {/* {instrumentFamilyGroups.map((group) => (
-            <MenuItem key={group.instrument_family_id} value={group.instrument_family_id}>
-              {group.instrument_family_name}
-            </MenuItem>
-          ))} */}
-        </TextField>
+       <TextField
+  type="text"
+  margin="dense"
+  label="Instrument Family Group"
+  fullWidth
+  variant="outlined"
+  
+  value={family}
+  InputLabelProps={{ shrink: true }}
+/>
+
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
