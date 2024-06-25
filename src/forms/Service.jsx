@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react"
+import React, { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -6,14 +6,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, IconButton } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
-const Service = ({ open, handleClose }) => {
+const Service = ({ open, handleClose, serviceOrder, id }) => {
   const [toolCount, setToolCount] = useState(1);
   const [tools, setTools] = useState([{ id: 1, tool: "", service_type: "", service_remarks: "" }]);
   const [vendorTools, setVendorTools] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [vendors, setVendors] = useState([]);
-  const date=new Date().toISOString().split('T')[0]
+  const [isUpdate, setIsUpdate] = useState(false);
+  const date = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     if (selectedVendor) {
@@ -22,7 +23,7 @@ const Service = ({ open, handleClose }) => {
           setVendorTools(response.data.vendor_handles);
         })
         .catch(error => {
-          console.error("Error fetching shed tools:", error);
+          console.error("Error fetching vendor tools:", error);
         });
     }
   }, [selectedVendor]);
@@ -53,6 +54,15 @@ const Service = ({ open, handleClose }) => {
     fetchVendors();
   }, []);
 
+  useEffect(() => {
+    if (id) {
+      setTools(serviceOrder?.service_tools);
+      console.log(tools)
+      setSelectedVendor(serviceOrder?.service_order?.vendor || "");
+      setIsUpdate(true);
+    }
+  }, [id, serviceOrder]);
+
   const handleToolChange = (index, key, value) => {
     const newTools = [...tools];
     newTools[index][key] = value;
@@ -63,28 +73,25 @@ const Service = ({ open, handleClose }) => {
     setToolCount(prevCount => prevCount + 1);
     setTools(prevTools => [...prevTools, { id: toolCount + 1, tool: "", service_type: "", service_remarks: "" }]);
   };
-    const subtractToolField = () => {
+
+  const subtractToolField = () => {
     if (toolCount > 1) {
       setToolCount(prevCount => prevCount - 1);
       setTools(prevTools => prevTools.slice(0, -1));
     }
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {
       date: date,
-      amount: "",
-      description: "",
-      vendor: "",
+      amount: serviceOrder?.service_order?.amount || "",
+      description: serviceOrder?.service_order?.description || "",
+      vendor: serviceOrder?.service_order?.vendor || "",
     },
     mode: "onChange",
   });
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const submitHandler = async (data) => {
     const requestData = {
       date: data.date,
@@ -101,24 +108,43 @@ const navigate = useNavigate();
     };
 
     try {
+     if(id){
+       const response = await axios.post(`${process.env.REACT_APP_URL}/update_service_order/${id}/`, requestData);
+      if(response.data.success) {toast.success("Service order updated successfully", {
+        position: "top-center",
+        autoClose: 1000,
+        closeButton: false,
+      });
+    } else {
+      toast.error("Failed to update service order")
+     } 
+    }
+    else {
       const response = await axios.post(`${process.env.REACT_APP_URL}/service-order/`, requestData);
-      console.log(response)
       toast.success("Service order added successfully", {
         position: "top-center",
         autoClose: 1000,
         closeButton: false,
       });
-      setTimeout(()=> {
+     }
+      setTimeout(() => {
         handleClose();
-      },2000)
+      }, 2000);
     } catch (error) {
       console.error('Error sending data:', error);
     }
   };
 
+  useEffect(() => {
+    if (isUpdate) {
+      setValue("vendor", selectedVendor);
+      setValue("description", serviceOrder?.service_order?.description || "");
+    }
+  }, [isUpdate, selectedVendor, serviceOrder, setValue]);
+
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Add Service Order</DialogTitle>
+      <DialogTitle>{id ? "Update Service Order" : "Add Service Order"}</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(submitHandler)} className="space-y-6">
           <TextField
@@ -145,6 +171,7 @@ const navigate = useNavigate();
             error={!!errors.vendor}
             helperText={errors.vendor?.message}
             margin="normal"
+            value={selectedVendor || ""}
             required
           >
             <MenuItem value="">
@@ -156,25 +183,13 @@ const navigate = useNavigate();
               </MenuItem>
             ))}
           </TextField>
-          {/* <TextField
-            {...register("amount", {
-              required: "Amount is required",
-            })}
-            label="Amount"
-            type="number"
-            fullWidth
-            error={!!errors.amount}
-            helperText={errors.amount?.message}
-            margin="normal"
-            required
-          /> */}
           <TextField
             {...register("description")}
             label="Description"
             type="text"
             fullWidth
             margin="normal"
-            
+            value={serviceOrder?.service_order?.description || ""}
           />
           {tools.map((_, index) => (
             <div key={index}>
@@ -225,15 +240,10 @@ const navigate = useNavigate();
             </div>
           ))}
           <IconButton onClick={addToolField} color="primary" aria-label="add tool">
-            <p className="text-[14px] mr-4">
-              Add tool
-            </p>
-            
+            <p className="text-[14px] mr-4">Add tool</p>
           </IconButton>
-          <IconButton onClick={subtractToolField} color="primary" aria-label="add tool">
-            <p className="text-[14px]">
-              Remove tool
-            </p>
+          <IconButton onClick={subtractToolField} color="primary" aria-label="remove tool">
+            <p className="text-[14px]">Remove tool</p>
           </IconButton>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">

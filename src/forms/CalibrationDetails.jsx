@@ -117,7 +117,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, 
                                 </td>
                             <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
             <Select
-              options={caVendors.map(vendor => ({
+              options={caVendors?.map(vendor => ({
                 value: vendor.vendor_id,
                 label: vendor.vendor_name
               }))}

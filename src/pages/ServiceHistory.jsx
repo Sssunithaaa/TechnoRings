@@ -12,7 +12,7 @@ const ServiceHistory = () => {
     queryKey: ["serviceorders"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/all_service_orders/`);
-      console.log(response);
+    
       return response.data.service_orders;
     },
   });
@@ -33,7 +33,7 @@ const ServiceHistory = () => {
     queryKey: ["vendors"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
-      console.log(response);
+    
       return response.data.vendors;
     },
   });
@@ -64,7 +64,7 @@ const ServiceHistory = () => {
     const [service,setService] = useState([]);
     const handleRowClick = async (args) => {
     const serviceId = args.data.service_id;
-    console.log(serviceId)
+ 
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_URL}/service_orders/${serviceId}/`

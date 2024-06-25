@@ -84,7 +84,7 @@ const History = () => {
         allowPaging
         allowSelection
         allowSorting
-        toolbar={['Delete',"ExcelExport","PdfExport"]}
+        toolbar={["ExcelExport","PdfExport"]}
          pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         toolbarClick={toolbarClick}

@@ -13,6 +13,8 @@ import {
   Paper,
 } from "@mui/material";
 import axios from "axios";
+import Service from "../forms/Service";
+import { ToastContainer, toast } from "react-toastify";
 
 const ServiceTool = ({ open, handleClose, transportOrder }) => {
   const [billData, setBillData] = useState(null);
@@ -31,6 +33,22 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
       fetchBillData();
     }
   }, [transportOrder]);
+  const [openn,setOpenn] = useState(false);
+  const handleDialogOpenn=()=> {
+    setOpenn(true);
+  }
+  const handleDialogClosee=()=> {
+    setOpenn(false)
+  }
+  const handleDelete =async ()=> {
+    const response =await axios.post(`https://practicehost.pythonanywhere.com/service_order/${transportOrder.service_order.service_id}/delete/`);
+    if(response.data.success){
+      toast.success(response.data.message);
+      setTimeout(()=>{
+        handleClose();
+      },2000)
+    }
+  }
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md">
@@ -95,11 +113,19 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
           <p>Loading...</p>
         )}
       </DialogContent>
+     <ToastContainer/>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+          <button  className="px-5 py-2 bg-blue-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn} color="primary">
+          Update service order
+        </button>
+        <button  className="px-5 py-2 bg-red-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDelete}>
+          Delete service order
+        </button>
+        <button  className="px-5 py-2 bg-indigo-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleClose} color="primary">
           Close
-        </Button>
+        </button>
       </DialogActions>
+      <Service open={openn} handleClose={handleDialogClosee} serviceOrder={transportOrder} id={transportOrder?.service_order?.service_id}/>
     </Dialog>
   );
 };

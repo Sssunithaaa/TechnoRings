@@ -11,7 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import CreateMovement from "../forms/Transport";
-
+import { toast,ToastContainer } from "react-toastify";
 const ToolDialog = ({ open, handleClose, transportOrder }) => {
   const [selectedToolIds, setSelectedToolIds] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
@@ -69,6 +69,15 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
   const handleDialogClosee=()=> {
     setOpenn(false)
   }
+   const handleDelete =async ()=> {
+    const response =await axios.post(`https://practicehost.pythonanywhere.com/transport_order/${transportOrder.transport_order.movement_id}/delete/`);
+    if(response.data.success){
+      toast.success(response.data.message);
+      setTimeout(()=>{
+        handleClose();
+      },2000)
+    }
+  }
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle className="text-center">Transport Order Details</DialogTitle>
@@ -104,9 +113,12 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
         ) : (
           <p>Loading...</p>
         )}
-              <div className="flex mx-auto justify-center items-center">
-                   <button className="px-5 py-2 bg-blue-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn}>Update transport order details
+              <div className="flex flex-row mx-auto gap-x-4 justify-between items-center">
+                   <button className="px-2  py-2 bg-blue-500 mx-4 text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn}>Update transport order 
 </button>
+<button  className="px-2 py-2 bg-red-500 mx-4 text-[14px] rounded-md text-white font-semibold" onClick={handleDelete}>
+          Delete transport order
+        </button>
               </div>
       </DialogContent>
 
@@ -122,6 +134,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           )
         }
       </DialogActions>
+      <ToastContainer/>
       <CreateMovement open={openn} handleClose={handleDialogClosee} transportOrder={transportOrder}/>
     </Dialog>
   );

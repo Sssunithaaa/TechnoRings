@@ -146,6 +146,7 @@ const handleDelete =async () => {
         <p><strong>Instrument Name:</strong> {instrument.instrument_name}</p>
         <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
         <p><strong>Type of Tool Name:</strong> {instrument.type_of_tool_name}</p>
+           <p><strong>Current Shed:</strong> {instrument.current_shed_name}</p>
         <button       className="bg-blue-500 rounded-md py-2 px-4 text-white" 
  onClick={handleDialogOpen}>Update Instrument</button>
                   <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete tool</button>
