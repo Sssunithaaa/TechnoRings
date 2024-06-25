@@ -100,7 +100,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, 
                                             required: "Calibration date is required",
                                         })}
                                         name={`calibrationDate${i}`}
-                                        value={date}
+                                        defaultValue={date}
                                         type="date"
                                         className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
                                     />
