@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, ContextMenu, Inject, Edit, Toolbar, Sort, Filter } from '@syncfusion/ej2-react-grids';
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, ContextMenu, Inject, Edit, Toolbar, Sort, Filter, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -98,7 +98,7 @@ const GroupMaster = () => {
 <ToastContainer/>
     
 
-      <AddInstrumentGroupDialog open={open} handleClose={handleDialogClose} />
+      <AddInstrumentGroupDialog open={open} handleClose={handleDialogClose} family={name} mode="add" id={id} />
 
       <Header className="Page" title="Instrument Group Masters" />
 
@@ -110,7 +110,7 @@ const GroupMaster = () => {
         allowSelection
         allowSorting
         toolbarClick={toolbarClick}
-        toolbar={['Delete', "ExcelExport", "PdfExport"]}
+        toolbar={["ExcelExport", "PdfExport"]}
         pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
@@ -133,6 +133,8 @@ const GroupMaster = () => {
             Filter,
             Page,
             Edit,
+            PdfExport,
+            ExcelExport
           ]}
         />
       </GridComponent>

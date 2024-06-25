@@ -12,6 +12,8 @@ import {
   Group,
   Sort,
   Filter,
+  PdfExport,
+  ExcelExport,
 } from "@syncfusion/ej2-react-grids";
 import { Header } from "../components";
 import { shedDetailsGrid } from "../data/apps";
@@ -121,9 +123,10 @@ const Shed = () => {
   };
 
   const toolbarClick = (args) => {
-    if (args.item.id === "gridcomp_pdfexport") {
+    console.log(args)
+    if (args.item.properties.id === "gridcomp_pdfexport") {
       grid.pdfExport();
-    } else if (args.item.id === "gridcomp_excelexport") {
+    } else if (args.item.properties.id === "gridcomp_excelexport") {
       grid.excelExport();
     }
   };
@@ -147,6 +150,7 @@ const Shed = () => {
           toolbar={[ "PdfExport","ExcelExport"]}
           rowSelected={rowSelected}
           allowPdfExport
+          allowExcelExport
           actionComplete={handleActionComplete}
           ref={g => grid = g}
         >
@@ -161,11 +165,12 @@ const Shed = () => {
               Toolbar,
               Resize,
               Sort,
-              ContextMenu,
               Filter,
               Page,
               Edit,
               Group,
+              PdfExport,
+              ExcelExport
             ]}
           />
         </GridComponent>

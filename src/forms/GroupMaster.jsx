@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup }) => {
+const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id }) => {
   const [toolGroupName, setToolGroupName] = useState('');
   const [toolGroupCode, setToolGroupCode] = useState('');
-
+  const [instrumentFamilyGroups, setInstrumentFamilyGroups] = useState([]);
+  const [selectedFamilyGroup, setSelectedFamilyGroup] = useState(family);
   useEffect(() => {
+   
+
     const fetchInstrumentGroupData = async () => {
       if (instrumentGroup) {
         try {
@@ -15,6 +19,7 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup }) => {
           const data = response.data.data;
           setToolGroupName(data.tool_group_name || '');
           setToolGroupCode(data.tool_group_code || '');
+          setSelectedFamilyGroup(data.instrument_family_id || '');
         } catch (error) {
           toast.error("Failed to fetch instrument group data.");
         }
@@ -26,10 +31,10 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup }) => {
 
   const handleSave = async () => {
     const data = {
-      toolGroupName,
-      toolGroupCode,
+      tool_group_name: toolGroupName,
+      tool_group_code: toolGroupCode,
+      tool_family: id,
     };
-    console.log(data);
 
     try {
       if (instrumentGroup) {
@@ -38,8 +43,13 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup }) => {
         toast.success("Instrument group master updated successfully");
       } else {
         // Add new instrument group
-        await axios.post(`${process.env.REACT_APP_URL}/add_instrument_group_master/`, data);
+        const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument_group_master/`, data);
+        console.log(response)
+        if(response.data.success){
         toast.success("Instrument group master added successfully");
+        } else {
+          toast.error("Failed to add instrument group master");
+        }
       }
       setTimeout(() => {
         handleClose();
@@ -73,6 +83,21 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup }) => {
           value={toolGroupCode}
           onChange={(e) => setToolGroupCode(e.target.value)}
         />
+        <TextField
+          type="text"
+          margin="dense"
+          label="Instrument Family Group"
+          fullWidth
+          variant="outlined"
+          disabled
+          value={family}
+        >
+          {/* {instrumentFamilyGroups.map((group) => (
+            <MenuItem key={group.instrument_family_id} value={group.instrument_family_id}>
+              {group.instrument_family_name}
+            </MenuItem>
+          ))} */}
+        </TextField>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>

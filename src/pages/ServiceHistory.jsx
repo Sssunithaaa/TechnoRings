@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter} from '@syncfusion/ej2-react-grids'
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
@@ -124,6 +124,8 @@ const ServiceHistory = () => {
             Filter,
             Page,
             Edit,
+            PdfExport,
+            ExcelExport
           ]}
         />
       </GridComponent>

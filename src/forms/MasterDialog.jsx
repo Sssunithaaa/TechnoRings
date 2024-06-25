@@ -128,7 +128,7 @@ const [instrumentGroup,setInstrumentGroup] = useState(false)
         allowPaging
         allowSelection
         allowSorting
-        toolbar={['Delete']}
+       
         pageSettings={{ pageSize: 5 }}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
