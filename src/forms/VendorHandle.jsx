@@ -60,7 +60,9 @@ const CreateVendorHandleData = ({ open, handleClose, id ,vendorName}) => {
       );
       console.log(response)
       toast.success("Vendor handle data added successfully");
-      handleClose();
+      setTimeout(()=> {
+        handleClose();
+      },2000)
     } catch (error) {
       console.log(error);
       toast.error("Failed to add vendor handle data. Please try again later.");

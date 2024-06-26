@@ -7,7 +7,7 @@ import axios from "axios";
 import BackButton from "../components/BackButton";
 import UpdateShed from "../forms/UpdateShed";
 import { toast,ToastContainer } from "react-toastify";
-
+import { useQuery } from "@tanstack/react-query";
 const ShedTools = () => {
   const [shedTools, setShedTools] = useState([]);
   const [tools, setTools] = useState([]);
@@ -16,17 +16,28 @@ const ShedTools = () => {
 
   const id = useParams();
 const [open,setOpen] = useState(false)
-  const fetchToolData = async (shed_id) => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
+  // const fetchToolData = async (shed_id) => {
+  //   try {
+  //     const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
+  //     setShed(response?.data.shed)
+     
+  //     setName(response?.data?.shed?.name)
+  //     setShedTools(response?.data?.shed_tools);
+  //   } catch (error) {
+  //     console.error("Error fetching tool data:", error);
+  //   }
+  // };
+  const { refetch } = useQuery({
+    queryKey: ["shedtools"],
+    queryFn: async () => {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${id["id"]}/`);
       setShed(response?.data.shed)
      
       setName(response?.data?.shed?.name)
       setShedTools(response?.data?.shed_tools);
-    } catch (error) {
-      console.error("Error fetching tool data:", error);
-    }
-  };
+  
+    },
+  });
 
   const fetchToolsData = async () => {
     try {
@@ -38,7 +49,7 @@ const [open,setOpen] = useState(false)
   };
 
   useEffect(() => {
-    fetchToolData(id["id"]);
+    // fetchToolData(id["id"]);
     fetchToolsData();
   }, []);
 
@@ -103,18 +114,23 @@ const [open,setOpen] = useState(false)
   }
    const handleDialogClose = ()=> {
     setOpen(false);
+    refetch()
   }
   const updateShed = () => {
     
   }
 
+  const handleClose = ()=> {
+    setShowAddShedTools(false)
+    refetch()
+  }
   return (
     <div>
       <div className="flex justify-start ml-10 mt-10">
         <BackButton />
       </div>
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-        {showAddShedTools && <AddShedTools setClose={setShowAddShedTools} />}
+        {showAddShedTools && <AddShedTools setClose={handleClose} />}
         <ToastContainer/>
         <Header className={`Shed tools`} title={name}/>
         <div className="flex flex-row justify-between gap-x-5 my-4">

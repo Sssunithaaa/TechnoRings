@@ -138,6 +138,7 @@ const handleActionComplete = async (args) => {
 }; 
  const handleDialogClose = () => {
         setOpen(false);
+        refetch()
     };
   const handleDialogOpen = () => {
         setOpen(true);

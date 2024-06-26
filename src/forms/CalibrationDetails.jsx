@@ -1,32 +1,30 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { ToastContainer } from "react-toastify";
-import { Select } from "@mui/material";
-const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, reset,sendToolDetails,caVendors }) => {
-  const [toolCount, setToolCount] = useState(1); // State to track the number of tools
-      const date=new Date().toISOString().split('T')[0]
+import {TextField} from "@mui/material";
+import { Autocomplete } from "@mui/material";
 
-   const [toolDetails, setToolDetails] = useState([
+const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools, reset, sendToolDetails, caVendors }) => {
+  const [toolCount, setToolCount] = useState(1); // State to track the number of tools
+  const date = new Date().toISOString().split('T')[0];
+
+  const [toolDetails, setToolDetails] = useState([
     {
       toolName: "",
-      calibrationDate: "",
+      calibrationDate: date,
       calibrationReportNumber: "",
       calibrationAgency: "",
       result: "",
       action: "",
       nextCalibrationDate: "",
       remark: "",
+      file: null,
+      file2: null,
     },
   ]);
 
-  // useEffect(async ()=> {
-  //  const tools =await axios.get("http://localhost:8000/instrument-tools/");
-  //  console.log(tools)
-
-  // },[])
- 
-    const handleAddTool = () => {
-        setToolCount(toolCount + 1);
-        setToolDetails([
+  const handleAddTool = () => {
+    setToolCount(toolCount + 1);
+    setToolDetails([
       ...toolDetails,
       {
         toolName: "",
@@ -37,39 +35,44 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, 
         action: "",
         nextCalibrationDate: "",
         remark: "",
-        file: null
+        file: null,
+        file2: null,
       },
     ]);
-    };
-    const handleRemoveTool = () => {
-        setToolCount(toolCount - 1);
-        setToolDetails([
+  };
+
+  const handleRemoveTool = () => {
+    setToolCount(toolCount - 1);
+    setToolDetails([
       ...toolDetails.slice(0, toolCount - 1),
-        ])
-    };
-   const handleSubmit = (e) => {
+    ]);
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target[`file${0}`].files[0]);
+
     const toolsData = toolDetails.map((tool, index) => ({
-  calibration_tool: e.target[`toolName${index}`].value,
-  calibration_date: e.target[`calibrationDate${index}`].value,
-  calibration_report_no: e.target[`calibrationReportNumber${index}`].value,
-  calibration_agency: e.target[`calibrationAgency${index}`].value,
-  result: e.target[`result${index}`].value,
-  action: e.target[`action${index}`].value,
-  notification_date: '2024-05-19',
-  next_calibration_date: '2024-05-19',
-  remark: e.target[`remark${index}`].value,
-  file: e.target[`file${index}`].files[0],
-  file2: e.target[`file2${index}`].files[0]
-}));
+      calibration_tool: e.target[`toolName${index}`].value,
+      calibration_date: e.target[`calibrationDate${index}`].value,
+      calibration_report_no: e.target[`calibrationReportNumber${index}`].value,
+      calibration_agency: tool.calibrationAgency,
+      result: e.target[`result${index}`].value,
+      action: e.target[`action${index}`].value,
+      notification_date: '2024-05-19',
+      next_calibration_date: '2024-05-19',
+      remark: e.target[`remark${index}`].value,
+      file: e.target[`file${index}`].files[0],
+      file2: e.target[`file2${index}`].files[0],
+    }));
 
-    console.log(toolsData);
-  
     onSubmit(toolsData);
+  };
 
-   
-};
+  const handleAgencyChange = (selectedOption, index) => {
+    const updatedToolDetails = [...toolDetails];
+    updatedToolDetails[index].calibrationAgency = selectedOption.value;
+    setToolDetails(updatedToolDetails);
+  };
 
   const renderToolRows = () => {
     const rows = [];
@@ -106,14 +109,25 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register,tools, 
               className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
             />
           </td>
-          <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
-            <Select
-              options={caVendors?.map(vendor => ({ value: vendor.vendor_id, label: vendor.vendor_name }))}
-              name={`calibrationAgency${i}`}
-              placeholder="Calibration Agency"
-              className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
-            />
-          </td>
+          
+<td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
+  <Autocomplete
+    freeSolo
+    options={caVendors?.map((vendor) => vendor.vendor_name)}
+    onChange={(event, newValue) => handleAgencyChange(newValue, i)}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="Calibration Agency"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        size="small"
+        onChange={(e) => handleAgencyChange({ value: e.target.value }, i)}
+      />
+    )}
+  />
+</td>
           <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
             <input
               {...register(`result${i}`, { required: "Result is required" })}

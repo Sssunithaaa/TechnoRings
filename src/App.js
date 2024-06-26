@@ -10,7 +10,7 @@ import Dashboard from "./pages/dashboard";
 import {
 
   Orders,
-  Calendar,
+
  
   
   
@@ -19,7 +19,6 @@ import VendorsDetail from "./pages/VendorsDetail";
 import CreateMovement from "./forms/Transport";
 import CreateService from "./forms/Service";
 import VendorHandle from "./forms/VendorHandle";
-import Kanban from "./pages/Kanban";
 import Shed from "./pages/Shed";
 import Calibration from "./pages/Calibration";
 import Vendor from "./pages/Vendor";
@@ -104,8 +103,8 @@ function App() {
                                 <Route path="/calibration/:id" element={<Transactions />} />
                  <Route path="/shed/:id" element={<ShedTools />} />
                  <Route path="/vendors/:id" element={<VendorsDetail />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/kanban" element={<Kanban />} />
+                {/* <Route path="/calendar" element={<Calendar />} /> */}
+                {/* <Route path="/kanban" element={<Kanban />} /> */}
                 <Route path="/calibrationreport" element={<CalibrationDetailsForm />} />
                   <Route path="/transport-history" element={<History />} />
                               <Route path="/service-history" element={<ServiceHistory />} />

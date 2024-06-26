@@ -134,8 +134,9 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
       formData.append("vendor", getValues("vendor"));
       formData.append("shed", getValues("shed"));
       formData.append("service", getValues("service"));
-
+      
       data.forEach((tool, index) => {
+        
         formData.append(`toolData[${index}][calibration_tool]`, tool.calibration_tool);
         formData.append(`toolData[${index}][calibration_date]`, tool.calibration_date);
         formData.append(`toolData[${index}][calibration_report_no]`, tool.calibration_report_no);
@@ -164,15 +165,20 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
       };
 
       const response = await axios.post(`${process.env.REACT_APP_URL}/store-delivery-challan/`, formData, config);
-      alert("Success")
+  
+       
+
+     
       toast.success("Calibration details added successfully");
+      alert("Success")
+      
+       setShowCalibrationModal(false);
       refetch();
-      setTimeout(() => {
-        setShowCalibrationModal(false);
-      }, 1000);
+      
 
     } catch (error) {
       console.error("Error submitting calibration details:", error);
+      alert("Unknown error!! Try again")
       toast.error("Failed to add calibration details. Please try again later.");
     }
   };

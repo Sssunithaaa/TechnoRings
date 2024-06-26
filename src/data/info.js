@@ -173,22 +173,22 @@ export const links = [
       // },
     ],
   },
-  {
-    title: "Apps",
-    links: [
-      {
-        name: "calendar",
-        icon: <AiOutlineCalendar />,
-        link:"calendar"
-      },
-      {
-        name: "kanban",
-        icon: <BsKanban />,
-        link:"kanban"
-      },
+  // {
+  //   title: "Apps",
+  //   links: [
+  //     {
+  //       name: "calendar",
+  //       icon: <AiOutlineCalendar />,
+  //       link:"calendar"
+  //     },
+  //     {
+  //       name: "kanban",
+  //       icon: <BsKanban />,
+  //       link:"kanban"
+  //     },
       
-    ],
-  },
+  //   ],
+  // },
 ];
 
 

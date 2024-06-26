@@ -18,21 +18,18 @@ const VendorsDetail = () => {
   const [vendorHandle,setVendorHandle] = useState([])
     const [vendor,setVendor] = useState([])
 
-  const fetchVendorData = async (vendor_id) => {
-    try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${vendor_id}/`);
-        setVendorHandle(response?.data?.vendor_handles)
+
+const {refetch } = useQuery({
+    queryKey: ["vendorhandle",id["id"]],
+    queryFn: async () => {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${id["id"]}/`);
+      setVendorHandle(response?.data?.vendor_handles)
         setVendorname(response?.data?.vendor?.name)
         setVendor(response?.data?.vendor)
-        
-    } catch (error) {
-        console.error("Error fetching tool data:", error);
-    }
-};
+    },
+  });
 
-  useEffect(()=> {
-    fetchVendorData(id["id"])
-  },[])
+ 
   let grid;
 
     
@@ -40,6 +37,7 @@ const VendorsDetail = () => {
 
     const handleDialogClose = () => {
         setOpen(false);
+        refetch()
     };
   const handleDialogOpen = () => {
         setOpen(true);
@@ -47,6 +45,7 @@ const VendorsDetail = () => {
 
      const handleDialogClosee = () => {
         setOpenn(false);
+        refetch()
     };
   const handleDialogOpenn = () => {
         setOpenn(true);

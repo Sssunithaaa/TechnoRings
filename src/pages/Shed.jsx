@@ -113,9 +113,11 @@ const Shed = () => {
 
    const handleDialogOpen = ()=> {
     setOpen(true);
+   
   }
    const handleDialogClose = ()=> {
     setOpen(false);
+     refetch()
   }
   const rowSelected = (args) => {
     const selectedRecord = args.data["shed_id"];

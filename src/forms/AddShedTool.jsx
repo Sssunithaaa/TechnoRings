@@ -57,7 +57,11 @@ const AddShedTools = ({setClose}) => {
         closeButton: false,
         progress: undefined,
       });
+      setTimeout(()=> {
+        setClose()
+      },2000)
     } catch (error) {
+      toast.error("Unable to add tools")
       console.error('Error sending data:', error);
     }
   };
