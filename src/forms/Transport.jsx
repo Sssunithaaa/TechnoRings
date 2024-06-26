@@ -23,7 +23,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
   const [shedTools, setShedTools] = useState([]);
   const [selectedShed, setSelectedShed] = useState(transportOrder ? transportOrder?.transport_order?.source_shed : null);
   const [sheds, setSheds] = useState([]);
- 
+
   useEffect(() => {
     if (selectedShed) {
       axios
@@ -53,7 +53,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
       { id: toolCount + 1, tool: "", remark: "" },
     ]);
   };
-  
+
   const subtractToolField = () => {
     if (toolCount > 1) {
       setToolCount(prevCount => prevCount - 1);
@@ -76,11 +76,11 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
     },
     mode: "onChange",
   });
-  const [dshed,setDshed] = useState();
+  const [dshed, setDshed] = useState(transportOrder ? transportOrder.transport_order.destination_shed : '');
 
   const submitHandler = async (data) => {
     try {
-      const toolsArray = tools && tools?.map((tool) => ({
+      const toolsArray = tools.map((tool) => ({
         tool: tool.tool,
         tool_movement_remarks: tool.remark,
       }));
@@ -96,7 +96,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
 
       if (transportOrder) {
         // Update existing transport order
-        await axios.post(`${process.env.REACT_APP_URL}/update_transport_tools/${transportOrder.transport_order.movement_id}/`, requestData);
+        await axios.post(`${process.env.REACT_APP_URL}/update_transport_order/${transportOrder.transport_order.movement_id}/`, requestData);
         toast.success("Tool movement updated successfully", {
           position: "top-center",
           autoClose: 1000,
@@ -183,7 +183,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
             onChange={(e) => setSelectedShed(e.target.value)}
             error={!!errors.sourceShed}
             helperText={errors.sourceShed?.message}
-            value={transportOrder ? transportOrder.transport_order.source_shed : ''}
+            value={selectedShed}
           >
             <MenuItem value="">Select a Source Shed</MenuItem>
             {shed_details?.map((shed) => (
@@ -202,9 +202,9 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
             fullWidth
             margin="normal"
             error={!!errors.destinationShed}
-            onChange = {(e)=> setDshed(e.target.value)}
+            onChange={(e) => setDshed(e.target.value)}
             helperText={errors.destinationShed?.message}
-            value={transportOrder ? dshed : ''}
+            value={dshed}
           >
             <MenuItem value="">Select a Destination Shed</MenuItem>
             {shed_details?.map((shed) => (

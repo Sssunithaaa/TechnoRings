@@ -146,7 +146,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         {Object.keys(formData).map((field) => (
           field === "type_of_tool_id" ? (
              <Select
-          label="Type of Tool"
+          label="Instrument Name"
           value={formData.type_of_tool_id}
           onChange={(e) => handleChange("type_of_tool_id", e.target.value)}
           variant="outlined"
@@ -201,7 +201,16 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
                 <MenuItem value="years">Years</MenuItem>
               </TextField>
             </div>
-          ) : (
+          ) : field === "instrument_name"? (<TextField
+              key={field}
+              label="Instrument code"
+              value={formData[field]}
+              onChange={(e) => handleChange(field, e.target.value)}
+              variant="outlined"
+              fullWidth
+              size="large"
+              margin="normal"
+            />) : (
             <TextField
               key={field}
               label={convertToSentenceCase(field)}

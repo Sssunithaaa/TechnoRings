@@ -93,7 +93,7 @@ const Calibration = () => {
                 });
                 setTimeout(()=> {
                      setOpen(false);
-                 },3000)
+                 },2000)
                  refetch()
                 }
             } catch (error) {
@@ -103,7 +103,7 @@ const Calibration = () => {
 
     return (
         <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-            <ToastContainer />
+           
             <div className="flex justify-between">
                 <div>
                 <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
@@ -157,6 +157,7 @@ const Calibration = () => {
                     ]}
                 />
             </GridComponent>
+            <ToastContainer/>
             <CalibrationDialog open={open} handleClose={handleDialogClose} handleAdd={handleAddTool} />
         </div>
     );

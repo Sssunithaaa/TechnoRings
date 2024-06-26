@@ -13,6 +13,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
   const [serviceTypes, setServiceTypes] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [vendors, setVendors] = useState([]);
+  const [description, setDescription] = useState(serviceOrder?.service_order?.description || "");
   const [isUpdate, setIsUpdate] = useState(false);
   const date = new Date().toISOString().split('T')[0];
 
@@ -57,7 +58,6 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
   useEffect(() => {
     if (id) {
       setTools(serviceOrder?.service_tools);
-      console.log(tools)
       setSelectedVendor(serviceOrder?.service_order?.vendor || "");
       setIsUpdate(true);
     }
@@ -85,7 +85,6 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
     defaultValues: {
       date: date,
       amount: serviceOrder?.service_order?.amount || "",
-      description: serviceOrder?.service_order?.description || "",
       vendor: serviceOrder?.service_order?.vendor || "",
     },
     mode: "onChange",
@@ -96,7 +95,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
     const requestData = {
       date: data.date,
       amount: 0,
-      description: data.description || "",
+      description: description,
       tool_count: toolCount,
       vendor: parseInt(data.vendor),
       tools: tools.map(tool => ({
@@ -108,25 +107,25 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
     };
 
     try {
-     if(id){
-       const response = await axios.post(`${process.env.REACT_APP_URL}/update_service_order/${id}/`, requestData);
-      if(response.data.success) {toast.success("Service order updated successfully", {
-        position: "top-center",
-        autoClose: 1000,
-        closeButton: false,
-      });
-    } else {
-      toast.error("Failed to update service order")
-     } 
-    }
-    else {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/service-order/`, requestData);
-      toast.success("Service order added successfully", {
-        position: "top-center",
-        autoClose: 1000,
-        closeButton: false,
-      });
-     }
+      if (id) {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/update_service_order/${id}/`, requestData);
+        if (response.data.success) {
+          toast.success("Service order updated successfully", {
+            position: "top-center",
+            autoClose: 1000,
+            closeButton: false,
+          });
+        } else {
+          toast.error("Failed to update service order");
+        }
+      } else {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/service-order/`, requestData);
+        toast.success("Service order added successfully", {
+          position: "top-center",
+          autoClose: 1000,
+          closeButton: false,
+        });
+      }
       setTimeout(() => {
         handleClose();
       }, 2000);
@@ -138,9 +137,8 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
   useEffect(() => {
     if (isUpdate) {
       setValue("vendor", selectedVendor);
-      setValue("description", serviceOrder?.service_order?.description || "");
     }
-  }, [isUpdate, selectedVendor, serviceOrder, setValue]);
+  }, [isUpdate, selectedVendor, setValue]);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
@@ -184,12 +182,12 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
             ))}
           </TextField>
           <TextField
-            {...register("description")}
             label="Description"
             type="text"
             fullWidth
             margin="normal"
-            value={serviceOrder?.service_order?.description || ""}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
           {tools.map((_, index) => (
             <div key={index}>

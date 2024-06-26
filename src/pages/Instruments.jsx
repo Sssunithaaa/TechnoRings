@@ -177,9 +177,9 @@ const Instruments = () => {
           <div className="w-full flex mx-auto">
             {instrument && <div className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
         <p><strong>Instrument No:</strong> {instrument.instrument_no}</p>
-        <p><strong>Instrument Name:</strong> {instrument.instrument_name}</p>
+        <p><strong>Instrument Code:</strong> {instrument.instrument_name}</p>
         <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
-        <p><strong>Type of Tool Name:</strong> {instrument.type_of_tool_name}</p>
+        <p><strong>Instrument name:</strong> {instrument.type_of_tool_name}</p>
       </div>}
           </div>
       </div>
