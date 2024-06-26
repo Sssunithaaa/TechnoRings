@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
 import CreateVendorHandleData from "../forms/VendorHandle";
+import { useQuery } from "@tanstack/react-query";
 const VendorsDetail = () => {
   
        const [open, setOpen] = useState(false);
