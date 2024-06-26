@@ -7,7 +7,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, M
 import { useNavigate } from "react-router-dom";
 
 const Service = ({ open, handleClose, serviceOrder, id }) => {
-  const [toolCount, setToolCount] = useState(1);
+  const [toolCount, setToolCount] = useState(serviceOrder?.service_tools?.length || 1);
   const [tools, setTools] = useState([{ id: 1, tool: "", service_type: "", service_remarks: "" }]);
   const [vendorTools, setVendorTools] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
@@ -75,6 +75,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
   };
 
   const subtractToolField = () => {
+
     if (toolCount > 1) {
       setToolCount(prevCount => prevCount - 1);
       setTools(prevTools => prevTools.slice(0, -1));
