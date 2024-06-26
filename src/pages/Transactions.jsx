@@ -143,9 +143,9 @@ const handleDelete =async () => {
     return (
       <div className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
         <p><strong>Instrument No:</strong> {instrument.instrument_no}</p>
-        <p><strong>Instrument Name:</strong> {instrument.instrument_name}</p>
-        <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
-        <p><strong>Type of Tool Name:</strong> {instrument.type_of_tool_name}</p>
+        <p><strong>Instrument Code:</strong> {instrument.instrument_name}</p>
+        <p><strong>Instrument Range:</strong> {instrument.instrument_range}</p>
+        <p><strong>Instrument Name:</strong> {instrument.type_of_tool_name}</p>
            <p><strong>Current Shed:</strong> {instrument.current_shed_name}</p>
         <button       className="bg-blue-500 rounded-md py-2 px-4 text-white" 
  onClick={handleDialogOpen}>Update Instrument</button>
@@ -166,9 +166,9 @@ const handleDelete =async () => {
       
         try {
           console.log(`${process.env.REACT_APP_URL}update_instrument/${instrument.instrument_no}/`)
-          console.log(data)
+        
                 const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument/${instrument.instrument_no}/`, data);
-                console.log(response)
+               
                 if(response.data.success === false){
                 toast.error("An error occured! Try again..", {
                     position: "top-center",
@@ -181,7 +181,7 @@ const handleDelete =async () => {
                     setOpen(false)
                 },3000)
             } else{
-            toast.success("Tool added successfully", {
+            toast.success("Tool updated successfully", {
                     position: "top-center",
                     autoClose: 1000,
                     style: { width: "auto", style: "flex justify-center" },
@@ -190,7 +190,7 @@ const handleDelete =async () => {
                 });
                 setTimeout(()=> {
                      setOpen(false);
-                 },3000)
+                 },2000)
               
                 }
             } catch (error) {

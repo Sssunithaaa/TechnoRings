@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Select } from "@mui/material";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
-import { Select } from '@mui/material';
+
 const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrument }) => {
   const date = new Date().toISOString().split('T')[0];
 
@@ -21,6 +21,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
 
   const [calibrationFrequencyUnit, setCalibrationFrequencyUnit] = useState("days");
   const [typeOfToolName, setTypeOfToolName] = useState("");
+  const [typeOfToolID, setTypeOfToolID] = useState(instrument?.type_of_tool || "");
   const [masters, setMasters] = useState([]);
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
       });
       setTypeOfToolName("");
     }
-  }, [instrument, date]);
+  }, [instrument, date, masters]);
 
   const handleChange = (field, value) => {
     setFormData((prevFormData) => ({
@@ -77,6 +78,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
     if (field === "type_of_tool_id") {
       const selectedTool = masters.find(tool => tool.tool_group_id === value);
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
+      setTypeOfToolID(value);
     }
   };
 
@@ -85,7 +87,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
       ...formData,
       calibration_frequency: convertToDays(formData.calibration_frequency, calibrationFrequencyUnit)
     };
-    console.log(convertedFormData)
+
     if (instrument) {
       handleUpdate(convertedFormData);
     } else {
@@ -117,7 +119,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
       return response.data.instrument_models;
     },
   });
-
+  
   const convertToSentenceCase = (str) => {
     return str
       .replace(/_/g, " ")
@@ -145,25 +147,25 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         <ToastContainer />
         {Object.keys(formData).map((field) => (
           field === "type_of_tool_id" ? (
-             <Select
-          label="Instrument Name"
-          value={formData.type_of_tool_id}
-          onChange={(e) => handleChange("type_of_tool_id", e.target.value)}
-          variant="outlined"
-          fullWidth
-         
-          displayEmpty
-          margin="normal"
-        >
-          <MenuItem value="" disabled>
-            <em>Select Type of Tool</em>
-          </MenuItem>
-          {masters.map((tool) => (
-            <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
-              {tool.tool_group_name}
-            </MenuItem>
-          ))}
-        </Select>
+            <Select
+              key={field}
+              label="Type of Tool"
+              value={typeOfToolID}
+              onChange={(e) => handleChange(field, e.target.value)}
+              variant="outlined"
+              fullWidth
+              displayEmpty
+              margin="normal"
+            >
+              <MenuItem value="" disabled>
+                <em>Select Type of Tool</em>
+              </MenuItem>
+              {masters.map((tool) => (
+                <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
+                  {tool.tool_group_name}
+                </MenuItem>
+              ))}
+            </Select>
           ) : field === "year_of_purchase" ? (
             <TextField
               type="date"
