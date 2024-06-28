@@ -182,7 +182,7 @@ const Homepage = () => {
           </div>
           
         </div>
-        {notificationData && notificationData.length > 0 && (
+        {/* {notificationData && notificationData.length > 0 && ( */}
           <div className='bg-gray-700 p-4 h-auto rounded-md lg:w-3/4'>
             <p className='font-bold text-white uppercase text-xl text-center mb-2'>Notifications</p>
             <div className='overflow-x-auto'>
@@ -208,7 +208,7 @@ const Homepage = () => {
               </table>
             </div>
           </div>
-    )}
+    {/* )} */}
       </div>
 
       <div className="relative overflow-x-auto">
