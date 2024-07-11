@@ -220,17 +220,6 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               fullWidth
               size="large"
               margin="normal"
-            />) : field == "instrument_range" ? (
-            <TextField
-              key={field}
-              label={convertToSentenceCase(field)}
-              value={formData[field]}
-              type="number"
-              onChange={(e) => handleChange(field, e.target.value)}
-              variant="outlined"
-              fullWidth
-              size="large"
-              margin="normal"
             />) : (
               <TextField
               key={field}
