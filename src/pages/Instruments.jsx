@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport } from '@syncfusion/ej2-react-grids';
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
@@ -82,20 +82,21 @@ const Instruments = () => {
     { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
   ];
 
-  // Function to handle PDF export toolbar click
-  const toolbarClick = (args) => {
-    if (args.item.id === 'gridcomp_pdfexport') {
-      grid.showSpinner();
-      grid.pdfExport({
+ const toolbarClick = (args) => {
+    const exportPattern = /(excelexport|pdfexport)$/;
+
+    if (exportPattern.test(args.item.id)) {
+        if (args.item.id.endsWith('pdfexport')) {
+            grid.pdfExport({
                 pageOrientation: 'Landscape'
             });
+        } else if (args.item.id.endsWith('excelexport')) {
+            grid.excelExport();
+        }
     }
-  };
+};
 
-  // Function to handle PDF export completion
-  const pdfExportComplete = () => {
-    grid.hideSpinner();
-  };
+
 
   const handleActionComplete = async (args) => {
     if (args.requestType === "delete") {
@@ -141,7 +142,6 @@ const Instruments = () => {
     }
   };
 
- 
 
   const submitHandler= async (data)=> {
      fetchToolData(data.toolId)
@@ -200,9 +200,10 @@ const Instruments = () => {
           allowFiltering
           allowSorting
           allowDeleting
-          toolbar={['PdfExport', 'Delete']}
+          toolbar={['PdfExport','ExcelExport','Delete']}
           allowPdfExport
-          pdfExportComplete={pdfExportComplete}
+          allowExcelExport
+            ref={g => grid = g}
           editSettings={{ allowDeleting: true }}
           toolbarClick={toolbarClick}
           rowSelected={rowSelected2}
@@ -213,7 +214,7 @@ const Instruments = () => {
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>
-          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
+          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport,ExcelExport]} />
         </GridComponent>
       </div>
 
@@ -227,9 +228,10 @@ const Instruments = () => {
           allowFiltering
           allowSorting
           allowDeleting
-          toolbar={['PdfExport', 'Delete']}
+          toolbar={['PdfExport','ExcelExport', 'Delete']}
           allowPdfExport
-          pdfExportComplete={pdfExportComplete}
+           ref={g => grid = g}
+           allowExcelExport
           actionComplete={handleActionComplete}
           editSettings={{ allowDeleting: true }}
           toolbarClick={toolbarClick}
@@ -239,7 +241,7 @@ const Instruments = () => {
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>
-          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
+          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport,ExcelExport]} />
         </GridComponent>
       </div>
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -252,19 +254,20 @@ const Instruments = () => {
           allowFiltering
           allowSorting
           allowDeleting
-          toolbar={['PdfExport']}
+          toolbar={['PdfExport','ExcelExport']}
           allowPdfExport
-          pdfExportComplete={pdfExportComplete}
+          allowExcelExport
           actionComplete={handleActionComplete}
           editSettings={{ allowDeleting: true }}
           toolbarClick={toolbarClick}
+            ref={g => grid = g}
         >
           <ColumnsDirective>
             {calibrationHistoryGrid?.map((item, index) => (
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>
-          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
+          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport,ExcelExport]} />
         </GridComponent>
       </div>
     </div>

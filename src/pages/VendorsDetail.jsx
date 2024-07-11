@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CreateVendor from "../forms/AddVendor";
-import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport } from '@syncfusion/ej2-react-grids';
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
@@ -147,8 +147,9 @@ const toolbarClick = (args) => {
           allowFiltering
           allowSorting
           editSettings={{allowDeleting:true}}
-          toolbar={['PdfExport','Delete']}
+          toolbar={['PdfExport','ExcelExport','Delete']}
           allowPdfExport
+          allowExcelExport
       pageSettings={{pageSize: 5}}
             ref={g => grid = g}
           toolbarClick={toolbarClick}
@@ -159,7 +160,7 @@ const toolbarClick = (args) => {
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>
-          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
+          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport,ExcelExport]} />
         </GridComponent>
       </div>
                         <CreateVendorHandleData open={open} handleClose={handleDialogClose} id={id} vendorName={vendorName} />

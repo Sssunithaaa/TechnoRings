@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport } from '@syncfusion/ej2-react-grids';
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import AddShedTools from "../forms/AddShedTool";
 import axios from "axios";
@@ -188,7 +188,8 @@ const handleDialogClosee=()=> {
           allowPaging
           allowFiltering
           allowSorting
-          toolbar={['PdfExport']}
+          allowExcelExport
+          toolbar={['PdfExport','ExcelExport']}
           allowPdfExport
            ref={g => grid = g}
           toolbarClick={toolbarClick}
@@ -199,7 +200,7 @@ const handleDialogClosee=()=> {
             ))}
           </ColumnsDirective>
           <Inject
-            services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]}
+            services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport,ExcelExport]}
           />
         </GridComponent>
                     <UpdateShed open={open} handleClose={handleDialogClose} shed={shed} />
