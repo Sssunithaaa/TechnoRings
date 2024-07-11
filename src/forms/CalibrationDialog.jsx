@@ -19,11 +19,10 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
     type_of_tool_id: id || ""
   });
 
-  const [calibrationFrequencyUnit, setCalibrationFrequencyUnit] = useState("days");
   const [typeOfToolName, setTypeOfToolName] = useState("");
   const [typeOfToolID, setTypeOfToolID] = useState(familyAdd ? id : instrument ? instrument?.type_of_tool : "");
   const [masters, setMasters] = useState([]);
-
+ const [calibrationFrequencyUnit, setCalibrationFrequencyUnit] = useState("years");
   useEffect(() => {
     if (instrument) {
       setFormData({
@@ -191,6 +190,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
                 value={formData[field]}
                 onChange={(e) => handleChange(field, e.target.value)}
                 variant="outlined"
+                type="number"
                 fullWidth
                 size="large"
                 sx={{ flex: 1 }}
@@ -198,10 +198,12 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               <TextField
                 select
                 label="Unit"
+                type=""
                 value={calibrationFrequencyUnit}
                 onChange={(e) => setCalibrationFrequencyUnit(e.target.value)}
                 variant="outlined"
                 size="medium"
+           
                 sx={{ minWidth: 120 }}
               >
                 <MenuItem value="days">Days</MenuItem>
@@ -218,9 +220,21 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               fullWidth
               size="large"
               margin="normal"
-            />) : (
+            />) : field == "instrument_range" ? (
             <TextField
               key={field}
+              label={convertToSentenceCase(field)}
+              value={formData[field]}
+              type="number"
+              onChange={(e) => handleChange(field, e.target.value)}
+              variant="outlined"
+              fullWidth
+              size="large"
+              margin="normal"
+            />) : (
+              <TextField
+              key={field}
+              
               label={convertToSentenceCase(field)}
               value={formData[field]}
               onChange={(e) => handleChange(field, e.target.value)}
@@ -228,7 +242,8 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               fullWidth
               size="large"
               margin="normal"
-            />
+            /> 
+            
           )
         ))}
       </DialogContent>

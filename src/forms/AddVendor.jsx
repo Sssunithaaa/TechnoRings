@@ -71,6 +71,7 @@ const submitHandler = async (data) => {
           },
         }
       );
+      console.log(response)
       toast.success("Vendor updated successfully");
     } else {
       // Create new vendor
