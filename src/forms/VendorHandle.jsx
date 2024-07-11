@@ -29,9 +29,9 @@ const CreateVendorHandleData = ({ open, handleClose, id ,vendorName}) => {
     const fetchData = async () => {
       try {
         const vendorResponse = await axios.get(`${process.env.REACT_APP_URL}/vendor`);
-        const toolResponse = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
+        const toolResponse = await axios.get(`${process.env.REACT_APP_URL}/instrument-group-master-tools/`);
         setVendors(vendorResponse.data.vendors);
-        setTools(toolResponse.data.instrument_models);
+        setTools(toolResponse.data.instrument_group_masters);
       } catch (error) {
         console.error("Failed to fetch data:", error);
         toast.error("Failed to fetch vendors or tools data.");
@@ -95,15 +95,15 @@ const CreateVendorHandleData = ({ open, handleClose, id ,vendorName}) => {
             helperText={errors.tool?.message}
           >
             {tools.map((tool) => (
-              <MenuItem key={tool.instrument_no} value={tool.instrument_no}>
-                {tool.instrument_name}
+              <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
+                {tool.tool_group_name}
               </MenuItem>
             ))}
           </TextField>
 
           <TextField
             {...register("turnaround_time", { required: "Turnaround time is required" })}
-            type="text"
+            type="number"
             label="Turnaround Time"
             fullWidth
             margin="normal"

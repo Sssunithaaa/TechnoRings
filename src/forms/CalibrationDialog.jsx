@@ -4,7 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 
-const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrument }) => {
+const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrument,family,familyAdd,id }) => {
   const date = new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
@@ -16,12 +16,12 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
     least_count: "",
     instrument_range: "",
     calibration_frequency: "",
-    type_of_tool_id: ""
+    type_of_tool_id: id || ""
   });
 
   const [calibrationFrequencyUnit, setCalibrationFrequencyUnit] = useState("days");
   const [typeOfToolName, setTypeOfToolName] = useState("");
-  const [typeOfToolID, setTypeOfToolID] = useState(instrument?.type_of_tool || "");
+  const [typeOfToolID, setTypeOfToolID] = useState(familyAdd ? id : instrument ? instrument?.type_of_tool : "");
   const [masters, setMasters] = useState([]);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         description: instrument.description || "",
         least_count: instrument.least_count || "",
         instrument_range: instrument.instrument_range || "",
-        calibration_frequency: instrument.calibration_frequency || "",
+        calibration_frequency: instrument.calibration_frequency || 1,
         type_of_tool_id: instrument.type_of_tool || ""
       });
       
@@ -62,10 +62,12 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         description: "",
         least_count: "",
         instrument_range: "",
-        calibration_frequency: "",
-        type_of_tool_id: ""
+        calibration_frequency: 1,
+        type_of_tool_id: id
       });
-      setTypeOfToolName("");
+      const selectedTool = masters.find(tool => tool.tool_group_id === family);
+      setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
+
     }
   }, [instrument, date, masters]);
 
@@ -83,6 +85,10 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
   };
 
   const handleFormAddOrUpdate = () => {
+    if(formData.gst == ""){
+      toast.error("Please enter GST");
+      return;
+    }
     const convertedFormData = {
       ...formData,
       calibration_frequency: convertToDays(formData.calibration_frequency, calibrationFrequencyUnit)
@@ -133,7 +139,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         setMasters(toolResponse.data.instrument_group_masters);
       } catch (error) {
         console.error("Failed to fetch data:", error);
-        toast.error("Failed to fetch vendors or tools data.");
+       
       }
     };
 
@@ -144,7 +150,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>{instrument ? "Update Instrument" : "Add New Instrument"}</DialogTitle>
       <DialogContent>
-        <ToastContainer />
+       
         {Object.keys(formData).map((field) => (
           field === "type_of_tool_id" ? (
             <Select
@@ -158,7 +164,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               margin="normal"
             >
               <MenuItem value="" disabled>
-                <em>Select Type of Tool</em>
+                <em>Select Instrument Family</em>
               </MenuItem>
               {masters.map((tool) => (
                 <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>

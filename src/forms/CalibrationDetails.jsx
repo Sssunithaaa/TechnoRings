@@ -50,7 +50,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    console.log(toolDetails)
     const toolsData = toolDetails.map((tool, index) => ({
       calibration_tool: e.target[`toolName${index}`].value,
       calibration_date: e.target[`calibrationDate${index}`].value,
@@ -69,8 +69,9 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
   };
 
   const handleAgencyChange = (selectedOption, index) => {
+    console.log(selectedOption)
     const updatedToolDetails = [...toolDetails];
-    updatedToolDetails[index].calibrationAgency = selectedOption.value;
+    updatedToolDetails[index].calibrationAgency = selectedOption;
     setToolDetails(updatedToolDetails);
   };
 

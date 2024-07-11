@@ -47,7 +47,9 @@ const Calibration = () => {
     const toolbarClick = (args) => {
         if (args.item.id === 'gridcomp_pdfexport') {
             grid.showSpinner();
-            grid.pdfExport();
+            grid.pdfExport({
+                pageOrientation: 'Landscape'
+            });
         } else if(args.item.id === 'gridcomp_excelexport') {
             grid.showSpinner();
             grid.excelExport();
@@ -56,6 +58,7 @@ const Calibration = () => {
             setOpen(true);
         }
     };
+    
 
     const pdfExportComplete = () => {
         grid.hideSpinner();
@@ -73,6 +76,7 @@ const Calibration = () => {
         try {
                 const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument1/`, data);
                 if(response.data.success === false){
+                     setOpen(false)
                 toast.error("An error occured! Try again..", {
                     position: "top-center",
                     autoClose: 1000,
@@ -80,10 +84,11 @@ const Calibration = () => {
                     closeButton: false,
                     progress: undefined,
                 });
-                setTimeout(()=> {
-                    setOpen(false)
-                },3000)
+               
+                   
+               
             } else{
+                       setOpen(false);
             toast.success("Tool added successfully", {
                     position: "top-center",
                     autoClose: 1000,
@@ -91,9 +96,10 @@ const Calibration = () => {
                     closeButton: false,
                     progress: undefined,
                 });
-                setTimeout(()=> {
-                     setOpen(false);
-                 },2000)
+             
+            
+              
+                
                  refetch()
                 }
             } catch (error) {
@@ -103,7 +109,7 @@ const Calibration = () => {
 
     return (
         <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-           
+           <ToastContainer/>
             <div className="flex justify-between">
                 <div>
                 <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 

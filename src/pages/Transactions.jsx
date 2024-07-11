@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport } from '@syncfusion/ej2-react-grids';
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
 import { useNavigate } from "react-router-dom";
 import CalibrationDialog from "../forms/CalibrationDialog";
+import {  calibrationHistoryGrid } from "../data/apps";
 const Transactions = () => {
  
   const id= useParams()
@@ -65,17 +66,23 @@ useEffect(()=> {
   // Template function to display source shed name
  
   // Function to handle PDF export toolbar click
-  const toolbarClick = (args) => {
-    if (args.item.id === 'gridcomp_pdfexport') {
-      grid.showSpinner();
-      grid.pdfExport();
-    }
-  };
+ const toolbarClick = (args) => {
 
-  // Function to handle PDF export completion
-  const pdfExportComplete = () => {
-    grid.hideSpinner();
-  };
+    const exportPattern = /(excelexport|pdfexport)$/;
+
+    if (exportPattern.test(args.item.id)) {
+        if (args.item.id.endsWith('pdfexport')) {
+            grid.pdfExport({
+                pageOrientation: 'Landscape'
+            });
+        } else if (args.item.id.endsWith('excelexport')) {
+            grid.excelExport();
+        }
+    }
+};
+
+
+
      const handleActionComplete=async (args)=> {
       if (args.requestType === "delete") {
     try {
@@ -145,8 +152,10 @@ const handleDelete =async () => {
         <p><strong>Instrument No:</strong> {instrument.instrument_no}</p>
         <p><strong>Instrument Code:</strong> {instrument.instrument_name}</p>
         <p><strong>Instrument Range:</strong> {instrument.instrument_range}</p>
-        <p><strong>Instrument Name:</strong> {instrument.type_of_tool_name}</p>
+        <p><strong>Instrument Family:</strong> {instrument.type_of_tool_name}</p>
            <p><strong>Current Shed:</strong> {instrument.current_shed_name}</p>
+            <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
+             <p><strong>Service Status:</strong> {instrument.service_status ? "Service pending" : "Service done" }</p>
         <button       className="bg-blue-500 rounded-md py-2 px-4 text-white" 
  onClick={handleDialogOpen}>Update Instrument</button>
                   <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete tool</button>
@@ -162,6 +171,19 @@ const handleDelete =async () => {
   const handleDialogOpen = () => {
         setOpen(true);
     };
+    const [instrumentDetails, setInstrumentDetails] = useState([])
+      const fetchToolDataa = async (toolId) => {
+    try {
+       const instrumentDetail = await axios.get(`${process.env.REACT_APP_URL}/instrument-calibration-history/${toolId}`);
+    
+      setInstrumentDetails(instrumentDetail?.data?.calibration_history)
+    } catch(error){
+
+    }
+  }
+  useEffect(()=> {
+    fetchToolDataa(instrument.instrument_no)
+  },[instrument])
       const handleUpdate =async (data) => {
       
         try {
@@ -197,6 +219,7 @@ const handleDelete =async () => {
                 console.log("Error inserting data:", error);
             }
     };
+    
   return (
     <div>
      <div className="flex justify-start ml-10 mt-10">
@@ -220,21 +243,22 @@ const handleDelete =async () => {
           allowFiltering
           allowSorting
           allowDeleting
-          toolbar={['PdfExport','Delete']}
+          toolbar={['PdfExport','ExcelExport','Delete']}
           allowPdfExport
-          pdfExportComplete={pdfExportComplete}
+          allowExcelExport
+       
           editSettings={{allowDeleting:true}}
           toolbarClick={toolbarClick}
           rowSelected={rowSelected2}
           actionComplete={handleActionComplete1}
-
+            ref={g => grid = g}
         >
           <ColumnsDirective>
             {serviceGridColumns.map((item, index) => (
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>
-          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
+          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit,ExcelExport, PdfExport]} />
         </GridComponent>
       </div>
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -247,13 +271,13 @@ const handleDelete =async () => {
           allowFiltering
           allowSorting
           allowDeleting
-          toolbar={['PdfExport','Delete']}
+          allowExcelExport
+          toolbar={['PdfExport','ExcelExport','Delete']}
           allowPdfExport
             sortSettings={{ columns: [{ field: 'movement_id', direction: 'Descending' }] }} 
-          pdfExportComplete={pdfExportComplete}
                             actionComplete={handleActionComplete}
                     editSettings={{allowDeleting:true}}
-
+            ref={g => grid = g}
           toolbarClick={toolbarClick}
         >
           <ColumnsDirective>
@@ -262,9 +286,35 @@ const handleDelete =async () => {
             ))}
          
           </ColumnsDirective>
-          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
+          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit,ExcelExport, PdfExport]} />
         </GridComponent>
       </div> 
+       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+        <Header className="Page" title="Calibration History" />
+        <GridComponent
+          dataSource={instrumentDetails}
+          width="auto"
+          allowGrouping
+          allowPaging
+          allowFiltering
+          allowSorting
+          allowDeleting
+          toolbar={['PdfExport','ExcelExport']}
+          allowPdfExport
+          allowExcelExport
+          actionComplete={handleActionComplete}
+          editSettings={{ allowDeleting: true }}
+          toolbarClick={toolbarClick}
+            ref={g => grid = g}
+        >
+          <ColumnsDirective>
+            {calibrationHistoryGrid?.map((item, index) => (
+              <ColumnDirective key={index} {...item}></ColumnDirective>
+            ))}
+          </ColumnsDirective>
+          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport]} />
+        </GridComponent>
+      </div>
                   <CalibrationDialog open={open} handleClose={handleDialogClose} handleUpdate={handleUpdate} instrument={instrument} />
 
     </div>

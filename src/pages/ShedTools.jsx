@@ -8,6 +8,7 @@ import BackButton from "../components/BackButton";
 import UpdateShed from "../forms/UpdateShed";
 import { toast,ToastContainer } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
+import CalibrationDialog from "../forms/CalibrationDialog";
 const ShedTools = () => {
   const [shedTools, setShedTools] = useState([]);
   const [tools, setTools] = useState([]);
@@ -16,17 +17,7 @@ const ShedTools = () => {
 
   const id = useParams();
 const [open,setOpen] = useState(false)
-  // const fetchToolData = async (shed_id) => {
-  //   try {
-  //     const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
-  //     setShed(response?.data.shed)
-     
-  //     setName(response?.data?.shed?.name)
-  //     setShedTools(response?.data?.shed_tools);
-  //   } catch (error) {
-  //     console.error("Error fetching tool data:", error);
-  //   }
-  // };
+    const [openn,setOpenn] = useState(false)
   const { refetch } = useQuery({
     queryKey: ["shedtools"],
     queryFn: async () => {
@@ -59,16 +50,21 @@ const [open,setOpen] = useState(false)
     return { ...shedTool.using_tool, ...toolDetails };
   });
 
-  const toolbarClick = (args) => {
-    if (args.item.id === 'gridcomp_pdfexport') {
-      grid.showSpinner();
-      grid.pdfExport();
-    }
-  };
+ const toolbarClick = (args) => {
+    const exportPattern = /(excelexport|pdfexport)$/;
 
-  const pdfExportComplete = () => {
-    grid.hideSpinner();
-  };
+    if (exportPattern.test(args.item.id)) {
+        if (args.item.id.endsWith('pdfexport')) {
+            grid.pdfExport({
+                pageOrientation: 'Landscape'
+            });
+        } else if (args.item.id.endsWith('excelexport')) {
+            grid.excelExport();
+        }
+    }
+};
+
+
 
   const [showAddShedTools, setShowAddShedTools] = useState(false);
   const addShedTools = () => {
@@ -93,7 +89,48 @@ const [open,setOpen] = useState(false)
       console.error("Error deleting data:", error);
     }
   };
+  const handleAddTool =async (data) => {
+      
+        try {
+                const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument1/`, data);
+                if(response.data.success === false){
+                     setOpenn(false)
+                toast.error("An error occured! Try again..", {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: { width: "auto", style: "flex justify-center" },
+                    closeButton: false,
+                    progress: undefined,
+                });
+               
+                   
+               
+            } else{
+                       setOpenn(false);
+            toast.success("Tool added successfully", {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: { width: "auto", style: "flex justify-center" },
+                    closeButton: false,
+                    progress: undefined,
+                });
+             
+            
+              
+                
+                 refetch()
+                }
+            } catch (error) {
+                console.log("Error inserting data:", error);
+            }
+    };
+const handleDialogOpenn = ()=> {
+  setOpenn(true);
 
+}
+const handleDialogClosee=()=> {
+  setOpenn(false)
+} 
   const serviceGrid = [
     { field: "instrument_no", headerText: "Tool Number", width: "150", textAlign: "Center" },
     { field: "instrument_name", headerText: "Instrument code", width: "150", textAlign: "Center" },
@@ -132,12 +169,16 @@ const [open,setOpen] = useState(false)
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
         {showAddShedTools && <AddShedTools setClose={handleClose} />}
         <ToastContainer/>
-        <Header className={`Shed tools`} title={name}/>
         <div className="flex flex-row justify-between gap-x-5 my-4">
-          <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={addShedTools}>Add shed tools</button>
           <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={handleDialogOpen}>Update shed</button>
 
           <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete shed</button>
+        </div>
+        <Header className={`Shed tools`} title={name}/>
+        
+        <div>
+                <button className="px-5 py-2 bg-blue-500 rounded-md mb-3 text-white font-semibold" onClick={handleDialogOpenn}>Add instrument</button>
+
         </div>
         <GridComponent
           id="gridcomp"
@@ -149,7 +190,7 @@ const [open,setOpen] = useState(false)
           allowSorting
           toolbar={['PdfExport']}
           allowPdfExport
-          pdfExportComplete={pdfExportComplete}
+           ref={g => grid = g}
           toolbarClick={toolbarClick}
         >
           <ColumnsDirective>
@@ -162,6 +203,7 @@ const [open,setOpen] = useState(false)
           />
         </GridComponent>
                     <UpdateShed open={open} handleClose={handleDialogClose} shed={shed} />
+                <CalibrationDialog open={openn} handleClose={handleDialogClosee}  handleAdd={handleAddTool}/>
 
       </div>
     </div>

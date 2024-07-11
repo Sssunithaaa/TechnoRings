@@ -127,7 +127,9 @@ const Shed = () => {
   const toolbarClick = (args) => {
     console.log(args)
     if (args.item.properties.id === "gridcomp_pdfexport") {
-      grid.pdfExport();
+      grid.pdfExport({
+                pageOrientation: 'Landscape'
+            });
     } else if (args.item.properties.id === "gridcomp_excelexport") {
       grid.excelExport();
     }

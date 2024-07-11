@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import AddInstrumentGroupDialog from "./GroupMaster";
 import { ToastContainer, toast } from "react-toastify";
+import CalibrationDialog from "./CalibrationDialog";
 const MasterToolsDialog = ({  }) => {
   const {id} = useParams();
   const [toolGroup,setToolGroup] = useState()
@@ -15,11 +16,13 @@ const MasterToolsDialog = ({  }) => {
     queryFn: async () => {
       console.log(id)
       const response = await axios.get(`${process.env.REACT_APP_URL}/instruments_by_tool_group/${id}/`);
+      console.log(response.data)
       setToolGroup(response.data.tool_group)
       return response.data.instruments;
     },
   });
    const [open,setOpen] = useState(false)
+   const [openn,setOpenn] = useState(false)
    const CalibrationGrid = [
 
   {
@@ -77,12 +80,55 @@ const MasterToolsDialog = ({  }) => {
  
 
 ];
+  const handleAddTool =async (data) => {
+      
+        try {
+                const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument1/`, data);
+                if(response.data.success === false){
+                     setOpenn(false)
+                toast.error("An error occured! Try again..", {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: { width: "auto", style: "flex justify-center" },
+                    closeButton: false,
+                    progress: undefined,
+                });
+               
+                   
+               
+            } else{
+                       setOpenn(false);
+            toast.success("Tool added successfully", {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: { width: "auto", style: "flex justify-center" },
+                    closeButton: false,
+                    progress: undefined,
+                });
+             
+            
+              
+                
+                 refetch()
+                }
+            } catch (error) {
+                console.log("Error inserting data:", error);
+            }
+    };
+
 const handleDialogOpen = ()=> {
   setOpen(true);
   setInstrumentGroup(true);
 }
 const handleDialogClose=()=> {
   setOpen(false)
+} 
+const handleDialogOpenn = ()=> {
+  setOpenn(true);
+
+}
+const handleDialogClosee=()=> {
+  setOpenn(false)
 } 
 const navigate = useNavigate();
 const handleDelete=async ()=> {
@@ -120,6 +166,7 @@ const [instrumentGroup,setInstrumentGroup] = useState(false)
         </div>
     <ToastContainer/>
       <Header className="Page" title="Instrument group masters tools" />
+      <button className="px-5 py-2 bg-blue-500 rounded-md mb-3 text-white font-semibold" onClick={handleDialogOpenn}>Add instrument</button>
 
       <GridComponent
         id="gridcomp"
@@ -153,6 +200,7 @@ const [instrumentGroup,setInstrumentGroup] = useState(false)
         />
       </GridComponent>
           <AddInstrumentGroupDialog open={open} handleClose={handleDialogClose} instrumentGroup={id} />
+          <CalibrationDialog open={openn} handleClose={handleDialogClosee} family={toolGroup} familyAdd={true} id={id} handleAdd={handleAddTool}/>
 
     </div>
     </div>

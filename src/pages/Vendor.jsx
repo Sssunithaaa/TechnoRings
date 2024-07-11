@@ -8,7 +8,9 @@ import {
   Edit,
   Page,
   Toolbar,
-  Group
+  Group,
+  ExcelExport,
+  PdfExport
   
 } from "@syncfusion/ej2-react-grids";
 import { useQuery } from "@tanstack/react-query";
@@ -76,16 +78,22 @@ const employeesGrid = [
 ];
 
 
- const toolbarClick = (args) => {
-        if (args.item.id === 'gridcomp_pdfexport') {
-    
-            grid.pdfExport();
-        } else if(args.item.id === 'gridcomp_excelexport') {
+const toolbarClick = (args) => {
+    console.log(args);
 
+    const exportPattern = /(excelexport|pdfexport)$/;
+
+    if (exportPattern.test(args.item.id)) {
+        if (args.item.id.endsWith('pdfexport')) {
+            grid.pdfExport({
+                pageOrientation: 'Landscape'
+            });
+        } else if (args.item.id.endsWith('excelexport')) {
             grid.excelExport();
         }
-        
-    };
+    }
+};
+
 
 
   const fetchVendorData = async (vendor_id) => {
@@ -188,7 +196,7 @@ const handleActionComplete = async (args) => {
             />
           ))}
         </ColumnsDirective>
-        <Inject services={[Search,Toolbar,Edit,Group, Page]} />
+        <Inject services={[Search,Toolbar,Edit,Group,ExcelExport,PdfExport, Page]} />
       </GridComponent>
                         <CreateVendor open={open} handleClose={handleDialogClose} />
 

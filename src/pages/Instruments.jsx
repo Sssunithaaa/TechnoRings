@@ -86,7 +86,9 @@ const Instruments = () => {
   const toolbarClick = (args) => {
     if (args.item.id === 'gridcomp_pdfexport') {
       grid.showSpinner();
-      grid.pdfExport();
+      grid.pdfExport({
+                pageOrientation: 'Landscape'
+            });
     }
   };
 
@@ -180,6 +182,9 @@ const Instruments = () => {
         <p><strong>Instrument Code:</strong> {instrument.instrument_name}</p>
         <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
         <p><strong>Instrument name:</strong> {instrument.type_of_tool_name}</p>
+         <p><strong>Current Shed:</strong> {instrument.current_shed_name}</p>
+            <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
+             <p><strong>Service Status:</strong> {instrument.service_status ? "Service pending" : "Service done" }</p>
       </div>}
           </div>
       </div>

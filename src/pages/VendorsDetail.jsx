@@ -54,7 +54,7 @@ const {refetch } = useQuery({
   
   const vendorGridColumns = [
     {type:"checkbox",width:"50"},
-      { field: "tool_name", headerText: "Tool Name", width: "150", textAlign: "Center" },
+      { field: "tool_name", headerText: "Tool Family", width: "150", textAlign: "Center" },
         { field: "vendor_name", headerText: "Vendor", width: "150", textAlign: "Center" },
   { field: "turnaround_time", headerText: "Turnaround Time", width: "150", textAlign: "Center" },
   { field: "cost", headerText: "Cost", width: "150", textAlign: "Center" },
@@ -64,17 +64,22 @@ const {refetch } = useQuery({
 
 
   
-const toolbarClick = (args) => {
-    if (args.item.id === 'gridcomp_pdfexport') {
-      grid.showSpinner();
-      grid.pdfExport();
-    }
-  };
 
-  // Function to handle PDF export completion
-  const pdfExportComplete = () => {
-    grid.hideSpinner();
-  };
+const toolbarClick = (args) => {
+    const exportPattern = /(excelexport|pdfexport)$/;
+
+    if (exportPattern.test(args.item.id)) {
+        if (args.item.id.endsWith('pdfexport')) {
+            grid.pdfExport({
+                pageOrientation: 'Landscape'
+            });
+        } else if (args.item.id.endsWith('excelexport')) {
+            grid.excelExport();
+        }
+    }
+};
+
+ 
   const vendor_id = id["id"]
   const navigate = useNavigate()
   const handleDelete = async ()=> {
@@ -114,7 +119,16 @@ const toolbarClick = (args) => {
               
         <Header className="Page" title="Vendor handle" />
         <div className="text-[20px]">
-                <strong>Vendor name: </strong>{vendorName}
+                <strong>Vendor name: </strong>{vendorName}<br/>
+                <strong>Location: </strong> {vendor?.location}<br/>
+                   <strong>Address: </strong> {vendor?.address}<br/>
+                      <strong>Phone number: </strong> {vendor?.phone_number}<br/>
+                         <strong>Email: </strong> {vendor?.email}<br/>
+                         <strong>Vendor type: </strong> {vendor?.vendor_type_name}<br/>
+                          <strong>Certificate: </strong> {vendor?.nabl_certificate}<br/>
+
+                         <br/>
+
               </div>
          <div className="flex flex-row justify-between mb-3">
           <button       className="bg-blue-500 py-2 my-2 px-4 rounded-md text-white" 
@@ -127,6 +141,7 @@ const toolbarClick = (args) => {
         <GridComponent
           dataSource={vendorHandle}
           width="auto"
+          id="grid"
           allowGrouping
           allowPaging
           allowFiltering
@@ -135,7 +150,7 @@ const toolbarClick = (args) => {
           toolbar={['PdfExport','Delete']}
           allowPdfExport
       pageSettings={{pageSize: 5}}
-          pdfExportComplete={pdfExportComplete}
+            ref={g => grid = g}
           toolbarClick={toolbarClick}
           actionComplete={handleActionComplete}
         >

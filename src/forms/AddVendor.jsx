@@ -49,7 +49,7 @@ const submitHandler = async (data) => {
     if (data.nabl_number) {
       formData.append("nabl_number", data.nabl_number);
     }
-
+    console.log(data.certificate[0])
     if (data.certificate && data.certificate.length > 0) {
       formData.append("certificate", data.certificate[0]);
     }
@@ -159,12 +159,14 @@ const submitHandler = async (data) => {
             error={!!errors.vendor_type}
             helperText={errors.vendor_type?.message}
           >
-            <MenuItem value="1">Manufacturer</MenuItem>
+             <MenuItem value="1">Calibration Agency</MenuItem>
+          
             <MenuItem value="2">Dealer</MenuItem>
-            <MenuItem value="3">Calibration Agency</MenuItem>
+              <MenuItem value="3">Manufacturer</MenuItem>
+           
           </TextField>
 
-          {watch("vendor_type") === "3" && (
+          {watch("vendor_type") === "1" && (
             <>
               <TextField
                 {...register("nabl_number")}
