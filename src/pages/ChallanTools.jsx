@@ -182,8 +182,8 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={()=> handleDeleteChallan(transportOrder?.delivery_challan?.deliverychallan_id)} variant="contained" color="primary">Delete</Button>
-        <Button onClick={handleClose} variant="contained" color="secondary">
+        <Button onClick={()=> handleDeleteChallan(transportOrder?.delivery_challan?.deliverychallan_id)} variant="contained" color="secondary">Delete</Button>
+        <Button onClick={handleClose} variant="contained" color="primary">
           Close
         </Button>
       </DialogActions>

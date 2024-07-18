@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Select } from "@mui/material";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 
 const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, instrument, family, familyAdd, id }) => {
   const date = new Date().toISOString().split('T')[0];
-  const { data: shedDetailsData, refetch } = useQuery({
+  const { data: shedDetailsData } = useQuery({
     queryKey: ["shed"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
@@ -32,6 +32,10 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
   const [typeOfToolID, setTypeOfToolID] = useState(familyAdd ? id : instrument ? instrument?.type_of_tool : "");
   const [masters, setMasters] = useState([]);
   const [shedId,setShedId] = useState(shed? shed.shed_id : instrument ? instrument.current_shed : "")
+  
+  useEffect(() => {
+    setShedId(shed.shed_id)
+  },[shed])
   useEffect(() => {
     if (instrument) {
       const { calibration_frequency, type_of_tool, current_shed, ...rest } = instrument;
@@ -57,12 +61,12 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
         instrument_range: "",
         calibration_frequency: { years: 1, months: 0, days: 0 },
         type_of_tool_id: id,
-        shed_id: ""
+        shed_id: shed ? shedId : ""
       });
       const selectedTool = masters.find(tool => tool.tool_group_id === family);
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
     }
-  }, [instrument, date, masters]);
+  }, [instrument, date, masters,shed]);
 
   const handleChange = (field, value) => {
     setFormData((prevFormData) => ({

@@ -1,5 +1,5 @@
-import React,{useState,useEffect} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter} from '@syncfusion/ej2-react-grids'
+import React,{useState} from "react";
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,Inject,Edit,Toolbar,Sort,Filter} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
@@ -8,7 +8,7 @@ import BackButton from "../components/BackButton";
 import AddInstrumentGroupDialog from "./GroupMaster";
 import { ToastContainer, toast } from "react-toastify";
 import CalibrationDialog from "./CalibrationDialog";
-const MasterToolsDialog = ({  }) => {
+const MasterToolsDialog = () => {
   const {id} = useParams();
   const [toolGroup,setToolGroup] = useState()
    const { data: tools, refetch } = useQuery({
@@ -192,7 +192,7 @@ const [instrumentGroup,setInstrumentGroup] = useState(false)
             Toolbar,
             Resize,
             Sort,
-            ContextMenu,
+            
             Filter,
             Page,
             Edit,

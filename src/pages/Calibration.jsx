@@ -21,16 +21,16 @@ const Calibration = () => {
     });
   
     const navigate = useNavigate();
-    const [toolData, setToolData] = useState(null);
-    const [service, setService] = useState(null);
+    // const [toolData, setToolData] = useState(null);
+    // const [service, setService] = useState(null);
     const [open, setOpen] = useState(false);
 
    const fetchToolData = async (instrument_no, instrument) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${instrument_no}/`);
-        const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${instrument_no}/`);
-        setToolData(response.data);
-        setService(response1.data);
+        // const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${instrument_no}/`);
+        // const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${instrument_no}/`);
+        // setToolData(response.data);
+        // setService(response1.data);
         navigate(`${instrument_no}`, { state: { instrument } }); // Passing instrument as state
     } catch (error) {
         console.error("Error fetching tool data:", error);

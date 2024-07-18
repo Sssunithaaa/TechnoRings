@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, ContextMenu, Inject, Edit, Toolbar, Sort, Filter, Group } from '@syncfusion/ej2-react-grids';
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, Inject, Edit, Toolbar, Sort, Filter, Group } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
