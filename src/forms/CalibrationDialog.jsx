@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Select } from "@mui/material";
 import axios from "axios";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 
-const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, instrument, family, familyAdd, id }) => {
+const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, instrument, family, familyAdd, id }) => {
   const date = new Date().toISOString().split('T')[0];
   const { data: shedDetailsData } = useQuery({
     queryKey: ["shed"],
@@ -13,7 +13,6 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
       return response.data;
     },
   });
-
 
   const [formData, setFormData] = useState({
     instrument_name: "",
@@ -31,22 +30,31 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
   const [typeOfToolName, setTypeOfToolName] = useState("");
   const [typeOfToolID, setTypeOfToolID] = useState(familyAdd ? id : instrument ? instrument?.type_of_tool : "");
   const [masters, setMasters] = useState([]);
-  const [shedId,setShedId] = useState(shed? shed?.shed_id : instrument ? instrument.current_shed : "")
-  
+  const [shedId, setShedId] = useState(shed ? shed?.shed_id : instrument ? instrument.current_shed : "")
+
   useEffect(() => {
     setShedId(shed?.shed_id)
-  },[shed])
+  }, [shed])
+
   useEffect(() => {
     if (instrument) {
       const { calibration_frequency, type_of_tool, current_shed, ...rest } = instrument;
       const [years, months, days] = convertDaysToUnits(calibration_frequency);
-
+      console.log(instrument)
       setFormData({
-        ...rest,
+        description: instrument.description,
+        instrument_name: instrument.instrument_name,
+        manufacturer_name: instrument.manufacturer_name,
+        year_of_purchase: instrument.year_of_purchase,
+        gst: instrument.gst,
+        least_count: instrument.least_count,
+        instrument_range: instrument.instrument_range,
         calibration_frequency: { years, months, days },
         type_of_tool_id: type_of_tool || "",
         shed_id: current_shed || ""
       });
+      console.log(formData)
+      setShedId(current_shed)
 
       const selectedTool = masters.find(tool => tool.tool_group_id === type_of_tool);
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
@@ -66,7 +74,7 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
       const selectedTool = masters.find(tool => tool.tool_group_id === family);
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
     }
-  }, [instrument, date, masters,shed]);
+  }, [instrument, date, masters, shed]);
 
   const handleChange = (field, value) => {
     setFormData((prevFormData) => ({
@@ -79,8 +87,7 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
       setTypeOfToolID(value);
     }
-     if (field === "shed_id") {
-   
+    if (field === "shed_id") {
       setShedId(value)
     }
   };
@@ -96,30 +103,27 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
   };
 
   const handleFormAddOrUpdate = () => {
-  if (formData.gst === "") {
-    toast.error("Please enter GST");
-    return;
-  }
+    if (formData.gst === "") {
+      toast.error("Please enter GST");
+      return;
+    }
 
-  // Convert the calibration_frequency before creating the convertedFormData
-  const convertedCalibrationFrequency = convertToDays(formData.calibration_frequency);
+    // Convert the calibration_frequency before creating the convertedFormData
+    const convertedCalibrationFrequency = convertToDays(formData.calibration_frequency);
 
- 
+    const convertedFormData = {
+      ...formData,
+      calibration_frequency: convertedCalibrationFrequency
+    };
 
-  const convertedFormData = {
-    ...formData,
-    calibration_frequency: convertedCalibrationFrequency
+    console.log("Converted formData:", convertedFormData);
+
+    if (instrument) {
+      handleUpdate(convertedFormData);
+    } else {
+      handleAdd(convertedFormData);
+    }
   };
-
-  console.log("Converted formData:", convertedFormData);
-
-  if (instrument) {
-    handleUpdate(convertedFormData);
-  } else {
-    handleAdd(convertedFormData);
-  }
-};
-
 
   const convertToDays = (frequency) => {
     const { years, months, days } = frequency;
@@ -165,122 +169,131 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>{instrument ? "Update Instrument" : "Add New Instrument"}</DialogTitle>
       <DialogContent>
-        {Object.keys(formData).map((field) => (
-          field === "type_of_tool_id" ? (
-            <div className="my-2">
-              <Select
-              key={field}
-              label="Type of Tool"
-              value={typeOfToolID}
-              onChange={(e) => handleChange(field, e.target.value)}
-              variant="outlined"
-              fullWidth
-              displayEmpty
-              disabled={familyAdd ? true : false}
-              margin="normal"
-            >
-              <MenuItem value="" disabled>
-                <em>Select Instrument Family</em>
-              </MenuItem>
-              {masters.map((tool) => (
-                <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
-                  {tool.tool_group_name}
-                </MenuItem>
-              ))}
-            </Select>
-            </div>
-          ) : field === "year_of_purchase" ? (
-            <TextField
-              type="date"
-              key={field}
-              label={convertToSentenceCase(field)}
-              value={formData[field]}
-              onChange={(e) => handleChange(field, e.target.value)}
-              variant="outlined"
-              fullWidth
-              size="large"
-              margin="normal"
-            />
-          ) : field === "calibration_frequency" ? (
-            <div key={field} style={{ marginBlock: "16px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <TextField
-                  label="Years"
-                  value={formData.calibration_frequency.years}
-                  onChange={(e) => handleFrequencyChange("years", e.target.value)}
+        {Object.keys(formData).map((field) => {
+          if (field === "type_of_tool_id") {
+            return (
+              <div className="my-2" key={field}>
+                <Select
+                  label="Type of Tool"
+                  value={typeOfToolID}
+                  onChange={(e) => handleChange(field, e.target.value)}
                   variant="outlined"
-                  type="number"
                   fullWidth
-                  size="large"
-                />
-                <TextField
-                  label="Months"
-                  value={formData.calibration_frequency.months}
-                  onChange={(e) => handleFrequencyChange("months", e.target.value)}
-                  variant="outlined"
-                  type="number"
-                  fullWidth
-                  size="large"
-                />
-                <TextField
-                  label="Days"
-                  value={formData.calibration_frequency.days}
-                  onChange={(e) => handleFrequencyChange("days", e.target.value)}
-                  variant="outlined"
-                  type="number"
-                  fullWidth
-                  size="large"
-                />
+                  displayEmpty
+                  disabled={familyAdd ? true : false}
+                  margin="normal"
+                >
+                  <MenuItem value="" disabled>
+                    <em>Select Instrument Family</em>
+                  </MenuItem>
+                  {masters.map((tool) => (
+                    <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
+                      {tool.tool_group_name}
+                    </MenuItem>
+                  ))}
+                </Select>
               </div>
-            </div>
-          ) : field === "shed_id" ? (
-            <div className="my-2">
-              <Select
-              key={field}
-              label="Shed"
-              value={shedId}
-              onChange={(e) => handleChange(field, e.target.value)}
-              variant="outlined"
-              fullWidth
-              disabled={shed ? true : false}
-              displayEmpty
-              
-              margin="normal"
-            >
-              <MenuItem value="" disabled>
-                <em>Select Shed</em>
-              </MenuItem>
-              {shedDetailsData?.shed_details.map((shed) => (
-                <MenuItem key={shed.shed_id} value={shed.shed_id}>
-                  {shed.name}
-                </MenuItem>
-              ))}
-            </Select>
-            </div>
-          ) : field === "instrument_name" ? (
-            <TextField
-              key={field}
-              label="Instrument code"
-              value={formData[field]}
-              onChange={(e) => handleChange(field, e.target.value)}
-              variant="outlined"
-              fullWidth
-              size="large"
-              margin="normal"
-            />
-          ) : (
-            <TextField
-              key={field}
-              label={convertToSentenceCase(field)}
-              value={formData[field]}
-              onChange={(e) => handleChange(field, e.target.value)}
-              variant="outlined"
-              fullWidth
-              size="large"
-              margin="normal"
-            />
-          )
-        ))}
+            );
+          } else if (field === "year_of_purchase") {
+            return (
+              <TextField
+                type="date"
+                key={field}
+                label={convertToSentenceCase(field)}
+                value={formData[field]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                variant="outlined"
+                fullWidth
+                size="large"
+                margin="normal"
+              />
+            );
+          } else if (field === "calibration_frequency") {
+            return (
+              <div key={field} style={{ marginBlock: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <TextField
+                    label="Years"
+                    value={formData.calibration_frequency.years}
+                    onChange={(e) => handleFrequencyChange("years", e.target.value)}
+                    variant="outlined"
+                    type="number"
+                    fullWidth
+                    size="large"
+                  />
+                  <TextField
+                    label="Months"
+                    value={formData.calibration_frequency.months}
+                    onChange={(e) => handleFrequencyChange("months", e.target.value)}
+                    variant="outlined"
+                    type="number"
+                    fullWidth
+                    size="large"
+                  />
+                  <TextField
+                    label="Days"
+                    value={formData.calibration_frequency.days}
+                    onChange={(e) => handleFrequencyChange("days", e.target.value)}
+                    variant="outlined"
+                    type="number"
+                    fullWidth
+                    size="large"
+                  />
+                </div>
+              </div>
+            );
+          } else if (field === "shed_id") {
+            return (
+              <div className="my-2" key={field}>
+                <Select
+                  label="Shed"
+                  value={shedId}
+                  onChange={(e) => handleChange(field, e.target.value)}
+                  variant="outlined"
+                  fullWidth
+                  disabled={shed ? true : false}
+                  displayEmpty
+                  margin="normal"
+                >
+                  <MenuItem value="" disabled>
+                    <em>Select Shed</em>
+                  </MenuItem>
+                  {shedDetailsData?.shed_details.map((shed) => (
+                    <MenuItem key={shed.shed_id} value={shed.shed_id}>
+                      {shed.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
+            );
+          } else if (field === "instrument_name") {
+            return (
+              <TextField
+                key={field}
+                label="Instrument code"
+                value={formData[field]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                variant="outlined"
+                fullWidth
+                size="large"
+                margin="normal"
+              />
+            );
+          } else {
+            return (
+              <TextField
+                key={field}
+                label={convertToSentenceCase(field)}
+                value={formData[field]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                variant="outlined"
+                fullWidth
+                size="large"
+                margin="normal"
+              />
+            );
+          }
+        })}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary">

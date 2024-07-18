@@ -17,6 +17,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
   const [isUpdate, setIsUpdate] = useState(false);
   const date = new Date().toISOString().split('T')[0];
   const [instruments,setInstruments] = useState([])
+  console.log(serviceOrder)
   useEffect(() => {
     if (selectedVendor) {
       axios.get(`${process.env.REACT_APP_URL}/vendor_details/${selectedVendor}/`)
@@ -94,7 +95,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
     mode: "onChange",
   });
 
-  const navigate = useNavigate();
+ 
   const submitHandler = async (data) => {
     const requestData = {
       date: data.date,
