@@ -151,6 +151,7 @@ const Shed = () => {
           allowSelection
            pageSettings={{pageSize:10}}
           allowSorting
+        
           toolbarClick={toolbarClick}
           toolbar={[ "PdfExport","ExcelExport"]}
           rowSelected={rowSelected}
@@ -167,15 +168,14 @@ const Shed = () => {
           </ColumnsDirective>
           <Inject
             services={[
-              Toolbar,
-              Resize,
-              Sort,
-              Filter,
-              Page,
-              Edit,
               Group,
-              PdfExport,
-              ExcelExport
+                        Toolbar,
+                        Sort,
+                        Filter,
+                        Page,
+                        Edit,
+                        PdfExport,
+                        ExcelExport
             ]}
           />
         </GridComponent>
