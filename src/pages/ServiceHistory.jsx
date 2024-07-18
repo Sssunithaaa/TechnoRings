@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group} from '@syncfusion/ej2-react-grids'
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group, Search} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
@@ -97,14 +97,15 @@ const ServiceHistory = () => {
         id="gridcomp"
         dataSource={serviceorders}
         width="auto"
-          toolbar={['Delete',"ExcelExport","PdfExport"]}
+          toolbar={["ExcelExport","PdfExport",'Search']}
         allowGrouping
         allowPaging
         allowFiltering
+        
         allowSorting
          pageSettings={{ pageSize: 10 }}
         toolbarClick={toolbarClick}
-        editSettings={{ allowDeleting:true,allowEditing:true}}
+        editSettings={{ allowEditing:true}}
         allowExcelExport
         sortSettings={{ columns: [{ field: 'service_id', direction: 'Descending' }] }} 
 
@@ -122,7 +123,7 @@ const ServiceHistory = () => {
             Toolbar,
             Group,
             Sort,
-           
+            Search,
             Filter,
             Page,
             Edit,

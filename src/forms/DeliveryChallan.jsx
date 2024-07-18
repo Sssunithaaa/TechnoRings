@@ -314,7 +314,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
             </div>
             {allTools && allTools?.map((tool) => (
               <div key={tool.tool_id} className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
-                <p><strong>Tool Name:</strong> {tool.tool_name}</p>
+                <p><strong>Instrument code:</strong> {tool.tool_name}</p>
               </div>
             ))}
 

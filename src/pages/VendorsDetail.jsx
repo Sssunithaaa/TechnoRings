@@ -54,7 +54,7 @@ const {refetch } = useQuery({
   
   const vendorGridColumns = [
     {type:"checkbox",width:"50"},
-      { field: "tool_name", headerText: "Tool Family", width: "150", textAlign: "Center" },
+      { field: "tool_name", headerText: "Instrument Family", width: "150", textAlign: "Center" },
         { field: "vendor_name", headerText: "Vendor", width: "150", textAlign: "Center" },
   { field: "turnaround_time", headerText: "Turnaround Time", width: "150", textAlign: "Center" },
   { field: "cost", headerText: "Cost", width: "150", textAlign: "Center" },
@@ -85,7 +85,10 @@ const toolbarClick = (args) => {
   const handleDelete = async ()=> {
      try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/vendor/${vendor_id}/delete/`);
-      toast.success("Vendor deleted successfully")
+      toast.success("Vendor deleted successfully");
+      setTimeout(()=> {
+        navigate(-1);
+      },2000)
     } catch (error) {
       console.error("Error deleting data:", error);
     }

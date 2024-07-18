@@ -88,7 +88,7 @@ const CreateVendorHandleData = ({ open, handleClose, id ,vendorName}) => {
           <TextField
             {...register("tool", { required: "Tool is required" })}
             select
-            label="Tool"
+            label="Instrument"
             fullWidth
             margin="normal"
             error={!!errors.tool}

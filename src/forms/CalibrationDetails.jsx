@@ -80,19 +80,21 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
     for (let i = 0; i < toolCount; i++) {
       rows.push(
         <tr key={i}>
-          <td className="px-5 py-0 text-sm bg-white border-b border-gray-200">
-            <select
-              {...register(`toolName${i}`, { required: "Tool name is required" })}
-              name={`toolName${i}`}
-              className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
-            >
-              {tools?.map((tool) => (
-                <option key={tool.tool} value={tool.tool}>
-                  {tool.tool_name}
-                </option>
-              ))}
-            </select>
-          </td>
+          <td className="py-0 text-sm bg-white border-b border-gray-200">
+  <select
+    {...register(`toolName${i}`, { required: "Instrument code is required" })}
+    name={`toolName${i}`}
+    className="form-select border-2 border-gray-300 py-2  mx-auto rounded-md mt-1 w-full text-center"
+    style={{ textAlignLast: 'center' }}
+  >
+    {tools?.map((tool) => (
+      <option className="px-10 text-center" key={tool.tool} value={tool.tool}>
+        {tool.tool_name}
+      </option>
+    ))}
+  </select>
+</td>
+
           <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
             <input
               {...register(`calibrationDate${i}`, { required: "Calibration date is required" })}
@@ -189,7 +191,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
                         <thead>
                             <tr>
                                 <th  scope="col"
-                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Tool Name</th>
+                        class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Instrument code</th>
                                 <th  scope="col"
                         class="px-5 py-3 text-sm text-center text-gray-800 uppercase bg-white border-b border-gray-200">Calibration date</th>
                          <th  scope="col"

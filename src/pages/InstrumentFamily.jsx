@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport} from '@syncfusion/ej2-react-grids'
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
@@ -43,14 +43,54 @@ const InstrumentFamily = () => {
     { field: "instrument_family_name", headerText: "Instrument Family Name", width: "150", textAlign: "Center" },
    
   ];
+    const date = new Date().toISOString().split('T')[0];
+
    const toolbarClick = (args) => {
-    console.log(args.item.id)
-        if (args.item.id === 'gridcomp_pdfexport') {
-            grid.pdfExport({
-                pageOrientation: 'Landscape'
-            });
-        } else if(args.item.id === 'gridcomp_excelexport') {
-            grid.excelExport();
+   if (args.item.id === 'gridcomp_pdfexport') {
+            const pdfExportProperties = {
+                pageOrientation: 'Landscape',
+                header: {
+                    fromTop: 0,
+                    height: 130,
+                    contents: [
+                        {
+                            type: 'Text',
+                            value: 'TechnoRings, Shimoga',
+                            position: { x: 0, y: 50 },
+                            style: { textBrushColor: '#000000', fontSize: 20 }
+                        }
+                    ]
+                }
+            };
+            grid.pdfExport(pdfExportProperties);
+        } else if (args.item.id === 'gridcomp_excelexport') {
+            const excelExportProperties = {
+                header: {
+                    headerRows: 2,
+                    rows: [
+                        {
+                            cells: [
+                                {
+                                    colSpan: 11, // Adjust according to your column span
+                                    value: 'TechnoRings, Shimoga',
+                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        }, {
+                            cells: [
+                                {
+                                    colSpan: 11, // Adjust according to your column span
+                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                }
+                            ] 
+                        }
+                    ]
+                }
+        
+                
+            };
+            grid.excelExport(excelExportProperties);
         }
         
     };
@@ -70,10 +110,12 @@ const InstrumentFamily = () => {
         allowPaging
         allowSelection
         allowSorting
+        allowFiltering
+        allowGrouping
         toolbarClick={toolbarClick}
         toolbar={["ExcelExport","PdfExport"]}
         pageSettings={{ pageSize: 10 }}
-        editSettings={{ allowDeleting: true, allowEditing: true }}
+       
         allowExcelExport
         sortSettings={{ columns: [{ field: 'tool_group_id', direction: 'Descending' }] }}
         allowPdfExport
@@ -92,6 +134,8 @@ const InstrumentFamily = () => {
             Sort,
             ContextMenu,
             Filter,
+            Group,
+            
             Page,
             Edit,
             PdfExport,

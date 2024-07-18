@@ -133,7 +133,7 @@ export const links = [
      
 
       {
-        name: "Tools",
+        name: "Instruments list",
         icon: <MdInventory />,
         link:"calibration"
       },
@@ -152,7 +152,7 @@ export const links = [
         
      
       {
-        name: "Transport orders",
+        name: "Instrument movement",
         icon: <AiOutlineTransaction />,
         link:"transport-history"
       },

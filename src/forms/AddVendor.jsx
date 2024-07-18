@@ -36,64 +36,58 @@ const CreateVendor = ({ open, handleClose, vendorData }) => {
     }
   }, [vendorData, setValue, reset]);
 
-const submitHandler = async (data) => {
-  try {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("location", data.location);
-    formData.append("address", data.address);
-    formData.append("phone_number", data.phone_number);
-    formData.append("email", data.email);
-    formData.append("vendor_type", data.vendor_type);
+  const submitHandler = async (data) => {
+    try {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("location", data.location);
+      formData.append("address", data.address);
+      formData.append("phone_number", data.phone_number);
+      formData.append("email", data.email);
+      formData.append("vendor_type", data.vendor_type);
 
-    if (data.nabl_number) {
-      formData.append("nabl_number", data.nabl_number);
+      if (data.nabl_number) {
+        formData.append("nabl_number", data.nabl_number);
+      }
+      
+      if (data.certificate && data.certificate.length > 0) {
+        formData.append("certificate", data.certificate[0]);
+      }
+
+      let response;
+      if (vendorData) {
+        // Update existing vendor
+        response = await axios.post(
+          `${process.env.REACT_APP_URL}/update_vendor/${vendorData.vendor_id}/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        toast.success("Vendor updated successfully");
+      } else {
+        // Create new vendor
+        console.log(formData)
+        response = await axios.post(
+          `${process.env.REACT_APP_URL}/add_vendor/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        toast.success("Vendor added successfully");
+      }
+
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to save vendor. Please try again later.");
     }
-    console.log(data.certificate[0])
-    if (data.certificate && data.certificate.length > 0) {
-      formData.append("certificate", data.certificate[0]);
-    }
-
-    // Log FormData content
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
-    let response;
-    if (vendorData) {
-      // Update existing vendor
-      response = await axios.post(
-        `${process.env.REACT_APP_URL}/update_vendor/${vendorData.vendor_id}/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log(response)
-      toast.success("Vendor updated successfully");
-    } else {
-      // Create new vendor
-      response = await axios.post(
-        `${process.env.REACT_APP_URL}/add_vendor/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      toast.success("Vendor added successfully");
-    }
-
-    handleClose();
-  } catch (error) {
-    console.log(error);
-    toast.error("Failed to save vendor. Please try again later.");
-  }
-};
-
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -160,11 +154,9 @@ const submitHandler = async (data) => {
             error={!!errors.vendor_type}
             helperText={errors.vendor_type?.message}
           >
-             <MenuItem value="1">Calibration Agency</MenuItem>
-          
+            <MenuItem value="1">Calibration Agency</MenuItem>
             <MenuItem value="2">Dealer</MenuItem>
-              <MenuItem value="3">Manufacturer</MenuItem>
-           
+            <MenuItem value="3">Manufacturer</MenuItem>
           </TextField>
 
           {watch("vendor_type") === "1" && (
@@ -178,16 +170,18 @@ const submitHandler = async (data) => {
                 error={!!errors.nabl_number}
                 helperText={errors.nabl_number?.message}
               />
-              <TextField
-                {...register("certificate")}
-                type="file"
-                label="Certificate"
-                fullWidth
-                margin="normal"
-                inputProps={{ accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png" }}
-                error={!!errors.certificate}
-                helperText={errors.certificate?.message}
-              />
+              <label className="file-input-label">
+                <input
+                  {...register("certificate")}
+                  type="file"
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  style={{ display: "none" }}
+                />
+                <Button variant="outlined" component="span">
+                  Upload Certificate
+                </Button>
+                {errors.certificate && <p>{errors.certificate.message}</p>}
+              </label>
             </>
           )}
 

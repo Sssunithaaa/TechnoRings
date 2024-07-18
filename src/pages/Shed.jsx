@@ -14,6 +14,7 @@ import {
   Filter,
   PdfExport,
   ExcelExport,
+  Search,
 } from "@syncfusion/ej2-react-grids";
 import { Header } from "../components";
 import { shedDetailsGrid } from "../data/apps";
@@ -123,16 +124,56 @@ const Shed = () => {
     const selectedRecord = args.data["shed_id"];
     fetchToolData(selectedRecord);
   };
+    const date = new Date().toISOString().split('T')[0];
+
 
   const toolbarClick = (args) => {
-    console.log(args)
-    if (args.item.properties.id === "gridcomp_pdfexport") {
-      grid.pdfExport({
-                pageOrientation: 'Landscape'
-            });
-    } else if (args.item.properties.id === "gridcomp_excelexport") {
-      grid.excelExport();
-    }
+     if (args.item.id === 'gridcomp_pdfexport') {
+            const pdfExportProperties = {
+                pageOrientation: 'Landscape',
+                header: {
+                    fromTop: 0,
+                    height: 130,
+                    contents: [
+                        {
+                            type: 'Text',
+                            value: 'TechnoRings, Shimoga',
+                            position: { x: 0, y: 50 },
+                            style: { textBrushColor: '#000000', fontSize: 20 }
+                        }
+                    ]
+                }
+            };
+            grid.pdfExport(pdfExportProperties);
+        } else if (args.item.id === 'gridcomp_excelexport') {
+            const excelExportProperties = {
+                header: {
+                    headerRows: 2,
+                    rows: [
+                        {
+                            cells: [
+                                {
+                                    colSpan: shedDetailsGrid.length, // Adjust according to your column span
+                                    value: 'TechnoRings, Shimoga',
+                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        }, {
+                            cells: [
+                                {
+                                    colSpan: shedDetailsGrid.length, // Adjust according to your column span
+                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                }
+                            ] 
+                        }
+                    ]
+                }
+        
+                
+            };
+            grid.excelExport(excelExportProperties);
+        }
   };
 
   return (
@@ -151,9 +192,10 @@ const Shed = () => {
           allowSelection
            pageSettings={{pageSize:10}}
           allowSorting
-        
+          allowSearching
+          allowFiltering
           toolbarClick={toolbarClick}
-          toolbar={[ "PdfExport","ExcelExport"]}
+          toolbar={["Search", "PdfExport","ExcelExport"]}
           rowSelected={rowSelected}
           allowPdfExport
           allowExcelExport
@@ -171,6 +213,7 @@ const Shed = () => {
               Group,
                         Toolbar,
                         Sort,
+                        Search,
                         Filter,
                         Page,
                         Edit,

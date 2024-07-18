@@ -76,20 +76,60 @@ const employeesGrid = [
   },
  
 ];
+  const date = new Date().toISOString().split('T')[0];
 
 
 const toolbarClick = (args) => {
-    console.log(args);
+   
 
     const exportPattern = /(excelexport|pdfexport)$/;
 
     if (exportPattern.test(args.item.id)) {
         if (args.item.id.endsWith('pdfexport')) {
-            grid.pdfExport({
-                pageOrientation: 'Landscape'
-            });
+            const pdfExportProperties = {
+                pageOrientation: 'Landscape',
+                header: {
+                    fromTop: 0,
+                    height: 130,
+                    contents: [
+                        {
+                            type: 'Text',
+                            value: 'TechnoRings, Shimoga',
+                            position: { x: 0, y: 50 },
+                            style: { textBrushColor: '#000000', fontSize: 20 }
+                        }
+                    ]
+                }
+            };
+            grid.pdfExport(pdfExportProperties);
         } else if (args.item.id.endsWith('excelexport')) {
-            grid.excelExport();
+           const excelExportProperties = {
+                header: {
+                    headerRows: 2,
+                    rows: [
+                        {
+                            cells: [
+                                {
+                                    colSpan: employeesGrid.length, // Adjust according to your column span
+                                    value: 'TechnoRings, Shimoga',
+                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        }, {
+                            cells: [
+                                {
+                                    colSpan: employeesGrid.length, // Adjust according to your column span
+                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                }
+                            ] 
+                        }
+                    ]
+                }
+        
+                
+            };
+            grid.excelExport(excelExportProperties);
         }
     }
 };
@@ -111,14 +151,14 @@ const toolbarClick = (args) => {
     queryKey: ["vendors"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
-      console.log(response.data)
+      
       return response.data;
     },
   });
 const handleActionComplete = async (args) => {
   if (args.requestType === "save") {
     try {
-      console.log(args.data)
+      
       const response = await axios.post(`${process.env.REACT_APP_URL}/add_vendor/`, args.data);
       console.log(response.data)
       if (response.data.success === false) {
@@ -152,7 +192,7 @@ const handleActionComplete = async (args) => {
         setOpen(true);
     };
  const rowSelected = (args) => {
-        console.log(args.data);
+        
         const selectedRecord = args.data["vendor_id"];
         fetchVendorData(selectedRecord);
     };
@@ -169,13 +209,12 @@ const handleActionComplete = async (args) => {
         toolbar={["Search","ExcelExport","PdfExport"]}
         allowPaging
         allowSorting
-        allowAdding
-        allowEditing
+ 
         allowExcelExport
         toolbarClick={toolbarClick}
         allowPdfExport
         allowGrouping
-        allowDeleting
+        allowFiltering
         pageSettings={{ pageSize: 10 }}
         editSettings={editing}
           sortSettings={{ columns: [{ field: 'vendor_id', direction: 'Descending' }] }} 

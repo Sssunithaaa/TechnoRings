@@ -175,7 +175,7 @@ const [instrumentGroup,setInstrumentGroup] = useState(false)
         allowPaging
         allowSelection
         allowSorting
-       
+         allowFiltering
         pageSettings={{ pageSize: 10 }}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
