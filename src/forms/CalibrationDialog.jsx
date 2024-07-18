@@ -31,10 +31,10 @@ const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, in
   const [typeOfToolName, setTypeOfToolName] = useState("");
   const [typeOfToolID, setTypeOfToolID] = useState(familyAdd ? id : instrument ? instrument?.type_of_tool : "");
   const [masters, setMasters] = useState([]);
-  const [shedId,setShedId] = useState(shed? shed.shed_id : instrument ? instrument.current_shed : "")
+  const [shedId,setShedId] = useState(shed? shed?.shed_id : instrument ? instrument.current_shed : "")
   
   useEffect(() => {
-    setShedId(shed.shed_id)
+    setShedId(shed?.shed_id)
   },[shed])
   useEffect(() => {
     if (instrument) {
