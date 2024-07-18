@@ -149,6 +149,7 @@ const Shed = () => {
           allowGrouping
           allowPaging
           allowSelection
+           pageSettings={{pageSize:10}}
           allowSorting
           toolbarClick={toolbarClick}
           toolbar={[ "PdfExport","ExcelExport"]}
