@@ -17,14 +17,14 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
   const [isUpdate, setIsUpdate] = useState(false);
   const date = new Date().toISOString().split('T')[0];
   const [instruments,setInstruments] = useState([])
-  console.log(serviceOrder)
+  
   useEffect(() => {
     if (selectedVendor) {
       axios.get(`${process.env.REACT_APP_URL}/vendor_details/${selectedVendor}/`)
         .then(response => {
        
           setInstruments(response.data.instruments);
-          console.log(instruments)
+        
         })
         .catch(error => {
           console.error("Error fetching vendor tools:", error);
@@ -58,7 +58,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
 
     fetchVendors();
   }, []);
- console.log(serviceOrder)
+ 
   useEffect(() => {
     if (id) {
       setTools(serviceOrder?.service_tools);
@@ -94,7 +94,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
     },
     mode: "onChange",
   });
-
+  
  
   const submitHandler = async (data) => {
     const requestData = {

@@ -42,12 +42,13 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
       const [years, months, days] = convertDaysToUnits(calibration_frequency);
       console.log(instrument)
       setFormData({
-        description: instrument.description,
+      
         instrument_name: instrument.instrument_name,
         manufacturer_name: instrument.manufacturer_name,
         year_of_purchase: instrument.year_of_purchase,
         gst: instrument.gst,
         least_count: instrument.least_count,
+          description: instrument.description,
         instrument_range: instrument.instrument_range,
         calibration_frequency: { years, months, days },
         type_of_tool_id: type_of_tool || "",
