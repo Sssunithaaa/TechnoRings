@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
 
 const ChallanTools = ({ open, handleClose, transportOrder }) => {
   const [calibrationReports, setCalibrationReports] = useState([]);
@@ -24,7 +25,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
 
   const fetchCalibrationReports = async () => {
     try {
-      const response = await fetch("https://practicehost.pythonanywhere.com/calibration_reports/");
+      const response = await fetch(`${process.env.REACT_APP_URL}/calibration_reports/`);
       const data = await response.json();
       setCalibrationReports(data.calibration_reports);
     } catch (error) {
@@ -45,9 +46,59 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
     );
   };
 
+  const handleDeleteChallan = async (id) => {
+    const url = `${process.env.REACT_APP_URL}/delivery_challan/${id}/delete/`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+
+        toast.success("Delivery Challan deleted successfully");
+        setTimeout(()=> {
+          handleClose()
+        },2000)
+        fetchCalibrationReports();
+      } else {
+        console.error('Failed to delete the tool.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+   const handleDeleteTool = async (toolId) => {
+    const url = `${process.env.REACT_APP_URL}/delivery_challan_tool/${toolId}/delete/`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        console.log(response)
+        toast.success("Challan tool deleted successfully");
+        setTimeout(()=> {
+          handleClose()
+        },2000)
+        fetchCalibrationReports();
+      } else {
+        console.error('Failed to delete the tool.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="lg">
       <DialogTitle>Delivery Challan Details</DialogTitle>
+      <ToastContainer/>
       <DialogContent>
         {transportOrder ? (
           <div>
@@ -85,6 +136,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
                         <TableCell>Remark</TableCell>
                         <TableCell>Report File</TableCell>
                         <TableCell>Report File 2</TableCell>
+                        <TableCell>Delete</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -107,11 +159,21 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
                               View Report 2
                             </a>
                           </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              onClick={() => handleDeleteTool(tool.deliverychallantool_id)}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </Paper>
+              
               </div>
             ))}
           </div>
@@ -120,7 +182,8 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={()=> handleDeleteChallan(transportOrder?.delivery_challan?.deliverychallan_id)} variant="contained" color="primary">Delete</Button>
+        <Button onClick={handleClose} variant="contained" color="secondary">
           Close
         </Button>
       </DialogActions>

@@ -204,7 +204,7 @@ const handleDialogClosee=()=> {
           />
         </GridComponent>
                     <UpdateShed open={open} handleClose={handleDialogClose} shed={shed} />
-                <CalibrationDialog open={openn} handleClose={handleDialogClosee}  handleAdd={handleAddTool}/>
+                <CalibrationDialog open={openn} handleClose={handleDialogClosee} shed={shed} handleAdd={handleAddTool}/>
 
       </div>
     </div>

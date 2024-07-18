@@ -14,9 +14,9 @@ const MasterToolsDialog = ({  }) => {
    const { data: tools, refetch } = useQuery({
     queryKey: ["tools"],
     queryFn: async () => {
-      console.log(id)
+ 
       const response = await axios.get(`${process.env.REACT_APP_URL}/instruments_by_tool_group/${id}/`);
-      console.log(response.data)
+    
       setToolGroup(response.data.tool_group)
       return response.data.instruments;
     },
@@ -144,7 +144,7 @@ const handleDelete=async ()=> {
 
    }
   } catch (error) {
-    console.log(error);
+    
     toast.error("Unknown error! Try again later");
   }
 }
@@ -176,7 +176,7 @@ const [instrumentGroup,setInstrumentGroup] = useState(false)
         allowSelection
         allowSorting
        
-        pageSettings={{ pageSize: 5 }}
+        pageSettings={{ pageSize: 10 }}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
         sortSettings={{ columns: [{ field: 'tool_group_id', direction: 'Descending' }] }}

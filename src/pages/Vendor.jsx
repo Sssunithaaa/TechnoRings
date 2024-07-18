@@ -176,7 +176,7 @@ const handleActionComplete = async (args) => {
         allowPdfExport
         allowGrouping
         allowDeleting
-        pageSettings={{ pageSize: 5 }}
+        pageSettings={{ pageSize: 10 }}
         editSettings={editing}
           sortSettings={{ columns: [{ field: 'vendor_id', direction: 'Descending' }] }} 
         actionComplete={handleActionComplete}

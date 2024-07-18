@@ -9,19 +9,21 @@ import { useNavigate } from "react-router-dom";
 const Service = ({ open, handleClose, serviceOrder, id }) => {
   const [toolCount, setToolCount] = useState(serviceOrder?.service_tools?.length || 1);
   const [tools, setTools] = useState([{ id: 1, tool: "", service_type: "", service_remarks: "" }]);
-  const [vendorTools, setVendorTools] = useState([]);
+ 
   const [serviceTypes, setServiceTypes] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [vendors, setVendors] = useState([]);
   const [description, setDescription] = useState(serviceOrder?.service_order?.description || "");
   const [isUpdate, setIsUpdate] = useState(false);
   const date = new Date().toISOString().split('T')[0];
-
+  const [instruments,setInstruments] = useState([])
   useEffect(() => {
     if (selectedVendor) {
       axios.get(`${process.env.REACT_APP_URL}/vendor_details/${selectedVendor}/`)
         .then(response => {
-          setVendorTools(response.data.vendor_handles);
+       
+          setInstruments(response.data.instruments);
+          console.log(instruments)
         })
         .catch(error => {
           console.error("Error fetching vendor tools:", error);
@@ -47,6 +49,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
         setVendors(response.data);
+        
       } catch (error) {
         console.error("Error fetching vendors:", error);
       }
@@ -54,7 +57,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
 
     fetchVendors();
   }, []);
-
+ console.log(serviceOrder)
   useEffect(() => {
     if (id) {
       setTools(serviceOrder?.service_tools);
@@ -204,9 +207,9 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
                 <MenuItem value="">
                   <em>Select a tool</em>
                 </MenuItem>
-                {vendorTools?.map((tool, toolIndex) => (
-                  <MenuItem key={toolIndex} value={tool.tool}>
-                    {tool.tool_name}
+                {instruments?.map((tool, toolIndex) => (
+                  <MenuItem key={toolIndex} value={tool.instrument_no}>
+                    {tool.instrument_name}
                   </MenuItem>
                 ))}
               </TextField>

@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport} from '@syncfusion/ej2-react-grids'
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
@@ -82,12 +82,13 @@ const History = () => {
         id="gridcomp"
         dataSource={transportOrders}
         width="auto"
-        
+        allowFiltering
+        allowGrouping
         allowPaging
         allowSelection
         allowSorting
         toolbar={["ExcelExport","PdfExport"]}
-         pageSettings={{ pageSize: 5 }}
+         pageSettings={{ pageSize: 10 }}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         toolbarClick={toolbarClick}
         allowExcelExport
@@ -104,15 +105,14 @@ const History = () => {
         </ColumnsDirective>
         <Inject
           services={[
-            Toolbar,
-            Resize,
-            Sort,
-            ContextMenu,
-            Filter,
-            Page,
-            Edit,
-            PdfExport,
-            ExcelExport
+           Group,
+          Toolbar,
+                        Sort,
+                        Filter,
+                        Page,
+                        Edit,
+                        PdfExport,
+                        ExcelExport
           ]}
         />
       </GridComponent>

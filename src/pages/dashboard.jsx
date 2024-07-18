@@ -191,7 +191,7 @@ const Homepage = () => {
                   <tr>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Name</th>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Shed name</th>
-                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Notification date</th>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Next calibration date</th>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Remaining days</th>
                   </tr>
                 </thead>
@@ -200,7 +200,7 @@ const Homepage = () => {
                     <tr key={index} className='bg-gray-200'>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.current_shed}</td>
-                      <td className='w-1/3 text-center py-3 px-4'>{notification.notification_date}</td>
+                      <td className='w-1/3 text-center py-3 px-4'>{notification.next_calibration_date === null ? "Null" : notification.next_calibration_date}</td>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.remaining_days}</td>
                     </tr>
                   ))}

@@ -98,13 +98,15 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
       fetchVendorsByType();
     }
   }, [selectedVendorTypeId]);
-
+  const [allTools,setAllTools] = useState([])
   useEffect(() => {
     if (selectedServiceId) {
       const fetchServiceTools = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_URL}/service_orders/${selectedServiceId}/`);
-          setServiceTools(response.data.service_tools);
+          setAllTools(response.data.service_tools);
+           const response1 = await axios.get(`${process.env.REACT_APP_URL}/pending_service_order_tools/${selectedServiceId}/`);
+          setServiceTools(response1.data.data);
         } catch (error) {
           console.error("Error fetching service tools:", error);
         }
@@ -154,9 +156,6 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
         }
       });
 
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-      }
 
       const config = {
         headers: {
@@ -313,7 +312,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
                 ))}
               </TextField>
             </div>
-            {serviceTools && serviceTools?.map((tool) => (
+            {allTools && allTools?.map((tool) => (
               <div key={tool.tool_id} className="instrument-details bg-white flex mx-auto rounded-md flex-col w-[90%] gap-y-2">
                 <p><strong>Tool Name:</strong> {tool.tool_name}</p>
               </div>

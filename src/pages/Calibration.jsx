@@ -19,7 +19,7 @@ const Calibration = () => {
             return response.data;
         },
     });
-   
+  
     const navigate = useNavigate();
     const [toolData, setToolData] = useState(null);
     const [service, setService] = useState(null);
@@ -132,7 +132,7 @@ const Calibration = () => {
               
                 allowExcelExport
                 allowPdfExport
-                pageSettings={{pageSize:5}}
+                pageSettings={{pageSize:10}}
                 rowSelected={rowSelected}
                 pdfExportComplete={pdfExportComplete}
                           sortSettings={{ columns: [{ field: 'instrument_no', direction: 'Descending' }] }} 

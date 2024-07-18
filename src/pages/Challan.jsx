@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, ContextMenu, Inject, Edit, Toolbar, Sort, Filter } from '@syncfusion/ej2-react-grids';
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, ContextMenu, Inject, Edit, Toolbar, Sort, Filter, Group } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ const Challan = () => {
     queryKey: ["deliveryChallans"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/all_delivery_challan/`);
-      console.log(response);
+      
       return response.data.delivery_challan;
     },
   });
@@ -45,6 +45,7 @@ const Challan = () => {
 
   const handleDialogClosee = () => {
     setOpenn(false);
+    refetch()
   };
 
   const handleDialogOpenn = () => {
@@ -53,7 +54,7 @@ const Challan = () => {
 
   const handleRowClick = async (args) => {
     const challanId = args.data?.deliverychallan_id;
-    console.log(challanId);
+   
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_URL}/delivery-challans/${challanId}/`
@@ -78,8 +79,10 @@ const Challan = () => {
         allowPaging
         allowSelection
         allowSorting
-        pageSettings={{ pageSize: 5 }}
-        toolbar={['Delete']}
+        
+        pageSettings={{ pageSize: 10 }}
+        allowFiltering
+
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
           sortSettings={{ columns: [{ field: 'deliverychallan_id', direction: 'Descending' }] }} 
@@ -92,7 +95,7 @@ const Challan = () => {
           ))}
         </ColumnsDirective>
         <Inject
-          services={[Toolbar, Resize, Sort, ContextMenu, Filter, Page, Edit]}
+          services={[Toolbar, Resize,Group, Sort, Filter, Page, Edit]}
         />
       </GridComponent>
       <h2 className="mt-4 font-semibold text-[18px]">Click on records to view tools</h2>

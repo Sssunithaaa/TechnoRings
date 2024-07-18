@@ -72,7 +72,7 @@ const InstrumentFamily = () => {
         allowSorting
         toolbarClick={toolbarClick}
         toolbar={["ExcelExport","PdfExport"]}
-        pageSettings={{ pageSize: 5 }}
+        pageSettings={{ pageSize: 10 }}
         editSettings={{ allowDeleting: true, allowEditing: true }}
         allowExcelExport
         sortSettings={{ columns: [{ field: 'tool_group_id', direction: 'Descending' }] }}

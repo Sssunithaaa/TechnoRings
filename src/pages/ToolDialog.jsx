@@ -113,9 +113,9 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
         ) : (
           <p>Loading...</p>
         )}
-              <div className="flex flex-row mx-auto gap-x-4 justify-between items-center">
-                   <button className="px-2  py-2 bg-blue-500 mx-4 text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn}>Update transport order 
-</button>
+              <div className="flex flex-row mx-auto gap-x-4 justify-center items-center">
+                  {transportOrder && !transportOrder?.transport_order?.acknowledgment &&  <button className="px-2  py-2 bg-blue-500 mx-4 text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn}>Update transport order 
+</button>}
 <button  className="px-2 py-2 bg-red-500 mx-4 text-[14px] rounded-md text-white font-semibold" onClick={handleDelete}>
           Delete transport order
         </button>

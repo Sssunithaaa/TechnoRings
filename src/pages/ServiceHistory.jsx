@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport} from '@syncfusion/ej2-react-grids'
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
@@ -98,11 +98,11 @@ const ServiceHistory = () => {
         dataSource={serviceorders}
         width="auto"
           toolbar={['Delete',"ExcelExport","PdfExport"]}
-
+        allowGrouping
         allowPaging
-        allowSelection
+        allowFiltering
         allowSorting
-         pageSettings={{ pageSize: 5 }}
+         pageSettings={{ pageSize: 10 }}
         toolbarClick={toolbarClick}
         editSettings={{ allowDeleting:true,allowEditing:true}}
         allowExcelExport
@@ -120,9 +120,9 @@ const ServiceHistory = () => {
         <Inject
           services={[
             Toolbar,
-            Resize,
+            Group,
             Sort,
-            ContextMenu,
+           
             Filter,
             Page,
             Edit,

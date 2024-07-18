@@ -4,8 +4,16 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 
-const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrument,family,familyAdd,id }) => {
+const CalibrationDialog = ({shed, open, handleClose, handleAdd, handleUpdate, instrument, family, familyAdd, id }) => {
   const date = new Date().toISOString().split('T')[0];
+  const { data: shedDetailsData, refetch } = useQuery({
+    queryKey: ["shed"],
+    queryFn: async () => {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
+      return response.data;
+    },
+  });
+
 
   const [formData, setFormData] = useState({
     instrument_name: "",
@@ -15,43 +23,29 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
     description: "",
     least_count: "",
     instrument_range: "",
-    calibration_frequency: "",
-    type_of_tool_id: id || ""
+    calibration_frequency: { years: 0, months: 0, days: 0 },
+    type_of_tool_id: id || "",
+    shed_id: "",
   });
 
   const [typeOfToolName, setTypeOfToolName] = useState("");
   const [typeOfToolID, setTypeOfToolID] = useState(familyAdd ? id : instrument ? instrument?.type_of_tool : "");
   const [masters, setMasters] = useState([]);
- const [calibrationFrequencyUnit, setCalibrationFrequencyUnit] = useState("years");
+  const [shedId,setShedId] = useState(shed? shed.shed_id : instrument ? instrument.current_shed : "")
   useEffect(() => {
     if (instrument) {
-      setFormData({
-        instrument_name: instrument.instrument_name || "",
-        manufacturer_name: instrument.manufacturer_name || "",
-        year_of_purchase: instrument.year_of_purchase || date,
-        gst: instrument.gst || "",
-        description: instrument.description || "",
-        least_count: instrument.least_count || "",
-        instrument_range: instrument.instrument_range || "",
-        calibration_frequency: instrument.calibration_frequency || 1,
-        type_of_tool_id: instrument.type_of_tool || ""
-      });
-      
-      const selectedTool = masters.find(tool => tool.tool_group_id === instrument.type_of_tool);
-      setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
+      const { calibration_frequency, type_of_tool, current_shed, ...rest } = instrument;
+      const [years, months, days] = convertDaysToUnits(calibration_frequency);
 
-      const days = parseInt(instrument.calibration_frequency, 10);
-      if (!isNaN(days)) {
-        if (days % 365 === 0) {
-          setCalibrationFrequencyUnit("years");
-          setFormData(prevFormData => ({ ...prevFormData, calibration_frequency: days / 365 }));
-        } else if (days % 30 === 0) {
-          setCalibrationFrequencyUnit("months");
-          setFormData(prevFormData => ({ ...prevFormData, calibration_frequency: days / 30 }));
-        } else {
-          setCalibrationFrequencyUnit("days");
-        }
-      }
+      setFormData({
+        ...rest,
+        calibration_frequency: { years, months, days },
+        type_of_tool_id: type_of_tool || "",
+        shed_id: current_shed || ""
+      });
+
+      const selectedTool = masters.find(tool => tool.tool_group_id === type_of_tool);
+      setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
     } else {
       setFormData({
         instrument_name: "",
@@ -61,12 +55,12 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         description: "",
         least_count: "",
         instrument_range: "",
-        calibration_frequency: 1,
-        type_of_tool_id: id
+        calibration_frequency: { years: 1, months: 0, days: 0 },
+        type_of_tool_id: id,
+        shed_id: ""
       });
       const selectedTool = masters.find(tool => tool.tool_group_id === family);
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
-
     }
   }, [instrument, date, masters]);
 
@@ -81,40 +75,59 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
       setTypeOfToolID(value);
     }
+     if (field === "shed_id") {
+   
+      setShedId(value)
+    }
+  };
+
+  const handleFrequencyChange = (unit, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      calibration_frequency: {
+        ...prevFormData.calibration_frequency,
+        [unit]: value
+      }
+    }));
   };
 
   const handleFormAddOrUpdate = () => {
-    if(formData.gst == ""){
-      toast.error("Please enter GST");
-      return;
-    }
-    const convertedFormData = {
-      ...formData,
-      calibration_frequency: convertToDays(formData.calibration_frequency, calibrationFrequencyUnit)
-    };
+  if (formData.gst === "") {
+    toast.error("Please enter GST");
+    return;
+  }
 
-    if (instrument) {
-      handleUpdate(convertedFormData);
-    } else {
-      handleAdd(convertedFormData);
-    }
+  // Convert the calibration_frequency before creating the convertedFormData
+  const convertedCalibrationFrequency = convertToDays(formData.calibration_frequency);
+
+ 
+
+  const convertedFormData = {
+    ...formData,
+    calibration_frequency: convertedCalibrationFrequency
   };
 
-  const convertToDays = (frequency, unit) => {
-    if (!frequency) return "";
-    const freq = parseInt(frequency, 10);
-    if (isNaN(freq)) return "";
+  console.log("Converted formData:", convertedFormData);
 
-    switch (unit) {
-      case "days":
-        return freq;
-      case "months":
-        return freq * 30; // Assuming an average month length of 30 days
-      case "years":
-        return freq * 365; // Assuming a year length of 365 days
-      default:
-        return freq;
-    }
+  if (instrument) {
+    handleUpdate(convertedFormData);
+  } else {
+    handleAdd(convertedFormData);
+  }
+};
+
+
+  const convertToDays = (frequency) => {
+    const { years, months, days } = frequency;
+    return (parseInt(years, 10) * 365) + (parseInt(months, 10) * 30) + parseInt(days, 10);
+  };
+
+  const convertDaysToUnits = (days) => {
+    const years = Math.floor(days / 365);
+    days -= years * 365;
+    const months = Math.floor(days / 30);
+    days -= months * 30;
+    return [years, months, days];
   };
 
   const { data: calibrationData } = useQuery({
@@ -124,7 +137,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
       return response.data.instrument_models;
     },
   });
-  
+
   const convertToSentenceCase = (str) => {
     return str
       .replace(/_/g, " ")
@@ -138,7 +151,6 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
         setMasters(toolResponse.data.instrument_group_masters);
       } catch (error) {
         console.error("Failed to fetch data:", error);
-       
       }
     };
 
@@ -149,10 +161,10 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>{instrument ? "Update Instrument" : "Add New Instrument"}</DialogTitle>
       <DialogContent>
-       
         {Object.keys(formData).map((field) => (
           field === "type_of_tool_id" ? (
-            <Select
+            <div className="my-2">
+              <Select
               key={field}
               label="Type of Tool"
               value={typeOfToolID}
@@ -160,6 +172,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               variant="outlined"
               fullWidth
               displayEmpty
+              disabled={familyAdd ? true : false}
               margin="normal"
             >
               <MenuItem value="" disabled>
@@ -171,6 +184,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
                 </MenuItem>
               ))}
             </Select>
+            </div>
           ) : field === "year_of_purchase" ? (
             <TextField
               type="date"
@@ -184,34 +198,63 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               margin="normal"
             />
           ) : field === "calibration_frequency" ? (
-            <div key={field} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
-              <TextField
-                label={convertToSentenceCase(field)}
-                value={formData[field]}
-                onChange={(e) => handleChange(field, e.target.value)}
-                variant="outlined"
-                type="number"
-                fullWidth
-                size="large"
-                sx={{ flex: 1 }}
-              />
-              <TextField
-                select
-                label="Unit"
-                type=""
-                value={calibrationFrequencyUnit}
-                onChange={(e) => setCalibrationFrequencyUnit(e.target.value)}
-                variant="outlined"
-                size="medium"
-           
-                sx={{ minWidth: 120 }}
-              >
-                <MenuItem value="days">Days</MenuItem>
-                <MenuItem value="months">Months</MenuItem>
-                <MenuItem value="years">Years</MenuItem>
-              </TextField>
+            <div key={field} style={{ marginBlock: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <TextField
+                  label="Years"
+                  value={formData.calibration_frequency.years}
+                  onChange={(e) => handleFrequencyChange("years", e.target.value)}
+                  variant="outlined"
+                  type="number"
+                  fullWidth
+                  size="large"
+                />
+                <TextField
+                  label="Months"
+                  value={formData.calibration_frequency.months}
+                  onChange={(e) => handleFrequencyChange("months", e.target.value)}
+                  variant="outlined"
+                  type="number"
+                  fullWidth
+                  size="large"
+                />
+                <TextField
+                  label="Days"
+                  value={formData.calibration_frequency.days}
+                  onChange={(e) => handleFrequencyChange("days", e.target.value)}
+                  variant="outlined"
+                  type="number"
+                  fullWidth
+                  size="large"
+                />
+              </div>
             </div>
-          ) : field === "instrument_name"? (<TextField
+          ) : field === "shed_id" ? (
+            <div className="my-2">
+              <Select
+              key={field}
+              label="Shed"
+              value={shedId}
+              onChange={(e) => handleChange(field, e.target.value)}
+              variant="outlined"
+              fullWidth
+              disabled={shed ? true : false}
+              displayEmpty
+              
+              margin="normal"
+            >
+              <MenuItem value="" disabled>
+                <em>Select Shed</em>
+              </MenuItem>
+              {shedDetailsData?.shed_details.map((shed) => (
+                <MenuItem key={shed.shed_id} value={shed.shed_id}>
+                  {shed.name}
+                </MenuItem>
+              ))}
+            </Select>
+            </div>
+          ) : field === "instrument_name" ? (
+            <TextField
               key={field}
               label="Instrument code"
               value={formData[field]}
@@ -220,10 +263,10 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               fullWidth
               size="large"
               margin="normal"
-            />) : (
-              <TextField
+            />
+          ) : (
+            <TextField
               key={field}
-              
               label={convertToSentenceCase(field)}
               value={formData[field]}
               onChange={(e) => handleChange(field, e.target.value)}
@@ -231,8 +274,7 @@ const CalibrationDialog = ({ open, handleClose, handleAdd, handleUpdate, instrum
               fullWidth
               size="large"
               margin="normal"
-            /> 
-            
+            />
           )
         ))}
       </DialogContent>
