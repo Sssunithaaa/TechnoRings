@@ -70,7 +70,7 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
         instrument_range: "",
         calibration_frequency: { years: 1, months: 0, days: 0 },
         type_of_tool_id: id,
-        shed_id: shed ? shedId : ""
+        shed_id: shedId
       });
       const selectedTool = masters.find(tool => tool.tool_group_id === family);
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");

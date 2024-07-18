@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, IconButton } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem,Autocomplete, IconButton } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
 const Service = ({ open, handleClose, serviceOrder, id }) => {
@@ -194,26 +194,25 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          {tools.map((_, index) => (
-            <div key={index}>
+         
+      {tools.map((toolItem, index) => (
+        <div key={index}>
+          <Autocomplete
+            options={instruments}
+            getOptionLabel={(option) => option.instrument_name}
+            value={instruments.find((tool) => tool.instrument_no === tools[index]?.tool) || null}
+            onChange={(e, newValue) => handleToolChange(index, "tool", newValue ? newValue.instrument_no : "")}
+            renderInput={(params) => (
               <TextField
-                select
+                {...params}
                 label={`Service Tool ${index + 1}`}
-                fullWidth
-                value={tools[index]?.tool || ""}
-                onChange={(e) => handleToolChange(index, "tool", e.target.value)}
                 margin="normal"
+                fullWidth
                 required
-              >
-                <MenuItem value="">
-                  <em>Select a tool</em>
-                </MenuItem>
-                {instruments?.map((tool, toolIndex) => (
-                  <MenuItem key={toolIndex} value={tool.instrument_no}>
-                    {tool.instrument_name}
-                  </MenuItem>
-                ))}
-              </TextField>
+              />
+            )}
+          />
+         
               <TextField
                 select
                 label={`Service Type ${index + 1}`}
