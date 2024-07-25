@@ -68,8 +68,9 @@ const CreateVendor = ({ open, handleClose, vendorData }) => {
         );
         toast.success("Vendor updated successfully");
       } else {
-        // Create new vendor
-        console.log(formData)
+       for (let pair of formData.entries()) {
+  console.log(`${pair[0]}: ${pair[1]}`);
+}
         response = await axios.post(
           `${process.env.REACT_APP_URL}/add_vendor/`,
           formData,

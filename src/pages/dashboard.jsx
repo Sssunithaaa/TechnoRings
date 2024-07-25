@@ -4,29 +4,43 @@ import { MdOutlineMiscellaneousServices } from "react-icons/md";
 import { FaWarehouse } from 'react-icons/fa';
 import { useQuery } from '@tanstack/react-query';
 import axios from "axios";
-
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/actions';
+import { useNavigate } from 'react-router-dom';
+import { useStateContext } from '../context/ContextProvider';
+import { useSelector } from 'react-redux';
 const Homepage = () => {
   const [displayedOrders, setDisplayedOrders] = useState(5);
   const [request, setRequest] = useState("");
   const [table, setTable] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Current month as default
-
-  const { data: toolsData } = useQuery({
-    queryKey: ["tools"],
-    queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/add-transport-order/`);
-      return response.data;
-    },
-  });
+   const { setActiveMenu,setIsLoading } = useStateContext();
+ const {  role,user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch()
   const [count, setCount] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/count_of/${selectedMonth}/`);
+        let response = await axios.get(`${process.env.REACT_APP_URL}/count_of/${selectedMonth}/`);
         if (response.data["data"]) {
-          setCount(response.data["data"]);
+          const data = response.data["data"];
+       
+
+          // Update the state with the fetched data
+          setCount(data);
+        
+        if(role ===  "shed"){
+         const filteredTools = data.tools_to_notify.filter((tool) => tool.current_shed === user);
+
+            // Update the count state with the filtered tools
+            setCount((prevCount) => ({
+              ...prevCount,
+              tools_to_notify: filteredTools,
+              tools_to_notify_count: filteredTools.length
+            }));
         }
+      }
       } catch (error) {
         console.error('Error fetching count data:', error);
       }
@@ -34,34 +48,12 @@ const Homepage = () => {
     fetchData();
   }, [selectedMonth]);
 
-  const { data: vendors } = useQuery({
-    queryKey: ["vendor"],
-    queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/vendor/`);
-      return response.data.vendors;
-    },
-  });
+ 
 
-  const { data: notificationData } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => {
-      const response = await axios.get("https://practicehost.pythonanywhere.com/instrument-service-tools/");
-      return response.data.instrument_models;
-    },
-  });
+ 
+  
 
-  const transport_orders = toolsData?.transport_orders;
-  const shed_details = toolsData?.shed_details;
-
-  const getShedName = (shedId) => {
-    const shed = shed_details.find((shed) => shed.shed_id === shedId);
-    return shed ? shed.name : "Unknown Shed";
-  };
-
-  const getVendorName = (vendorId) => {
-    const vendor = vendors.find((vendor) => vendor.vendor_id === vendorId);
-    return vendor ? vendor.name : "Unknown vendor";
-  };
+ 
 
   const handleLoadMore = () => {
     setDisplayedOrders((prevCount) => prevCount + 5);
@@ -103,9 +95,28 @@ const Homepage = () => {
         .then((response) => {
           const parts = request.split('_');
           const lastTwoWords = parts.slice(-2).join('_');
-          setTable(response.data[lastTwoWords]);
-        })
-        .catch((error) => {
+          let data = response.data[lastTwoWords]
+          setTable(data);
+          console.log(data)
+          if(role === "shed")
+          {
+            if (
+              data.some((order) => 'destination_shed_name' in order) ||
+              data.some((order) => 'shed_name' in order)
+            ) {
+              const filteredData = data.filter((order) =>
+                order.destination_shed_name
+                  ? order.destination_shed_name === user
+                  : order.shed_name === user
+              );
+
+              // Update the table with the filtered data
+              setTable(filteredData);
+
+          }
+        }
+      }
+    ).catch((error) => {
           console.error('Error fetching data:', error);
         });
     }
@@ -133,11 +144,23 @@ const Homepage = () => {
         return [];
     }
   };
-
+ const navigate = useNavigate()
   const headers = getHeaders();
-
+  const handleLogout = () => {
+    dispatch(logout())
+    setActiveMenu(false)
+    setIsLoading(true)
+    setTimeout(()=> {
+      setIsLoading(false)
+       navigate("/")
+    },1000)
+   
+  }
   return (
-    <div className='bg-main-dark-bg m-10 flex flex-col gap-y-8 mt-24'>
+    <div className='bg-main-dark-bg m-10 flex flex-col gap-y-8 mt-12'>
+      <div className='w-full flex justify-end items-end '>
+        <button onClick={handleLogout} className=' px-6 text-white font-semibold py-2 rounded-md bg-indigo-600 hover:bg-indigo-800'>LOGOUT</button>
+      </div>
       <div className='text-center mb-4'>
         <select
           value={selectedMonth}
@@ -196,7 +219,7 @@ const Homepage = () => {
                   </tr>
                 </thead>
                 <tbody className='text-gray-700'>
-                  {count && count.tools_to_notify.map((notification, index) => (
+                  {count && count?.tools_to_notify?.map((notification, index) => (
                     <tr key={index} className='bg-gray-200'>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.current_shed}</td>

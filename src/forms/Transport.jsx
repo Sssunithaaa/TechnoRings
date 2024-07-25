@@ -12,7 +12,7 @@ import {
   Button,
   MenuItem,
 } from "@mui/material";
-
+import { useSelector } from "react-redux";
 const CreateMovement = ({ open, handleClose, transportOrder }) => {
   const [toolCount, setToolCount] = useState(transportOrder ? transportOrder?.transport_tools?.length : 1);
   const [tools, setTools] = useState(transportOrder ? transportOrder?.transport_tools?.map((tool, index) => ({
@@ -21,7 +21,8 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
     remark: tool.tool_movement_remarks
   })) : [{ id: 1, tool: "", remark: "" }]);
   const [shedTools, setShedTools] = useState([]);
-  const [selectedShed, setSelectedShed] = useState(transportOrder ? transportOrder?.transport_order?.source_shed : null);
+   const {  role,user,id } = useSelector((state) => state.auth);
+  const [selectedShed, setSelectedShed] = useState(role === "shed" ? id : transportOrder ? transportOrder?.transport_order?.source_shed : null);
   const [sheds, setSheds] = useState([]);
 
   useEffect(() => {
@@ -62,7 +63,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
   };
 
   const date = new Date().toISOString().split('T')[0];
-
+  console.log(id)
   const {
     register,
     handleSubmit,
@@ -71,7 +72,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
   } = useForm({
     defaultValues: {
       movementDate: transportOrder ? transportOrder.transport_order.movement_date : date,
-      sourceShed: transportOrder ? transportOrder.transport_order.source_shed : 0,
+      sourceShed: role ==="shed" ? id : transportOrder ? transportOrder.transport_order.source_shed : 0,
       destinationShed: transportOrder ? transportOrder.transport_order.destination_shed : 0,
     },
     mode: "onChange",
@@ -87,12 +88,12 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
 
       const requestData = {
         movement_date: data.movementDate,
-        source_shed: data.sourceShed,
+        source_shed: role === "shed" ? id : data.sourceShed,
         destination_shed: data.destinationShed,
         tool_count: toolCount,
         tools: toolsArray,
       };
-      console.log(requestData)
+     
 
       if (transportOrder) {
         // Update existing transport order

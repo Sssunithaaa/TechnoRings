@@ -112,7 +112,8 @@ export const links = [
       {
         name: "Home",
         icon: <FiShoppingBag />,
-        link:""
+        link:"home",
+        role:["admin" , "shed"],
       },
     ],
   },
@@ -122,49 +123,58 @@ export const links = [
       {
         name: "Vendors",
         icon: <IoMdContacts />,
-        link:"vendors"
+        link:"vendors",
+        role:["admin"],
       },
       
       {
         name: "shed",
         icon: <FaWarehouse />,
-        link:"shed"
+        link:"shed",
+        role:["admin"],
       },
      
 
       {
         name: "Instruments list",
         icon: <MdInventory />,
-        link:"calibration"
+        link:"calibration",
+        role:["admin"],
       },
       
        {
         name: "Instrument History",
         icon: <AiOutlineTransaction />,
-        link:"instruments"
+        link:"instruments",
+        role:["admin"],
       },
        
        {
         name: "Instrument Family",
         icon: <AiOutlineTransaction />,
-        link:"instrument-family"
+        link:"instrument-family",
+        role:["admin"],
       },
         
      
       {
         name: "Instrument movement",
         icon: <AiOutlineTransaction />,
-        link:"transport-history"
+        link:"transport-history",
+        role:["shed","admin"],
+        shed:true,
       },
        {
         name: "Service orders",
         icon: <AiOutlineTransaction />,
-        link:"service-history"
+        link:"service-history",
+        role:["admin"],
       },
       {
         name: "Return order",
         icon: <HiDocumentReport />,
-        link:`deliverychallan`
+        link:`deliverychallan`,
+        role:["admin"],
       },
       // {
       //   name: "Generate Bill",

@@ -1,22 +1,37 @@
-// import {
-//     Grid_Add,
-// Grid_Editing,Grid_Delete} from './action';
+import { LOGIN_SUCCESS, LOGOUT } from './actions';
 
-// const initialState = {
-//     error: false,
-//     result: [],
-//     count: 0,
-//     isUpdated: false
-// }
-// const reducer = (state = initialState, action) => {
+const initialState = {
+  isAuthenticated: false,
+  user: null,
+  role: null,  // Add role to the state
+  id: null
+};
 
-//     switch (action.type) {
-//         case Grid_Add: {
-         
-//          return 0
-         
-//     }
-//   }
-// }
 
-// export default reducer
+
+const authReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case LOGIN_SUCCESS:
+      console.log(state)
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload.user,
+        role: action.payload.role,  // Set the role
+        id:action.payload.id
+      };
+    case LOGOUT:
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+        role: null,  // Reset the role
+        id:null
+      };
+    default:
+
+      return state;
+  }
+};
+
+export default authReducer;

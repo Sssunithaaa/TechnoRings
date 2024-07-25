@@ -5,19 +5,25 @@ import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
 import CreateMovement from "../forms/Transport";
 import ToolDialog from "./ToolDialog";
+import { useSelector } from "react-redux";
 const History = () => {
       const [open, setOpen] = useState(false);
          const [openn, setOpenn] = useState(false);
   const [selectedTransportOrder, setSelectedTransportOrder] = useState(null);
-
+ const { role,user } = useSelector((state) => state.auth);
   const { data: transportOrders, refetch } = useQuery({
   queryKey: ["transportorders"],
   queryFn: async () => {
     const response = await axios.get(`${process.env.REACT_APP_URL}/all_transport_orders/`);
-    const transformedData = response.data.transport_orders.map(order => ({
+    let transformedData = response.data.transport_orders.map(order => ({
       ...order,
       acknowledgment: order.acknowledgment ? "accepted" : "not accepted"
     }));
+  
+    if(role === "shed"){
+      transformedData = transformedData.filter((order)=> order.destination_shed_name === user)
+    }
+   
     return transformedData;
   },
 });

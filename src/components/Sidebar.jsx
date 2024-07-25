@@ -4,12 +4,12 @@ import { SiShopware } from "react-icons/si";
 import { MdOutlineCancel } from "react-icons/md";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { links } from "../data/info";
-
+import { useSelector } from "react-redux";
 import { useStateContext } from "../context/ContextProvider";
 const Sidebar = () => {
   const { currentColor, activeMenu, setActiveMenu, screenSize } =
     useStateContext();
-
+  const { isAuthenticated, role } = useSelector(state => state.auth);
   const handleCloseSideBar = () => {
     if (activeMenu !== undefined && screenSize <= 900) {
       setActiveMenu(false);
@@ -51,7 +51,7 @@ const Sidebar = () => {
                   {item.title}
                 </p>
                 {item.links.map((link) => (
-                  <NavLink
+                  link.role.includes(role) && <NavLink
                     to={`/${link.link}`}
                     key={link.name}
                     onClick={handleCloseSideBar}

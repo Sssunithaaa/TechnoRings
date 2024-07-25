@@ -114,21 +114,21 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           <p>Loading...</p>
         )}
               <div className="flex flex-row mx-auto gap-x-4 justify-center items-center">
-                  {transportOrder && !transportOrder?.transport_order?.acknowledgment &&  <button className="px-2  py-2 bg-blue-500 mx-4 text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn}>Update transport order 
+                  {transportOrder && !transportOrder?.transport_order?.acknowledgment &&  <button className="px-2  py-2 text-blue-500 mx-4 text-[16px] rounded-md  font-semibold" onClick={handleDialogOpenn}>Update transport order 
 </button>}
-<button  className="px-2 py-2 bg-red-500 mx-4 text-[14px] rounded-md text-white font-semibold" onClick={handleDelete}>
+<button  className="px-2 py-2 mx-4 text-[16px] rounded-md text-red-500 font-semibold" onClick={handleDelete}>
           Delete transport order
         </button>
               </div>
       </DialogContent>
 
       <DialogActions>
-        <button className="px-5 py-2 bg-red-500 text-[14px] rounded-md text-white font-semibold" onClick={handleClose}>
+        <button className="px-5 py-2 text-[16px] rounded-md text-white bg-red-500 font-semibold" onClick={handleClose}>
           Close
         </button>
         {
           !transportOrder?.transport_order.acknowledgment && (
-            <button className="px-5 py-2 bg-blue-500 text-[14px] rounded-md text-white font-semibold" onClick={acknowledgeTools}>
+            <button className="px-5 py-2  text-[16px] rounded-md bg-blue-500 text-white font-semibold" onClick={acknowledgeTools}>
               Acknowledge
             </button>
           )

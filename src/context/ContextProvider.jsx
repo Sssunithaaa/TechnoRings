@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-
+import { useSelector } from "react-redux";
 const StateContext = createContext();
 
 const initialState = {
@@ -10,13 +10,14 @@ const initialState = {
 };
 
 export const ContextProvider = ({ children }) => {
+    const { isAuthenticated, role } = useSelector(state => state.auth);
   const [screenSize, setScreenSize] = useState(undefined);
   const [currentColor, setCurrentColor] = useState("#03C9D7");
   const [currentMode, setCurrentMode] = useState("Dark");
   const [themeSettings, setThemeSettings] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(true);
+  const [activeMenu, setActiveMenu] = useState(isAuthenticated ? true : false);
   const [isClicked, setIsClicked] = useState(initialState);
-
+  const [isLoading,setIsLoading] = useState(false)
   const setMode = (e) => {
     setCurrentMode(e.target.value);
     localStorage.setItem("themeMode", e.target.value);
@@ -38,6 +39,8 @@ export const ContextProvider = ({ children }) => {
         currentMode,
         activeMenu,
         screenSize,
+        isLoading,
+        setIsLoading,
         setScreenSize,
         handleClick,
         isClicked,
