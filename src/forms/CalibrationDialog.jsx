@@ -1,21 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Select } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 
-const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, instrument, family, familyAdd, id }) => {
-  const date = new Date().toISOString().split('T')[0];
+const CalibrationDialog = ({
+  shed,
+  open,
+  handleClose,
+  handleAdd,
+  handleUpdate,
+  instrument,
+  family,
+  familyAdd,
+  id,
+}) => {
+  const date = new Date().toISOString().split("T")[0];
   const { data: shedDetailsData } = useQuery({
     queryKey: ["shed"],
     queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_URL}/shed-details/`
+      );
       return response.data;
     },
   });
 
   const [formData, setFormData] = useState({
-    instrument_name: "",
+    instrument_name: "tr",
     manufacturer_name: "",
     year_of_purchase: date,
     gst: "",
@@ -28,36 +49,42 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
   });
 
   const [typeOfToolName, setTypeOfToolName] = useState("");
-  const [typeOfToolID, setTypeOfToolID] = useState(familyAdd ? id : instrument ? instrument?.type_of_tool : "");
+  const [typeOfToolID, setTypeOfToolID] = useState(
+    familyAdd ? id : instrument ? instrument?.type_of_tool : ""
+  );
   const [masters, setMasters] = useState([]);
-  const [shedId, setShedId] = useState(shed ? shed?.shed_id : instrument ? instrument.current_shed : "")
+  const [shedId, setShedId] = useState(
+    shed ? shed?.shed_id : instrument ? instrument.current_shed : ""
+  );
 
   useEffect(() => {
-    setShedId(shed?.shed_id)
-  }, [shed])
+    setShedId(shed?.shed_id);
+  }, [shed]);
 
   useEffect(() => {
     if (instrument) {
-      const { calibration_frequency, type_of_tool, current_shed, ...rest } = instrument;
+      const { calibration_frequency, type_of_tool, current_shed, ...rest } =
+        instrument;
       const [years, months, days] = convertDaysToUnits(calibration_frequency);
-      console.log(instrument)
+      console.log(instrument);
       setFormData({
-      
         instrument_name: instrument.instrument_name,
         manufacturer_name: instrument.manufacturer_name,
         year_of_purchase: instrument.year_of_purchase,
         gst: instrument.gst,
         least_count: instrument.least_count,
-          description: instrument.description,
+        description: instrument.description,
         instrument_range: instrument.instrument_range,
         calibration_frequency: { years, months, days },
         type_of_tool_id: type_of_tool || "",
-        shed_id: current_shed || ""
+        shed_id: current_shed || "",
       });
-      console.log(formData)
-      setShedId(current_shed)
+      console.log(formData);
+      setShedId(current_shed);
 
-      const selectedTool = masters.find(tool => tool.tool_group_id === type_of_tool);
+      const selectedTool = masters.find(
+        (tool) => tool.tool_group_id === type_of_tool
+      );
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
     } else {
       setFormData({
@@ -70,26 +97,32 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
         instrument_range: "",
         calibration_frequency: { years: 1, months: 0, days: 0 },
         type_of_tool_id: id,
-        shed_id: shedId
+        shed_id: shedId ? shedId : "",
       });
-      const selectedTool = masters.find(tool => tool.tool_group_id === family);
+      const selectedTool = masters.find((tool) => tool.tool_group_id === family);
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
     }
   }, [instrument, date, masters, shed]);
 
   const handleChange = (field, value) => {
+    if (field === "instrument_name") {
+      value = formatInstrumentName(value);
+    }
+
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [field]: value
+      [field]: value,
     }));
 
     if (field === "type_of_tool_id") {
-      const selectedTool = masters.find(tool => tool.tool_group_id === value);
+      const selectedTool = masters.find(
+        (tool) => tool.tool_group_id === value
+      );
       setTypeOfToolName(selectedTool ? selectedTool.tool_group_name : "");
       setTypeOfToolID(value);
     }
     if (field === "shed_id") {
-      setShedId(value)
+      setShedId(value);
     }
   };
 
@@ -98,23 +131,32 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
       ...prevFormData,
       calibration_frequency: {
         ...prevFormData.calibration_frequency,
-        [unit]: value
-      }
+        [unit]: value,
+      },
     }));
   };
 
-  const handleFormAddOrUpdate = () => {
+const handleFormAddOrUpdate = () => {
     if (formData.gst === "") {
       toast.error("Please enter GST");
       return;
     }
 
+    if (!validateInstrumentName(formData.instrument_name)) {
+      toast.error(
+        "Instrument name is invalid. Format should be tr/AAAAA/11111."
+      );
+      return;
+    }
+
     // Convert the calibration_frequency before creating the convertedFormData
-    const convertedCalibrationFrequency = convertToDays(formData.calibration_frequency);
+    const convertedCalibrationFrequency = convertToDays(
+      formData.calibration_frequency
+    );
 
     const convertedFormData = {
       ...formData,
-      calibration_frequency: convertedCalibrationFrequency
+      calibration_frequency: convertedCalibrationFrequency,
     };
 
     console.log("Converted formData:", convertedFormData);
@@ -126,9 +168,42 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
     }
   };
 
+const formatInstrumentName = (name) => {
+  // Remove any non-alphanumeric characters
+  name = name.replace(/[^a-zA-Z0-9]/g, "");
+
+   if (!name.startsWith("tr")) {
+    name = "tr" + name;
+  }
+
+  // Find the start of the numeric part (part2)
+  let numericIndex = name.length;
+  for (let i = 2; i < name.length; i++) {
+    if (!isNaN(name[i])) {
+      numericIndex = i;
+      break;
+    }
+  }
+
+  // Extract parts
+  const part1 = name.substring(2, numericIndex).toUpperCase(); // Up to numericIndex characters after 'tr'
+  const part2 = name.substring(numericIndex, Math.min(numericIndex + 5, name.length)); // Up to 5 digits after part1
+
+  // Return formatted string
+  return `tr/${part1}/${part2}`;
+};
+
+const validateInstrumentName = (name) => {
+  // Regex to validate the format: tr/XXXXX/##### with any length from 0 to 5
+  const regex = /^tr\/[A-Z]{0,5}\/\d{0,5}$/;
+  return regex.test(name);
+};
+
   const convertToDays = (frequency) => {
     const { years, months, days } = frequency;
-    return (parseInt(years, 10) * 365) + (parseInt(months, 10) * 30) + parseInt(days, 10);
+    return (
+      parseInt(years, 10) * 365 + parseInt(months, 10) * 30 + parseInt(days, 10)
+    );
   };
 
   const convertDaysToUnits = (days) => {
@@ -142,7 +217,9 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
   const { data: calibrationData } = useQuery({
     queryKey: ["calibration"],
     queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_URL}/instrument-tools/`
+      );
       return response.data.instrument_models;
     },
   });
@@ -150,13 +227,17 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
   const convertToSentenceCase = (str) => {
     return str
       .replace(/_/g, " ")
-      .replace(/(?:^|\s)\S/g, function (a) { return a.toUpperCase(); });
+      .replace(/(?:^|\s)\S/g, function (a) {
+        return a.toUpperCase();
+      });
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const toolResponse = await axios.get(`${process.env.REACT_APP_URL}/instrument-group-master-tools/`);
+        const toolResponse = await axios.get(
+          `${process.env.REACT_APP_URL}/instrument-group-master-tools/`
+        );
         setMasters(toolResponse.data.instrument_group_masters);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -168,7 +249,9 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>{instrument ? "Update Instrument" : "Add New Instrument"}</DialogTitle>
+      <DialogTitle>
+        {instrument ? "Update Instrument" : "Add New Instrument"}
+      </DialogTitle>
       <DialogContent>
         {Object.keys(formData).map((field) => {
           if (field === "type_of_tool_id") {
@@ -209,7 +292,26 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
                 margin="normal"
               />
             );
-          } else if (field === "calibration_frequency") {
+          } else if (field === "instrument_name") {
+  return (
+    <TextField
+      key={field}
+      label="Instrument Code"
+      value={formData[field]}
+      onChange={(e) => handleChange(field, e.target.value)}
+      variant="outlined"
+      fullWidth
+      size="large"
+      margin="normal"
+      error={!validateInstrumentName(formData[field]) && formData[field] !== ""}
+      helperText={
+        !validateInstrumentName(formData[field]) && formData[field] !== ""
+          ? "Format: tr/AAAAA/11111"
+          : ""
+      }
+    />
+  );
+} else if (field === "calibration_frequency") {
             return (
               <div key={field} style={{ marginBlock: "16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -246,6 +348,7 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
           } else if (field === "shed_id") {
             return (
               <div className="my-2" key={field}>
+                <label className="ml-2 mb-4">Select shed</label>
                 <Select
                   label="Shed"
                   value={shedId}
@@ -255,8 +358,9 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
                   disabled={shed ? true : false}
                   displayEmpty
                   margin="normal"
+                  
                 >
-                  <MenuItem value="" disabled>
+                  <MenuItem value=" " disabled>
                     <em>Select Shed</em>
                   </MenuItem>
                   {shedDetailsData?.shed_details.map((shed) => (
@@ -266,19 +370,6 @@ const CalibrationDialog = ({ shed, open, handleClose, handleAdd, handleUpdate, i
                   ))}
                 </Select>
               </div>
-            );
-          } else if (field === "instrument_name") {
-            return (
-              <TextField
-                key={field}
-                label="Instrument code"
-                value={formData[field]}
-                onChange={(e) => handleChange(field, e.target.value)}
-                variant="outlined"
-                fullWidth
-                size="large"
-                margin="normal"
-              />
             );
           } else {
             return (
