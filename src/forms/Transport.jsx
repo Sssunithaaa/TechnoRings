@@ -181,6 +181,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
             label="Source Shed"
             fullWidth
             margin="normal"
+            disabled={role === "shed" ? true : false}
             onChange={(e) => setSelectedShed(e.target.value)}
             error={!!errors.sourceShed}
             helperText={errors.sourceShed?.message}
