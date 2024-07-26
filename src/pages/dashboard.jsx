@@ -96,8 +96,13 @@ const Homepage = () => {
           const parts = request.split('_');
           const lastTwoWords = parts.slice(-2).join('_');
           let data = response.data[lastTwoWords]
-          setTable(data);
-          console.log(data)
+          if(lastTwoWords === "transport_orders"){
+            setTable(data.filter((order)=> !order.acknowledgement))
+          }
+           else {
+            setTable(data);
+           }
+          console.log(table)
           if(role === "shed")
           {
             if (
@@ -161,7 +166,43 @@ const Homepage = () => {
       <div className='w-full flex justify-end items-end '>
         <button onClick={handleLogout} className=' px-6 text-white font-semibold py-2 rounded-md bg-indigo-600 hover:bg-indigo-800'>LOGOUT</button>
       </div>
-           <div className="relative overflow-x-auto">
+      <div className='flex flex-row gap-x-5 mb-[200px]'>
+        <div className='grid grid-cols-1 lg:grid-cols-1 max-h-10 gap-5 lg:w-1/4'>
+          <div className='bg-gray-800 p-8'>
+            <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
+              <span className='p-1 bg-[#8177d5] rounded-md'>
+                <BsPersonWorkspace color='#2e1cc9'/>
+              </span>Transport Orders</p>
+            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.transport_order_count}</p>
+            <p className='text-sm text-gray-500'>Active</p>
+            <p onClick={() => setRequest("recent_transport_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
+          </div>
+      
+      {role === "admin" &&
+        <div className='bg-gray-800 p-8'>
+          <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
+            <span className='p-1 bg-[#8177d5] rounded-md'>
+              <FaWarehouse color='#2e1cc9'/>
+            </span>Delivery Challan</p>
+          <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.deliverychallan_count}</p>
+          <p className='text-sm text-gray-500'>Active</p>
+          <p onClick={() => setRequest("recent_delivery_challan")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
+        </div>
+      }
+         {
+          role === "admin" &&  <div className='bg-gray-800 p-8'>
+            <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
+              <span className='p-1 bg-[#8177d5] rounded-md'>
+                <MdOutlineMiscellaneousServices color='#2e1cc9'/>
+              </span>Services</p>
+            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.service_order_count}</p>
+            <p className='text-sm text-gray-500'>Active</p>
+            <p onClick={() => setRequest("recent_service_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
+          </div>
+         }
+          
+        </div>
+           <div className="relative w-3/4 overflow-x-auto">
         <p className='font-bold text-3xl text-white mb-3'> {convertToSentenceCase(request)}</p>
         <table className="w-full text-sm text-left rtl:text-right text-gray-400">
           <thead className="text-xs uppercase bg-gray-700 text-gray-400">
@@ -185,9 +226,7 @@ const Homepage = () => {
             ))}
           </tbody>
         </table>
-      </div>
-
-      <div className="text-center my-4">
+         <div className="text-center my-4">
         {table && table.length > displayedOrders && (
           <button onClick={handleLoadMore} className="text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-2">
             Load More
@@ -199,7 +238,13 @@ const Homepage = () => {
           </button>
         )}
       </div>
-      <div className='text-center mb-4'>
+      </div>
+      </div>
+
+     
+     
+      <div className='flex flex-col  mt-10 gap-5 gap-x-3'>
+         <div className='text-center'>
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(Number(e.target.value))}
@@ -212,44 +257,9 @@ const Homepage = () => {
           ))}
         </select>
       </div>
-      <div className='flex flex-col lg:flex-row gap-5 gap-x-3'>
-        <div className='grid grid-cols-1 lg:grid-cols-1 gap-5 lg:w-1/4'>
-          <div className='bg-gray-800 p-8'>
-            <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
-              <span className='p-1 bg-[#8177d5] rounded-md'>
-                <BsPersonWorkspace color='#2e1cc9'/>
-              </span>Transport Orders</p>
-            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.transport_order_count}</p>
-            <p className='text-sm text-gray-500'>Active</p>
-            <p onClick={() => setRequest("recent_transport_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
-          </div>
-      
-      {!role === "shed" &&
-        <div className='bg-gray-800 p-8'>
-          <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
-            <span className='p-1 bg-[#8177d5] rounded-md'>
-              <FaWarehouse color='#2e1cc9'/>
-            </span>Delivery Challan</p>
-          <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.deliverychallan_count}</p>
-          <p className='text-sm text-gray-500'>Active</p>
-          <p onClick={() => setRequest("recent_delivery_challan")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
-        </div>
-      }
-         {
-          !role === "shed" &&  <div className='bg-gray-800 p-8'>
-            <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
-              <span className='p-1 bg-[#8177d5] rounded-md'>
-                <MdOutlineMiscellaneousServices color='#2e1cc9'/>
-              </span>Services</p>
-            <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.service_order_count}</p>
-            <p className='text-sm text-gray-500'>Active</p>
-            <p onClick={() => setRequest("recent_service_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>
-          </div>
-         }
-          
-        </div>
+        
         {/* {notificationData && notificationData.length > 0 && ( */}
-          <div className='bg-gray-700 p-4 h-auto rounded-md lg:w-3/4'>
+          <div className='bg-gray-700 p-4 h-auto rounded-md lg:w-full'>
             <p className='font-bold text-white uppercase text-xl text-center mb-2'>Notifications</p>
             <div className='overflow-x-auto'>
               <table className='min-w-full bg-white'>
