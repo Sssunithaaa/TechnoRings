@@ -115,8 +115,8 @@ const Calibration = () => {
         try {
                 const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument1/`, data);
                 if(response.data.success === false){
-                     setOpen(false)
-                toast.error("An error occured! Try again..", {
+                     
+                toast.error(response.data.errors, {
                     position: "top-center",
                     autoClose: 1000,
                     style: { width: "auto", style: "flex justify-center" },
@@ -142,7 +142,13 @@ const Calibration = () => {
                  refetch()
                 }
             } catch (error) {
-                console.log("Error inserting data:", error);
+                toast.error(error.response.data.errors, {
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: { width: "auto", style: "flex justify-center" },
+                    closeButton: false,
+                    progress: undefined,
+                })
             }
     };
 

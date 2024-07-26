@@ -66,7 +66,7 @@ const CalibrationDialog = ({
       const { calibration_frequency, type_of_tool, current_shed, ...rest } =
         instrument;
       const [years, months, days] = convertDaysToUnits(calibration_frequency);
-      console.log(instrument);
+      
       setFormData({
         instrument_name: instrument.instrument_name,
         manufacturer_name: instrument.manufacturer_name,
@@ -79,7 +79,7 @@ const CalibrationDialog = ({
         type_of_tool_id: type_of_tool || "",
         shed_id: current_shed || "",
       });
-      console.log(formData);
+   
       setShedId(current_shed);
 
       const selectedTool = masters.find(
@@ -144,7 +144,7 @@ const handleFormAddOrUpdate = () => {
 
     if (!validateInstrumentName(formData.instrument_name)) {
       toast.error(
-        "Instrument name is invalid. Format should be tr/AAAAA/11111."
+        "Instrument name is invalid. Format should be TR/AAAAA/11111."
       );
       return;
     }
@@ -159,7 +159,7 @@ const handleFormAddOrUpdate = () => {
       calibration_frequency: convertedCalibrationFrequency,
     };
 
-    console.log("Converted formData:", convertedFormData);
+  
 
     if (instrument) {
       handleUpdate(convertedFormData);
@@ -172,8 +172,8 @@ const formatInstrumentName = (name) => {
   // Remove any non-alphanumeric characters
   name = name.replace(/[^a-zA-Z0-9]/g, "");
 
-   if (!name.startsWith("tr")) {
-    name = "tr" + name;
+   if (!name.startsWith("TR")) {
+    name = "TR" + name;
   }
 
   // Find the start of the numeric part (part2)
@@ -190,12 +190,12 @@ const formatInstrumentName = (name) => {
   const part2 = name.substring(numericIndex, Math.min(numericIndex + 5, name.length)); // Up to 5 digits after part1
 
   // Return formatted string
-  return `tr/${part1}/${part2}`;
+  return `TR/${part1}/${part2}`;
 };
 
 const validateInstrumentName = (name) => {
   // Regex to validate the format: tr/XXXXX/##### with any length from 0 to 5
-  const regex = /^tr\/[A-Z]{0,5}\/\d{0,5}$/;
+  const regex = /^TR\/[A-Z]{0,5}\/\d{0,5}$/;
   return regex.test(name);
 };
 
@@ -314,7 +314,8 @@ const validateInstrumentName = (name) => {
 } else if (field === "calibration_frequency") {
             return (
               <div key={field} style={{ marginBlock: "16px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <label className="mb-[30px]">Instrument Calibration Frequency</label>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px",marginTop:'10px' }}>
                   <TextField
                     label="Years"
                     value={formData.calibration_frequency.years}

@@ -11,7 +11,7 @@ import { useStateContext } from '../context/ContextProvider';
 import { useSelector } from 'react-redux';
 const Homepage = () => {
   const [displayedOrders, setDisplayedOrders] = useState(5);
-  const [request, setRequest] = useState("");
+  const [request, setRequest] = useState("recent_transport_orders");
   const [table, setTable] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Current month as default
    const { setActiveMenu,setIsLoading } = useStateContext();
@@ -66,7 +66,7 @@ const Homepage = () => {
   const transportOrdersHeaders = [
     { label: "Movement ID", key: "movement_id" },
     { label: "Movement Date", key: "movement_date" },
-    { label: "Acknowledgment", key: "acknowledgment" },
+    { label: "Status", key: "acknowledgment" },
     { label: "Tool count", key: "tool_count" },
     { label: "Source shed", key: "source_shed_name" },
     { label: "Destination shed", key: "destination_shed_name" }
@@ -162,11 +162,11 @@ const Homepage = () => {
    
   }
   return (
-    <div className='bg-main-dark-bg m-10 flex flex-col gap-y-8 mt-12'>
+    <div className='bg-main-dark-bg m-10 flex flex-col gap-y-auto mt-12'>
       <div className='w-full flex justify-end items-end '>
         <button onClick={handleLogout} className=' px-6 text-white font-semibold py-2 rounded-md bg-indigo-600 hover:bg-indigo-800'>LOGOUT</button>
       </div>
-      <div className='flex flex-row gap-x-5 mb-[200px]'>
+      <div className='w-full flex flex-row justify-start items-start gap-x-5'>
         <div className='grid grid-cols-1 lg:grid-cols-1 max-h-10 gap-5 lg:w-1/4'>
           <div className='bg-gray-800 p-8'>
             <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
@@ -202,7 +202,7 @@ const Homepage = () => {
          }
           
         </div>
-           <div className="relative w-3/4 overflow-x-auto">
+           <div className=" w-3/4 overflow-x-auto">
         <p className='font-bold text-3xl text-white mb-3'> {convertToSentenceCase(request)}</p>
         <table className="w-full text-sm text-left rtl:text-right text-gray-400">
           <thead className="text-xs uppercase bg-gray-700 text-gray-400">
@@ -243,7 +243,7 @@ const Homepage = () => {
 
      
      
-      <div className='flex flex-col  mt-10 gap-5 gap-x-3'>
+      <div className='flex flex-col gap-5 mt-[20%] gap-x-3'>
          <div className='text-center'>
         <select
           value={selectedMonth}

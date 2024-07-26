@@ -16,9 +16,10 @@ const UpdateShed = ({ open, handleClose, shed, mode }) => {
       setName(shed.name || '');
       setLocation(shed.location || '');
       setPhoneNumber(shed.phone_number || '');
-      if (mode === 'update') {
-        setPassword(''); // Clear password field for update mode
-      }
+      setPassword(shed.password || '')
+      // if (mode === 'update') {
+      //   setPassword(''); // Clear password field for update mode
+      // }
     }
   }, [shed, mode]);
 
@@ -28,31 +29,40 @@ const UpdateShed = ({ open, handleClose, shed, mode }) => {
       name: name,
       location: location,
       phone_number: phoneNumber,
-      ...(mode === 'add' && { password1: password }), // Include password only in add mode
+
+     password1: password  // Include password only in add mode
     };
 
-    console.log(data);
 
     try {
       let response;
       if (mode === 'add') {
         response = await axios.post(`${process.env.REACT_APP_URL}/add_shed/`, data);
-        console.log(response)
+        
        if(response.data.success){
          toast.success("Shed added successfully");
        } else {
-        toast.error("Error adding shed")
+        const errors = JSON.parse(response.data.errors);
+        const errorMessage = errors.name[0].message;
+        toast.error(errorMessage)
        }
       } else {
+        
         response = await axios.post(`${process.env.REACT_APP_URL}/update_shed/${shedId}/`, data);
-        toast.success("Shed details updated successfully");
+  
+        if(response.data.success){
+          toast.success(response.data.message);
+        } else {
+           
+        toast.error(response.data.message)
+        }
       }
       setTimeout(() => {
         handleClose();
       }, 2000);
     } catch (error) {
-      console.log(error);
-      toast.error("Unknown error!");
+      
+      toast.error(error.response.data.message);
     }
   };
 
@@ -102,7 +112,7 @@ const UpdateShed = ({ open, handleClose, shed, mode }) => {
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
-        {mode === 'add' && (
+
           <TextField
             margin="dense"
             label="Password"
@@ -112,7 +122,7 @@ const UpdateShed = ({ open, handleClose, shed, mode }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        )}
+        
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>

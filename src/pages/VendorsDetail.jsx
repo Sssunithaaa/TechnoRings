@@ -128,7 +128,8 @@ const toolbarClick = (args) => {
                       <strong>Phone number: </strong> {vendor?.phone_number}<br/>
                          <strong>Email: </strong> {vendor?.email}<br/>
                          <strong>Vendor type: </strong> {vendor?.vendor_type_name}<br/>
-                          <strong>Certificate: </strong> {vendor?.nabl_certificate}<br/>
+                           <strong>NABL number: </strong> {vendor?.nabl_number}<br/>
+                          {/* <strong>Certificate: </strong> {vendor?.nabl_certificate}<br/> */}
 
                          <br/>
 

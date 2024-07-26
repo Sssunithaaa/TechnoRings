@@ -50,15 +50,23 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
         console.log(response)
         if(response.data.success){
         toast.success("Instrument group master added successfully");
-        } else {
-          toast.error("Failed to add instrument group master");
-        }
-      }
-      setTimeout(() => {
+         setTimeout(() => {
         handleClose();
       }, 2000);
+        } else {
+          const errors = JSON.parse(response.data.errors);
+        const errorMessage = errors.tool_group_name[0].message;
+        toast.error(errorMessage)
+          
+        }
+      }
+     
     } catch (error) {
-      toast.error("Unknown error!");
+      
+      const errors = JSON.parse(error.data.errors);
+        const errorMessage = errors.name[0].message;
+        toast.error(errorMessage)
+      
     }
   };
 

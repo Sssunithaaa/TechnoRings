@@ -86,7 +86,7 @@ useEffect(()=> {
      const handleActionComplete=async (args)=> {
       if (args.requestType === "delete") {
     try {
-      console.log(args.data[0].movement_id)
+     
      await axios.post(`${process.env.REACT_APP_URL}/transport_order/${args.data[0].movement_id}/delete/`);
       toast.success("Transport order deleted successfully")
     } catch (error) {
@@ -98,7 +98,7 @@ useEffect(()=> {
      const handleActionComplete1=async (args)=> {
       if (args.requestType === "delete") {
     try {
-      console.log(args.data[0].service_id)
+    
      await axios.post(`${process.env.REACT_APP_URL}/service_order/${args.data[0].service_id}/delete/`);
             toast.success("Service order deleted successfully")
 
@@ -110,13 +110,13 @@ useEffect(()=> {
   }
      }
     const rowSelected2 = async (args) => {
-        console.log(args.data);
+     
         const id = Object.values(args.data)[0]
         
     
         try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/shed/${id}/delete/`);
-      console.log(response)
+  
     } catch (error) {
       console.error("Error deleting data:", error);
     }
@@ -129,14 +129,14 @@ useEffect(()=> {
   } catch (error) {
     toast.error(error.message);
     
-    console.log("Error acknowledging transport:", error);
+  
   }
 };
 const navigate=useNavigate()
 const handleDelete =async () => {
   try {
     const response = await axios.post(`${process.env.REACT_APP_URL}/instrument/${instrument.instrument_no}/delete/`);
-  console.log(response);
+
       toast.success("Instrument deleted successfully");
     setTimeout(()=> {
       navigate(-1);
@@ -187,12 +187,12 @@ const handleDelete =async () => {
       const handleUpdate =async (data) => {
       
         try {
-          console.log(`${process.env.REACT_APP_URL}update_instrument/${instrument.instrument_no}/`)
+         
         
                 const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument/${instrument.instrument_no}/`, data);
                
                 if(response.data.success === false){
-                toast.error("An error occured! Try again..", {
+                toast.error(response.data.message, {
                     position: "top-center",
                     autoClose: 1000,
                     style: { width: "auto", style: "flex justify-center" },
@@ -216,7 +216,14 @@ const handleDelete =async () => {
               
                 }
             } catch (error) {
-                console.log("Error inserting data:", error);
+                toast.error(error.response.data.message,{
+                    position: "top-center",
+                    autoClose: 1000,
+                    style: { width: "auto", style: "flex justify-center" },
+                    closeButton: false,
+                    progress: undefined,
+                })
+                
             }
     };
     
