@@ -12,17 +12,12 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import CreateMovement from "../forms/Transport";
 import { toast,ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
 const ToolDialog = ({ open, handleClose, transportOrder }) => {
   const [selectedToolIds, setSelectedToolIds] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
-
-  const { data: calibrationData } = useQuery({
-    queryKey: ["calibration"],
-    queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
-      return response.data.instrument_models;
-    },
-  });
+  const {user,role} = useSelector((user)=> user.auth)
+ console.log(user)
 
   useEffect(() => {
     if (transportOrder) {
@@ -114,8 +109,18 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           <p>Loading...</p>
         )}
               <div className="flex flex-row mx-auto gap-x-4 justify-center items-center">
-                  {transportOrder && !transportOrder?.transport_order?.acknowledgment &&  <button className="px-2  py-2 text-blue-500 mx-4 text-[16px] rounded-md  font-semibold" onClick={handleDialogOpenn}>Update transport order 
-</button>}
+  {(role === "admin" || (
+    transportOrder &&
+    transportOrder.transport_order.source_shed_name === user && 
+    !transportOrder.transport_order.acknowledgment
+  )) && (
+    <button
+      className="px-2 py-2 text-blue-500 mx-4 text-[16px] rounded-md font-semibold"
+      onClick={handleDialogOpenn}
+    >
+      Update transport order
+    </button>
+  )}
 <button  className="px-2 py-2 mx-4 text-[16px] rounded-md text-red-500 font-semibold" onClick={handleDelete}>
           Delete transport order
         </button>
@@ -127,7 +132,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           Close
         </button>
         {
-          !transportOrder?.transport_order.acknowledgment && (
+          !transportOrder?.transport_order.acknowledgment && transportOrder?.transport_order.destination_shed_name === user && (
             <button className="px-5 py-2  text-[16px] rounded-md bg-blue-500 text-white font-semibold" onClick={acknowledgeTools}>
               Acknowledge
             </button>

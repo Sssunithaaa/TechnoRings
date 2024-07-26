@@ -63,7 +63,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
   };
 
   const date = new Date().toISOString().split('T')[0];
-  console.log(id)
+ 
   const {
     register,
     handleSubmit,
