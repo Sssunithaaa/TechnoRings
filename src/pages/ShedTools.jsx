@@ -14,7 +14,7 @@ const ShedTools = () => {
   const [tools, setTools] = useState([]);
   const [name, setName] = useState();
   const [shed,setShed] = useState();
-
+ const date = new Date().toISOString().split('T')[0];
   const id = useParams();
 
 const [open,setOpen] = useState(false)
@@ -56,14 +56,54 @@ const [open,setOpen] = useState(false)
 
     if (exportPattern.test(args.item.id)) {
         if (args.item.id.endsWith('pdfexport')) {
-            grid.pdfExport({
-                pageOrientation: 'Landscape'
-            });
+            const pdfExportProperties = {
+                pageOrientation: 'Landscape',
+                header: {
+                    fromTop: 0,
+                    height: 130,
+                    contents: [
+                        {
+                            type: 'Text',
+                            value: 'TechnoRings, Shimoga',
+                            position: { x: 0, y: 50 },
+                            style: { textBrushColor: '#000000', fontSize: 20 }
+                        }
+                    ]
+                }
+            };
+            grid.pdfExport(pdfExportProperties);
         } else if (args.item.id.endsWith('excelexport')) {
-            grid.excelExport();
+            const excelExportProperties = {
+                header: {
+                    headerRows: 2,
+                    rows: [
+                        {
+                            cells: [
+                                {
+                                    colSpan: 11, // Adjust according to your column span
+                                    value: 'TechnoRings, Shimoga',
+                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        }, {
+                            cells: [
+                                {
+                                    colSpan: 11, // Adjust according to your column span
+                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                }
+                            ] 
+                        }
+                    ]
+                }
+        
+                
+            };
+            grid.excelExport(excelExportProperties);
         }
     }
 };
+
 
 
 

@@ -161,6 +161,44 @@ const Homepage = () => {
       <div className='w-full flex justify-end items-end '>
         <button onClick={handleLogout} className=' px-6 text-white font-semibold py-2 rounded-md bg-indigo-600 hover:bg-indigo-800'>LOGOUT</button>
       </div>
+           <div className="relative overflow-x-auto">
+        <p className='font-bold text-3xl text-white mb-3'> {convertToSentenceCase(request)}</p>
+        <table className="w-full text-sm text-left rtl:text-right text-gray-400">
+          <thead className="text-xs uppercase bg-gray-700 text-gray-400">
+            <tr>
+              {headers.map((header, index) => (
+                <th key={index} scope="col" className="px-6 py-3 text-center">{header.label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table?.slice(0, displayedOrders).map((row, index) => (
+              <tr key={index} className="border-b bg-gray-800 text-white border-gray-700">
+                {headers.map((header, colIndex) => (
+                  <td key={colIndex} className="px-6 py-4 text-center">
+                    {header.key === "acknowledgment"
+                      ? row[header.key] ? "Acknowledged" : "Not Acknowledged"
+                      : row[header.key]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="text-center my-4">
+        {table && table.length > displayedOrders && (
+          <button onClick={handleLoadMore} className="text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-2">
+            Load More
+          </button>
+        )}
+        {displayedOrders > 5 && (
+          <button onClick={handleLoadLess} className="text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-2">
+            Load Less
+          </button>
+        )}
+      </div>
       <div className='text-center mb-4'>
         <select
           value={selectedMonth}
@@ -239,44 +277,7 @@ const Homepage = () => {
     {/* )} */}
       </div>
 
-      <div className="relative overflow-x-auto">
-        <p className='font-bold text-3xl text-white mb-3'> {convertToSentenceCase(request)}</p>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-400">
-          <thead className="text-xs uppercase bg-gray-700 text-gray-400">
-            <tr>
-              {headers.map((header, index) => (
-                <th key={index} scope="col" className="px-6 py-3 text-center">{header.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {table?.slice(0, displayedOrders).map((row, index) => (
-              <tr key={index} className="border-b bg-gray-800 text-white border-gray-700">
-                {headers.map((header, colIndex) => (
-                  <td key={colIndex} className="px-6 py-4 text-center">
-                    {header.key === "acknowledgment"
-                      ? row[header.key] ? "Acknowledged" : "Not Acknowledged"
-                      : row[header.key]}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="text-center my-4">
-        {table && table.length > displayedOrders && (
-          <button onClick={handleLoadMore} className="text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-2">
-            Load More
-          </button>
-        )}
-        {displayedOrders > 5 && (
-          <button onClick={handleLoadLess} className="text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-2">
-            Load Less
-          </button>
-        )}
-      </div>
+ 
     </div>
   );
 };
