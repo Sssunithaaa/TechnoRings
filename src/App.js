@@ -35,7 +35,7 @@ import FullPageLoading from './components/FullPageLoading';
 
 const App = () => {
   const { setCurrentColor, setCurrentMode, activeMenu, currentMode, currentColor, themeSettings, setThemeSettings, isLoading, setIsLoading } = useStateContext();
-  const { isAuthenticated, role } = useSelector((state) => state.auth);
+  const { isAuthenticated, role,id } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const currentThemeColor = localStorage.getItem('colorMode');
@@ -107,6 +107,7 @@ const App = () => {
                   <>
                     <Route path="/home" element={<Dashboard />} />
                     <Route path="/transport-history" element={<History />} />
+                    <Route path={`/shed-tools/:id`} element={<ShedTools/>}/>
                   </>
                 ) : role === 'admin' ? (
                   <>

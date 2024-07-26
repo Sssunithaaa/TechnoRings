@@ -9,7 +9,7 @@ import { useStateContext } from "../context/ContextProvider";
 const Sidebar = () => {
   const { currentColor, activeMenu, setActiveMenu, screenSize } =
     useStateContext();
-  const { isAuthenticated, role } = useSelector(state => state.auth);
+  const {  role,id } = useSelector(state => state.auth);
   const handleCloseSideBar = () => {
     if (activeMenu !== undefined && screenSize <= 900) {
       setActiveMenu(false);
@@ -52,7 +52,7 @@ const Sidebar = () => {
                 </p>
                 {item.links.map((link) => (
                   link.role.includes(role) && <NavLink
-                    to={`/${link.link}`}
+                    to={link.link === "shed-tools" ? `/${link.link}/${id}`:`/${link.link}`}
                     key={link.name}
                     onClick={handleCloseSideBar}
                     style={({ isActive }) => ({

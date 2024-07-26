@@ -21,7 +21,7 @@ const History = () => {
     }));
   
     if(role === "shed"){
-      transformedData = transformedData.filter((order)=> order.destination_shed_name === user)
+      transformedData = transformedData.filter((order)=> order.destination_shed_name === user || order.source_shed_name === user)
     }
    
     return transformedData;

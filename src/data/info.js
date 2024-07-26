@@ -1,7 +1,7 @@
 
 import { MdInventory } from "react-icons/md";
 import product from "./product.jpg";
-
+import { useSelector } from "react-redux";
 import { FaWarehouse } from "react-icons/fa";
 import {
   AiOutlineCalendar,
@@ -105,7 +105,9 @@ export const gridOrderStatus = (props) => (
     {props.Status}
   </button>
 );
+
 export const links = [
+  
   {
     title: "Dashboard",
     links: [
@@ -132,6 +134,12 @@ export const links = [
         icon: <FaWarehouse />,
         link:"shed",
         role:["admin"],
+      },
+        {
+        name: "shed tools",
+        icon: <FaWarehouse />,
+        link:`shed-tools`,
+        role:["shed"],
       },
      
 
