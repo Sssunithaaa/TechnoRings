@@ -193,7 +193,7 @@ const Homepage = () => {
           
         </div>
            <div className=" w-3/4 overflow-x-auto">
-        <p className='font-bold text-3xl text-white mb-3'> {convertToSentenceCase(request)}</p>
+        <p className='font-bold text-3xl text-white mb-3'> {convertToSentenceCase(request === "recent_transport_orders" ? "recent_instrument_movements" : request)}</p>
         <table className="w-full text-sm text-left rtl:text-right text-gray-400">
           <thead className="text-xs uppercase bg-gray-700 text-gray-400">
             <tr>
