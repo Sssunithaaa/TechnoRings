@@ -190,7 +190,7 @@ export const links = [
       //   link:`generate-bill/0`
       // },
     ],
-  },
+  }
   // {
   //   title: "Apps",
   //   links: [

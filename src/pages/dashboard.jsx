@@ -4,8 +4,7 @@ import { MdOutlineMiscellaneousServices } from "react-icons/md";
 import { FaWarehouse } from 'react-icons/fa';
 import { useQuery } from '@tanstack/react-query';
 import axios from "axios";
-import { useDispatch } from 'react-redux';
-import { logout } from '../store/actions';
+
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../context/ContextProvider';
 import { useSelector } from 'react-redux';
@@ -16,7 +15,7 @@ const Homepage = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Current month as default
    const { setActiveMenu,setIsLoading } = useStateContext();
  const {  role,user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch()
+
   const [count, setCount] = useState();
 
   useEffect(() => {
@@ -151,21 +150,12 @@ const Homepage = () => {
   };
  const navigate = useNavigate()
   const headers = getHeaders();
-  const handleLogout = () => {
-    dispatch(logout())
-    setActiveMenu(false)
-    setIsLoading(true)
-    setTimeout(()=> {
-      setIsLoading(false)
-       navigate("/")
-    },1000)
-   
-  }
+  
   return (
     <div className='bg-main-dark-bg m-10 flex flex-col gap-y-auto mt-12'>
-      <div className='w-full flex justify-end items-end '>
+      {/* <div className='w-full flex justify-end items-end '>
         <button onClick={handleLogout} className=' px-6 text-white font-semibold py-2 rounded-md bg-indigo-600 hover:bg-indigo-800'>LOGOUT</button>
-      </div>
+      </div> */}
       <div className='w-full flex flex-row justify-start items-start gap-x-5'>
         <div className='grid grid-cols-1 lg:grid-cols-1 max-h-10 gap-5 lg:w-1/4'>
           <div className='bg-gray-800 p-8'>

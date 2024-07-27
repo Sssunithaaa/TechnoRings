@@ -6,15 +6,31 @@ import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { links } from "../data/info";
 import { useSelector } from "react-redux";
 import { useStateContext } from "../context/ContextProvider";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/actions';
 const Sidebar = () => {
-  const { currentColor, activeMenu, setActiveMenu, screenSize } =
+  const { currentColor, activeMenu, setActiveMenu, screenSize,setIsLoading } =
     useStateContext();
-  const {  role,id } = useSelector(state => state.auth);
+  const {  role,id ,user} = useSelector(state => state.auth);
   const handleCloseSideBar = () => {
     if (activeMenu !== undefined && screenSize <= 900) {
       setActiveMenu(false);
     }
   };
+  const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const handleLogout = () => {
+    dispatch(logout())
+    setActiveMenu(false)
+    setIsLoading(true)
+    setTimeout(()=> {
+      setIsLoading(false)
+       navigate("/")
+    },1000)
+   
+  }
+
 
   const activeLink =
     "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-white  text-md m-2";
@@ -45,6 +61,12 @@ const Sidebar = () => {
             </TooltipComponent>
           </div>
           <div className="mt-10 ">
+           {
+            role !== "admin" &&  <NavLink className={`flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-white  text-md m-2 bg-[#7352FF]`}>
+          <span className="capitalize text-center font-semibold flex mx-auto">{user}</span>
+              </NavLink>
+           }
+               
             {links.map((item) => (
               <div key={item.title}>
                 <p className="text-white m-3 mt-4 uppercase">
@@ -68,6 +90,19 @@ const Sidebar = () => {
                 ))}
               </div>
             ))}
+            <NavLink
+                     
+                    
+                    onClick={handleLogout}
+                    style={({ isActive }) => ({
+                      backgroundColor: isActive ? currentColor : "",
+                    })}
+                    className={`absolute bottom-0 w-[90%] flex mx-4 items-center left-0  justify-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-white  text-md m-2 ${currentColor}`}
+                  >
+                    
+                    <span className="capitalize text-center font-semibold flex mx-auto">LOGOUT</span>
+                  </NavLink>
+           
           </div>
         </>
       )}
