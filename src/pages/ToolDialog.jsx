@@ -109,10 +109,10 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           <p>Loading...</p>
         )}
               <div className="flex flex-row mx-auto gap-x-4 justify-center items-center">
-  {(role === "admin" && !transportOrder.transport_order.acknowledgment  || (
+  {(role === "admin" && !transportOrder?.transport_order?.acknowledgment  || (
     transportOrder &&
-    transportOrder.transport_order.source_shed_name === user && 
-    !transportOrder.transport_order.acknowledgment
+    transportOrder.transport_order?.source_shed_name === user && 
+    !transportOrder.transport_order?.acknowledgment
   )) && (
     <button
       className="px-2 py-2 text-blue-500 mx-4 text-[16px] rounded-md font-semibold"
