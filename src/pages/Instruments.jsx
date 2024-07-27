@@ -63,7 +63,7 @@ const Instruments = () => {
 
   // Columns configuration for the service grid
   const serviceGridColumns = [
-    { type: 'checkbox', width: '50' },
+  
     { field: "service_id", headerText: "Service ID", width: "150", textAlign: "Center" },
     { field: "vendor", headerText: "Vendor", width: "150", textAlign: "Center" },
     { field: "date", headerText: "Date", width: "150", textAlign: "Center" },
@@ -84,13 +84,87 @@ const Instruments = () => {
 
  const toolbarClick = (args) => {
     const exportPattern = /(excelexport|pdfexport)$/;
-
+    console.log(args)
     if (exportPattern.test(args.item.id)) {
         if (args.item.id.endsWith('pdfexport')) {
             grid.pdfExport({
                 pageOrientation: 'Landscape'
             });
         } else if (args.item.id.endsWith('excelexport')) {
+          if(args.item.id === "grid_1103441901_2_excelexport"){
+             const excelExportProperties = {
+                header: {
+                    headerRows: 6,
+                    rows: [
+                      {
+                            cells: [
+                                {
+                                    colSpan: calibrationHistoryGrid.length, // Adjust according to your column span
+                                    value: 'TechnoRings, Shimoga',
+                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        },
+                        {
+                            cells: [
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: "Instrument name",
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                },
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: instrument.instrument_name,
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        },{
+                            cells: [
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: "ID No",
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                },
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: instrument.instrument_no,
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        },{
+                            cells: [
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: "Calibration frequency",
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                },
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: instrument.calibration_frequency,
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        },{
+                            cells: [
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: "Range",
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                },
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: instrument.instrument_range,
+                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        }
+                    ]
+                }
+        
+                
+            };
+            grid.excelExport(excelExportProperties);
+          } else
             grid.excelExport();
         }
     }
@@ -131,17 +205,22 @@ const Instruments = () => {
       console.error("Error deleting data:", error);
     }
   };
-
-  const handleAcknowledgment = async (props) => {
+ const handleCalibrationHistoryActionComplete = async (args) => {
+  console.log(args)
+  if (args.requestType === "delete") {
     try {
-      console.log(props)
-       await axios.post(`${process.env.REACT_APP_URL}/transport/${props.movement_id}/acknowledge/`);
-      toast.success("Transport acknowledged successfully");
+      // Assuming calibration_id is the identifier for each calibration record
+      const calibrationId = args.data[0].calibrationtool_id;
+      await axios.post(`${process.env.REACT_APP_URL}/delivery_challan_tool/${calibrationId}/delete/`);
+      toast.success("Calibration history record deleted successfully");
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Error deleting calibration history record");
+      console.log(error);
     }
-  };
+  }
+};
 
+  
 
   const submitHandler= async (data)=> {
      fetchToolData(data.toolId)
@@ -219,7 +298,7 @@ const Instruments = () => {
       </div>
 
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-        <Header className="Page" title="Transport orders" />
+        <Header className="Page" title="Instrument movement" />
         <GridComponent
           dataSource={transportOrder}
           width="auto"
@@ -254,10 +333,11 @@ const Instruments = () => {
           allowFiltering
           allowSorting
           allowDeleting
-          toolbar={['PdfExport','ExcelExport']}
+          
+          toolbar={['PdfExport','ExcelExport','Delete']}
           allowPdfExport
           allowExcelExport
-          actionComplete={handleActionComplete}
+            actionComplete={handleCalibrationHistoryActionComplete}
           editSettings={{ allowDeleting: true }}
           toolbarClick={toolbarClick}
             ref={g => grid = g}

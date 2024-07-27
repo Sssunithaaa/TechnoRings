@@ -269,7 +269,7 @@ const handleDelete =async () => {
         </GridComponent>
       </div>
       <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-        <Header className="Page" title="Transport orders" />
+        <Header className="Page" title="Instrument movement" />
         <GridComponent
           dataSource={transportOrder}
           width="auto"

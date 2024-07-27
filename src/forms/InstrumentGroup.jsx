@@ -40,7 +40,7 @@ const AddInstrumentFamilyDialog = ({ open, handleClose, instrumentGroup }) => {
            if(response.data.success){
         toast.success("Instrument family  added successfully");
            } else {
-            toast.error("Error adding instrument family")
+            toast.error()
            }
       }
       setTimeout(() => {

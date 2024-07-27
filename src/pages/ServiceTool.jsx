@@ -115,7 +115,7 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
       </DialogContent>
      <ToastContainer/>
       <DialogActions>
-          {transportOrder && !transportOrder?.service_order?.service_pending && <button  className="px-5 py-2 bg-blue-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn} color="primary">
+          {transportOrder && transportOrder?.service_order?.service_pending && <button  className="px-5 py-2 bg-blue-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn} color="primary">
           Update service order
         </button> }
         <button  className="px-5 py-2 bg-red-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDelete}>

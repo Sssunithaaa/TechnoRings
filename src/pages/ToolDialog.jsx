@@ -109,7 +109,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           <p>Loading...</p>
         )}
               <div className="flex flex-row mx-auto gap-x-4 justify-center items-center">
-  {(role === "admin" || (
+  {(role === "admin" && !transportOrder.transport_order.acknowledgment  || (
     transportOrder &&
     transportOrder.transport_order.source_shed_name === user && 
     !transportOrder.transport_order.acknowledgment

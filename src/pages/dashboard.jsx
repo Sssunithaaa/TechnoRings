@@ -172,7 +172,7 @@ const Homepage = () => {
             <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
               <span className='p-1 bg-[#8177d5] rounded-md'>
                 <BsPersonWorkspace color='#2e1cc9'/>
-              </span>Transport Orders</p>
+              </span>Instrument movement</p>
             <p className='mt-3 font-semibold text-white text-2xl'>{count && count?.transport_order_count}</p>
             <p className='text-sm text-gray-500'>Active</p>
             <p onClick={() => setRequest("recent_transport_orders")} className='text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-3 hover:cursor-pointer mx-10 flex justify-center'>View more</p>

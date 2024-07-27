@@ -123,9 +123,9 @@ const History = () => {
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
- onClick={handleDialogOpen}>Add Tool Movement</button>
+ onClick={handleDialogOpen}>Add Instrument Movement</button>
  
-      <Header className="Page" title="Transport Orders" />
+      <Header className="Page" title="Instrument movement" />
 
       <GridComponent
         id="gridcomp"
