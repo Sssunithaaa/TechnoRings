@@ -104,7 +104,7 @@ const CreateVendorHandleData = ({ open, handleClose, id ,vendorName}) => {
           <TextField
             {...register("turnaround_time", { required: "Turnaround time is required" })}
             type="number"
-            label="Turnaround Time"
+            label="Turnaround Time in days"
             fullWidth
             margin="normal"
             error={!!errors.turnaround_time}

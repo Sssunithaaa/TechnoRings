@@ -95,8 +95,9 @@ const Homepage = () => {
           const parts = request.split('_');
           const lastTwoWords = parts.slice(-2).join('_');
           let data = response.data[lastTwoWords]
+        
           if(lastTwoWords === "transport_orders"){
-            setTable(data.filter((order)=> !order.acknowledgement))
+            setTable(data.filter((order)=> order.acknowledgement === false))
           }
            else {
             setTable(data);

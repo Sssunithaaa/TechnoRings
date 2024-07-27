@@ -52,7 +52,7 @@ const History = () => {
     
     { field: "movement_id", headerText: "Movement ID", width: "150", textAlign: "Center" },
     { field: "movement_date", headerText: "Movement date", width: "150", textAlign: "Center" },
-    { field: "acknowledgment", headerText: "Acknowledgment", width: "150", textAlign: "Center" },
+    { field: "acknowledgment", headerText: "Status", width: "150", textAlign: "Center" },
     { field: "source_shed_name", headerText: "Source shed", width: "150", textAlign: "Center" },
     { field: "destination_shed_name", headerText: "Destination shed", width: "150", textAlign: "Center" },
     { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
@@ -72,6 +72,54 @@ const History = () => {
     const date = new Date().toISOString().split('T')[0];
 
    const toolbarClick = (args) => {
+    if (args.item.id === 'gridcomp_pdfexport') {
+            const pdfExportProperties = {
+                pageOrientation: 'Landscape',
+                header: {
+                    fromTop: 0,
+                    height: 130,
+                    contents: [
+                        {
+                            type: 'Text',
+                            value: 'TechnoRings, Shimoga',
+                            position: { x: 0, y: 50 },
+                            style: { textBrushColor: '#000000', fontSize: 20 }
+                        }
+                    ]
+                }
+            };
+            grid.pdfExport(pdfExportProperties);
+        } else if (args.item.id === 'gridcomp_excelexport') {
+            const excelExportProperties = {
+                header: {
+                    headerRows: 2,
+                    rows: [
+                        {
+                            cells: [
+                                {
+                                    colSpan: transportGridColumns.length, // Adjust according to your column span
+                                    value: 'TechnoRings, Shimoga',
+                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        }, {
+                            cells: [
+                                {
+                                    colSpan: transportGridColumns.length, // Adjust according to your column span
+                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
+                                    style: { fontColor: '#000000', fontSize: 10, hAlign: 'Center',wAlign:'Center', bold: true }
+                                }
+                            ] 
+                        }
+                    ]
+                }
+        
+                
+            };
+            grid.excelExport(excelExportProperties);
+        }
+    };
+      const toolbarClickk = (args) => {
     if (args.item.id === 'gridcomp_pdfexport') {
             const pdfExportProperties = {
                 pageOrientation: 'Landscape',
