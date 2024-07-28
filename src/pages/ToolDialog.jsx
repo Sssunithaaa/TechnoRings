@@ -91,6 +91,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      disabled={tool.acknowledgment ? true : false}
                       checked={selectedToolIds.includes(tool.tool)}
                       onChange={() => handleCheckboxChange(tool.tool)}
                     />

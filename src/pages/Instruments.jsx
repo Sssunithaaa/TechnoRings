@@ -140,47 +140,51 @@ const Instruments = () => {
             });
         } else if (args.item.id.endsWith('excelexport')) {
         
-          if(args.item.id === "grid_1103441901_2_excelexport"){
+       
              const excelExportProperties = {
                 header: {
-                    headerRows: 6,
+                    headerRows: 7,
                     rows: [
                       {
                             cells: [
                         {
-                            colSpan: calibrationHistoryGrid.length - 2, // Adjusted colSpan for main header
-                            value: 'TechnoRings, Shimoga',
+                            colSpan: calibrationHistoryGrid.length, // Adjusted colSpan for main header
+                            value: 'Calibration History Card',
                             style: {
                                 fontColor: '#000000',
-                                fontSize: 20,
+                                fontSize: 22,
                                 hAlign: 'Center',
                                 bold: true,
                             },
                         },
-                        {
+                        
+                    ],
+                        },{
+                          cells: [
+                            {
                             // Ensures "TR/QAD/F13:R0" is placed in the remaining two columns
-                            colSpan:1,
+                            colSpan:calibrationHistoryGrid.length,
                             value: 'TR/QAD/F13:R0',
                             style: {
                                 fontColor: '#000000',
-                                fontSize: 20,
-                                hAlign: 'Center',
+                                fontSize: 16,
+                                hAlign: 'Right',
                                 bold: true,
                             },
                         },
-                    ],
+                          ]
                         },
                         {
                             cells: [
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "Instrument name",
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: instrument.type_of_tool_name,
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: false }
                                 }
                             ]
                         },{
@@ -188,12 +192,12 @@ const Instruments = () => {
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "ID No",
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: instrument.instrument_name,
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: false }
                                 }
                             ]
                         },{
@@ -201,12 +205,12 @@ const Instruments = () => {
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "Calibration frequency",
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: `${instrument.calibration_frequency} days`,
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: false }
                                 }
                             ]
                         },{
@@ -214,12 +218,12 @@ const Instruments = () => {
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "Range",
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: instrument.instrument_range,
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: false }
                                 }
                             ]
                         },{
@@ -227,12 +231,12 @@ const Instruments = () => {
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "Location",
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: instrument.current_shed_name,
-                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Left', bold: false }
                                 }
                             ]
                         }
@@ -242,8 +246,7 @@ const Instruments = () => {
                 
             };
             grid.excelExport(excelExportProperties);
-          } else
-            grid.excelExport();
+         
         }
     }
 };

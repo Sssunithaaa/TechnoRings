@@ -163,7 +163,7 @@ export const calibrationHistoryGrid = [
   },
     {
     field: "calibration_report_no",
-    headerText: "Report Number",
+    headerText: "Calibration Report Number",
     width: "150",
     textAlign: "Center",
   },

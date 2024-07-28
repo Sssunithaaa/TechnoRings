@@ -62,7 +62,22 @@ const mergedToolsData = shedTools.map((shedTool, index) => {
   };
 });
 
-
+  const serviceGrid = [
+    { field: "sl_no", headerText: "Sl No", width: "120", textAlign: "Center" },
+     { field: "type_of_tool_name", headerText: "Instrument Name", width: "150", textAlign: "Center" },
+        { field: "manufacturer_name", headerText: "Manufacturer", width: "150", textAlign: "Center" },
+    { field: "instrument_name", headerText: "Instrument No", width: "150", textAlign: "Center" },
+  { field: "instrument_range", headerText: "Range", width: "150", textAlign: "Center" },
+  { field: "least_count", headerText: "Least Count", width: "150", textAlign: "Center" },
+    { field: "calibration_frequency", headerText: "Calibration Frequency", width: "150", textAlign: "Center" },
+   
+    { field: "year_of_purchase", headerText: "Year of Purchase", width: "150", textAlign: "Center" },
+    { field: "gst", headerText: "GST", width: "150", textAlign: "Center" },
+    { field: "description", headerText: "Remarks", width: "150", textAlign: "Center" },
+   
+    
+    
+  ];
  const toolbarClick = (args) => {
     const exportPattern = /(excelexport|pdfexport)$/;
 
@@ -94,26 +109,18 @@ const mergedToolsData = shedTools.map((shedTool, index) => {
                                 {
                                     colSpan: 11, // Adjust according to your column span
                                     value: 'TechnoRings, Shimoga',
-                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 22, hAlign: 'Center', bold: true }
                                 }
                             ]
-                        }, {
-                          cells: [
-                            {
-                              colSpan: 11,
-                              value: `Shed: ${user}`,
-                              style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center',bold:true}
-                              },
-                            ]
-                        }, {
+                        },{
                             cells: [
                                 {
-                                    colSpan: 11, // Adjust according to your column span
-                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
+                                    colSpan: serviceGrid.length, // Adjust according to your column span
+                                    value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY - ${user} PLANNED ON ${date}`,
                                     style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
                                 }
                             ] 
-                        },
+                        }
                     ]
                 }
         
@@ -189,19 +196,7 @@ const handleDialogOpenn = ()=> {
 const handleDialogClosee=()=> {
   setOpenn(false)
 } 
-  const serviceGrid = [
-    { field: "sl_no", headerText: "Sl No", width: "120", textAlign: "Center" },
-    { field: "instrument_name", headerText: "Instrument code", width: "150", textAlign: "Center" },
-    { field: "manufacturer_name", headerText: "Manufacturer", width: "150", textAlign: "Center" },
-    { field: "calibration_frequency", headerText: "Calibration Frequency", width: "150", textAlign: "Center" },
-    { field: "type_of_tool_name", headerText: "Instrument name", width: "150", textAlign: "Center" },
-    { field: "year_of_purchase", headerText: "Year of Purchase", width: "150", textAlign: "Center" },
-    { field: "gst", headerText: "GST", width: "150", textAlign: "Center" },
-    { field: "description", headerText: "Description", width: "150", textAlign: "Center" },
-    { field: "instrument_range", headerText: "Range", width: "150", textAlign: "Center" },
-    { field: "least_count", headerText: "Least Count", width: "150", textAlign: "Center" },
-    
-  ];
+
 
   let grid;
   const handleDialogOpen = ()=> {
@@ -249,6 +244,7 @@ const handleDialogClosee=()=> {
           allowPdfExport
            ref={g => grid = g}
           toolbarClick={toolbarClick}
+          pageSettings={{pageSize:10}}
         >
           <ColumnsDirective>
             {serviceGrid.map((item, index) => (
