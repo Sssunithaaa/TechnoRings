@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import AddShedTools from "../forms/AddShedTool";
@@ -9,6 +9,7 @@ import UpdateShed from "../forms/UpdateShed";
 import { toast,ToastContainer } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import CalibrationDialog from "../forms/CalibrationDialog";
+import { useSelector } from "react-redux";
 const ShedTools = () => {
   const [shedTools, setShedTools] = useState([]);
   const [tools, setTools] = useState([]);
@@ -44,12 +45,23 @@ const [open,setOpen] = useState(false)
     // fetchToolData(id["id"]);
     fetchToolsData();
   }, []);
-
+const {  user } = useSelector(state => state.auth);
   // Merge shedTools and tools data
-  const mergedToolsData = shedTools.map(shedTool => {
-    const toolDetails = tools.find(tool => tool.instrument_no === shedTool.using_tool.instrument_no);
-    return { ...shedTool.using_tool, ...toolDetails };
-  });
+ // Merge shedTools and tools data
+const mergedToolsData = shedTools.map((shedTool, index) => {
+  // Find matching tool details
+  const toolDetails = tools.find(
+    (tool) => tool.instrument_no === shedTool.using_tool.instrument_no
+  );
+
+  // Merge shedTool and toolDetails
+  return {
+    sl_no: index + 1, // Add serial number
+    ...shedTool.using_tool, // Include shed tool data
+    ...toolDetails, // Include additional tool details if found
+  };
+});
+
 
  const toolbarClick = (args) => {
     const exportPattern = /(excelexport|pdfexport)$/;
@@ -86,6 +98,14 @@ const [open,setOpen] = useState(false)
                                 }
                             ]
                         }, {
+                          cells: [
+                            {
+                              colSpan: 11,
+                              value: `Shed: ${user}`,
+                              style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center',bold:true}
+                              },
+                            ]
+                        }, {
                             cells: [
                                 {
                                     colSpan: 11, // Adjust according to your column span
@@ -93,7 +113,7 @@ const [open,setOpen] = useState(false)
                                     style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
                                 }
                             ] 
-                        }
+                        },
                     ]
                 }
         
@@ -108,10 +128,7 @@ const [open,setOpen] = useState(false)
 
 
   const [showAddShedTools, setShowAddShedTools] = useState(false);
-  const addShedTools = () => {
-    setShowAddShedTools(true);
-  };
-
+ 
  
   const navigate=useNavigate();
   const handleDelete = async () => {
@@ -162,7 +179,7 @@ const [open,setOpen] = useState(false)
                  refetch()
                 }
             } catch (error) {
-                console.log("Error inserting data:", error);
+                toast.error("Error inserting data:");
             }
     };
 const handleDialogOpenn = ()=> {
@@ -173,7 +190,7 @@ const handleDialogClosee=()=> {
   setOpenn(false)
 } 
   const serviceGrid = [
-    { field: "instrument_no", headerText: "Tool Number", width: "150", textAlign: "Center" },
+    { field: "sl_no", headerText: "Sl No", width: "120", textAlign: "Center" },
     { field: "instrument_name", headerText: "Instrument code", width: "150", textAlign: "Center" },
     { field: "manufacturer_name", headerText: "Manufacturer", width: "150", textAlign: "Center" },
     { field: "calibration_frequency", headerText: "Calibration Frequency", width: "150", textAlign: "Center" },
@@ -194,9 +211,7 @@ const handleDialogClosee=()=> {
     setOpen(false);
     refetch()
   }
-  const updateShed = () => {
-    
-  }
+  
 
   const handleClose = ()=> {
     setShowAddShedTools(false)

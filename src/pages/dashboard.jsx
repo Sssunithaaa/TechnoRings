@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { BsPersonWorkspace } from "react-icons/bs";
 import { MdOutlineMiscellaneousServices } from "react-icons/md";
 import { FaWarehouse } from 'react-icons/fa';
-import { useQuery } from '@tanstack/react-query';
+
 import axios from "axios";
 
-import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../context/ContextProvider';
+
 import { useSelector } from 'react-redux';
 const Homepage = () => {
   const [displayedOrders, setDisplayedOrders] = useState(5);
+    const [displayedNotifications, setNotifications] = useState(5);
   const [request, setRequest] = useState("recent_transport_orders");
   const [table, setTable] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Current month as default
-   const { setActiveMenu,setIsLoading } = useStateContext();
+  
  const {  role,user } = useSelector((state) => state.auth);
 
   const [count, setCount] = useState();
@@ -61,6 +61,14 @@ const Homepage = () => {
   const handleLoadLess = () => {
     setDisplayedOrders((prevCount) => Math.max(prevCount - 5, 5));
   };
+  
+  const handleLoadMoreNotifications = () => {
+    setNotifications((prevCount) => prevCount + 5);
+  };
+
+  const handleLoadLessNotifications = () => {
+    setNotifications((prevCount) => Math.max(prevCount - 5, 5));
+  };
 
   const transportOrdersHeaders = [
     { label: "Movement ID", key: "movement_id" },
@@ -95,14 +103,14 @@ const Homepage = () => {
           const parts = request.split('_');
           const lastTwoWords = parts.slice(-2).join('_');
           let data = response.data[lastTwoWords]
-        
+     
           if(lastTwoWords === "transport_orders"){
-            setTable(data.filter((order)=> order.acknowledgement === false))
+            setTable(data.filter((order)=> order.acknowledgment === false ))
           }
            else {
             setTable(data);
            }
-          console.log(table)
+          
           if(role === "shed")
           {
             if (
@@ -149,7 +157,6 @@ const Homepage = () => {
         return [];
     }
   };
- const navigate = useNavigate()
   const headers = getHeaders();
   
   return (
@@ -157,7 +164,7 @@ const Homepage = () => {
       {/* <div className='w-full flex justify-end items-end '>
         <button onClick={handleLogout} className=' px-6 text-white font-semibold py-2 rounded-md bg-indigo-600 hover:bg-indigo-800'>LOGOUT</button>
       </div> */}
-      <div className='w-full flex flex-row justify-start items-start gap-x-5'>
+      <div className='w-full flex flex-row justify-start h-[500px]  gap-x-5'>
         <div className='grid grid-cols-1 lg:grid-cols-1 max-h-10 gap-5 lg:w-1/4'>
           <div className='bg-gray-800 p-8'>
             <p className='text-light-gray-500 flex flex-row h-10 items-center gap-x-3 text-xl text-white'>
@@ -234,7 +241,7 @@ const Homepage = () => {
 
      
      
-      <div className='flex flex-col gap-5 mt-[20%] gap-x-3'>
+      <div className='flex flex-col gap-5  mt-[20%] gap-x-3'>
          <div className='text-center'>
         <select
           value={selectedMonth}
@@ -263,7 +270,7 @@ const Homepage = () => {
                   </tr>
                 </thead>
                 <tbody className='text-gray-700'>
-                  {count && count?.tools_to_notify?.map((notification, index) => (
+                  {count && count?.tools_to_notify?.slice(0,displayedNotifications).map((notification, index) => (
                     <tr key={index} className='bg-gray-200'>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.current_shed}</td>
@@ -274,6 +281,18 @@ const Homepage = () => {
                 </tbody>
               </table>
             </div>
+             <div className="text-center my-4">
+        {count && count.tools_to_notify_count > displayedOrders && (
+          <button onClick={handleLoadMoreNotifications} className="text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-2">
+            Load More
+          </button>
+        )}
+        {displayedOrders > 5 && (
+          <button onClick={handleLoadLessNotifications} className="text-sm text-white px-3 py-2 bg-[#2e1cc9] rounded-md my-2">
+            Load Less
+          </button>
+        )}
+      </div>
           </div>
     {/* )} */}
       </div>

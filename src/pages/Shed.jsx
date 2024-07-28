@@ -43,9 +43,9 @@ const Shed = () => {
       if (args.action === "add") {
         // Add operation
         try {
-          console.log(args.data);
+          
           const response = await axios.post(`${process.env.REACT_APP_URL}/add_shed/`, args.data);
-          console.log(response);
+      
           toast.success("Shed added successfully", {
             position: "top-center",
             autoClose: 1000,

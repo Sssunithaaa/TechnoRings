@@ -10,7 +10,7 @@ const CreateVendor = (props) => {
         <TextBoxComponent id="MovementDate" value={props.MovementDate} floatLabelType="Auto" className="w-1/2" />
       </div>
       <div className="flex flex-row justify-between items-center gap-x-3">
-        <label htmlFor="Tool" className="w-1/2 px-3">Tool</label>
+        <label htmlFor="Tool" className="w-1/2 px-3">Instrument</label>
         <TextBoxComponent id="Tool" value={props.Tool} floatLabelType="Auto" className="w-1/2"   />
         </div>
       <div className="flex flex-row justify-between items-center gap-x-3">
@@ -22,7 +22,7 @@ const CreateVendor = (props) => {
         <TextBoxComponent id="DestinationShed" value={props.DestinationShed} floatLabelType="Auto" className="w-1/2"/>
       </div>
       <div className="flex flex-row justify-between items-center gap-x-3">
-        <label htmlFor="ToolCount" className="w-1/2 px-3">Tool Count</label>
+        <label htmlFor="ToolCount" className="w-1/2 px-3">Instrument Count</label>
         <NumericTextBoxComponent id="ToolCount" value={props.ToolCount} floatLabelType="Auto" className="w-1/2" />
       </div>
       <div className="flex flex-row justify-between items-center gap-x-3">

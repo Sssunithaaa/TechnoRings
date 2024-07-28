@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import {  useNavigate, useParams } from "react-router-dom";
 import CreateVendor from "../forms/AddVendor";
 import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
@@ -84,7 +84,7 @@ const toolbarClick = (args) => {
   const navigate = useNavigate()
   const handleDelete = async ()=> {
      try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/vendor/${vendor_id}/delete/`);
+    await axios.post(`${process.env.REACT_APP_URL}/vendor/${vendor_id}/delete/`);
       toast.success("Vendor deleted successfully");
       setTimeout(()=> {
         navigate(-1);

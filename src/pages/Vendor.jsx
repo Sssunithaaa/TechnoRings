@@ -160,7 +160,7 @@ const handleActionComplete = async (args) => {
     try {
       
       const response = await axios.post(`${process.env.REACT_APP_URL}/add_vendor/`, args.data);
-      console.log(response.data)
+     
       if (response.data.success === false) {
         // Parse the error message from the response and toast it
         const errors = JSON.parse(response.data.errors);
@@ -177,7 +177,7 @@ const handleActionComplete = async (args) => {
     refetch()
   } else if (args.requestType === "delete") {
     try {
-      console.log(args.vendor_id)
+  
       await axios.delete(`${process.env.REACT_APP_URL}/${args.data[0].id}`);
     } catch (error) {
       console.error("Error deleting data:", error);

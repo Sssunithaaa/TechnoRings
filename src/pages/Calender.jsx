@@ -8,7 +8,7 @@ const Calender = () => {
 
   const handleEventCreate = (args) => {
     const { data } = args;
-    console.log(data)
+   
     if(data){
       const newEventTitle = data[0]?.Subject // Assuming Subject holds the title
     setNewEventTitle(newEventTitle);

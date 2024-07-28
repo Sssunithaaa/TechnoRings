@@ -8,7 +8,7 @@ import {
   Button,
   FormControlLabel,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+
 import axios from "axios";
 import CreateMovement from "../forms/Transport";
 import { toast,ToastContainer } from "react-toastify";
@@ -17,7 +17,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
   const [selectedToolIds, setSelectedToolIds] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
   const {user,role} = useSelector((user)=> user.auth)
- console.log(user)
+ 
 
   useEffect(() => {
     if (transportOrder) {
@@ -46,10 +46,9 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
 
   const acknowledgeTools = async () => {
     if (!transportOrder) return;
-    console.log(selectedToolIds)
-    console.log(transportOrder.transport_order.movement_id)
+
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${transportOrder.transport_order.movement_id}/`, {
+      await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${transportOrder.transport_order.movement_id}/`, {
         tool_ids: selectedToolIds,
       });
       handleClose();
@@ -109,7 +108,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           <p>Loading...</p>
         )}
               <div className="flex flex-row mx-auto gap-x-4 justify-center items-center">
-  {(role === "admin" && !transportOrder?.transport_order?.acknowledgment  || (
+  {((role === "admin" && !transportOrder?.transport_order?.acknowledgment)  || (
     transportOrder &&
     transportOrder.transport_order?.source_shed_name === user && 
     !transportOrder.transport_order?.acknowledgment

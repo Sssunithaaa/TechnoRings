@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import {  IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -8,7 +10,9 @@ const UpdateShed = ({ open, handleClose, shed, mode }) => {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
+const [password, setPassword] = useState('');
+const [showPassword, setShowPassword] = useState(false);
+
 
   useEffect(() => {
     if (shed) {
@@ -65,6 +69,10 @@ const UpdateShed = ({ open, handleClose, shed, mode }) => {
       toast.error(error.response.data.message);
     }
   };
+  const handleTogglePasswordVisibility = () => {
+  setShowPassword((prevShowPassword) => !prevShowPassword);
+};
+
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -114,14 +122,28 @@ const UpdateShed = ({ open, handleClose, shed, mode }) => {
         />
 
           <TextField
-            margin="dense"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+  margin="dense"
+  label="Password"
+  type={showPassword ? 'text' : 'password'} // Toggle between 'text' and 'password'
+  fullWidth
+  variant="outlined"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          aria-label="toggle password visibility"
+          onClick={handleTogglePasswordVisibility}
+          edge="end"
+        >
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+/>
+
         
       </DialogContent>
       <DialogActions>

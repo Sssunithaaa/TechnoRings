@@ -83,7 +83,7 @@ const CreateVendor = ({ open, handleClose, vendorData }) => {
 
       handleClose();
     } catch (error) {
-      console.log(error);
+
       toast.error("Failed to save vendor. Please try again later.");
     }
   };

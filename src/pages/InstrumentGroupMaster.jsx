@@ -106,7 +106,7 @@ const GroupMaster = () => {
     
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/instrument_family/${id}/delete/ `);
-      console.log(response)
+
       if(response.data.success){
         toast.success(response.data.message)
         setTimeout(()=> {

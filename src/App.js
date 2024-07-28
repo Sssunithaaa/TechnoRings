@@ -20,11 +20,11 @@ import Vendor from './pages/Vendor';
 import Transactions from './pages/Transactions';
 import ShedTools from './pages/ShedTools';
 import CalibrationDetailsForm from './forms/CalibrationDetails';
-import InstrumentGroup from './forms/InstrumentGroup';
+
 import Instruments from './pages/Instruments';
 import History from './pages/History';
 import ServiceHistory from './pages/ServiceHistory';
-import GenerateBill from './pages/GenerateBill';
+
 import Challan from './pages/Challan';
 import GroupMaster from './pages/InstrumentGroupMaster';
 import MasterToolsDialog from './forms/MasterDialog';

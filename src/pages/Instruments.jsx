@@ -30,9 +30,14 @@ const Instruments = () => {
   const fetchToolData = async (toolId) => {
     try {
        const instrumentDetail = await axios.get(`${process.env.REACT_APP_URL}/instrument-calibration-history/${toolId}`);
+       const mappedInstrumentDetails = instrumentDetail?.data?.calibration_history?.map((detail, index) => ({
+          sl_no: index + 1, 
+          ...detail, // Spread the rest of the properties
+        }));
       setInstrument(instrumentDetail?.data?.instrument);
-      setInstrumentDetails(instrumentDetail?.data?.calibration_history)
-      console.log(instrumentDetails)
+      setInstrumentDetails(mappedInstrumentDetails)
+     
+     
       const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-transport-history/${toolId}/`);
       const response1 = await axios.get(`${process.env.REACT_APP_URL}/instrument-service-history/${toolId}/`);
       setService(response1?.data?.service_history);
@@ -84,7 +89,7 @@ const Instruments = () => {
 
  const toolbarClick = (args) => {
     const exportPattern = /(excelexport|pdfexport)$/;
-    console.log(args)
+    
     if (exportPattern.test(args.item.id)) {
         if (args.item.id.endsWith('pdfexport')) {
             grid.pdfExport({
@@ -127,7 +132,7 @@ const Instruments = () => {
 
  const toolbarClickk = (args) => {
     const exportPattern = /(excelexport|pdfexport)$/;
-    console.log(args)
+   
     if (exportPattern.test(args.item.id)) {
         if (args.item.id.endsWith('pdfexport')) {
             grid.pdfExport({
@@ -142,24 +147,40 @@ const Instruments = () => {
                     rows: [
                       {
                             cells: [
-                                {
-                                    colSpan: calibrationHistoryGrid.length, // Adjust according to your column span
-                                    value: 'TechnoRings, Shimoga',
-                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
-                                }
-                            ]
+                        {
+                            colSpan: calibrationHistoryGrid.length - 2, // Adjusted colSpan for main header
+                            value: 'TechnoRings, Shimoga',
+                            style: {
+                                fontColor: '#000000',
+                                fontSize: 20,
+                                hAlign: 'Center',
+                                bold: true,
+                            },
+                        },
+                        {
+                            // Ensures "TR/QAD/F13:R0" is placed in the remaining two columns
+                            colSpan:1,
+                            value: 'TR/QAD/F13:R0',
+                            style: {
+                                fontColor: '#000000',
+                                fontSize: 20,
+                                hAlign: 'Center',
+                                bold: true,
+                            },
+                        },
+                    ],
                         },
                         {
                             cells: [
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "Instrument name",
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
-                                    value: instrument.instrument_name,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                    value: instrument.type_of_tool_name,
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
                                 }
                             ]
                         },{
@@ -167,12 +188,12 @@ const Instruments = () => {
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "ID No",
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
-                                    value: instrument.instrument_no,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                    value: instrument.instrument_name,
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
                                 }
                             ]
                         },{
@@ -180,12 +201,12 @@ const Instruments = () => {
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "Calibration frequency",
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
-                                    value: instrument.calibration_frequency,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                    value: `${instrument.calibration_frequency} days`,
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
                                 }
                             ]
                         },{
@@ -193,12 +214,25 @@ const Instruments = () => {
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: "Range",
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
                                 },
                                 {
                                     colSpan: 1, // Adjust according to your column span
                                     value: instrument.instrument_range,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                }
+                            ]
+                        },{
+                            cells: [
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: "Location",
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
+                                },
+                                {
+                                    colSpan: 1, // Adjust according to your column span
+                                    value: instrument.current_shed_name,
+                                    style: { fontColor: '#000000', fontSize: 12, hAlign: 'Center', bold: true }
                                 }
                             ]
                         }
@@ -243,54 +277,59 @@ const Instruments = () => {
     const id = Object.values(args.data)[0];
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/shed/${id}/delete/`);
-      console.log(response);
+    
     } catch (error) {
       console.error("Error deleting data:", error);
     }
   };
  const handleCalibrationHistoryActionComplete = async (args) => {
-  console.log(args)
+ 
   if (args.requestType === "delete") {
     try {
       // Assuming calibration_id is the identifier for each calibration record
       const calibrationId = args.data[0].calibrationtool_id;
-      await axios.post(`${process.env.REACT_APP_URL}/delivery_challan_tool/${calibrationId}/delete/`);
+      await axios.post(`${process.env.REACT_APP_URL}/calibration_report/${calibrationId}/delete/`);
       toast.success("Calibration history record deleted successfully");
     } catch (error) {
       toast.error("Error deleting calibration history record");
-      console.log(error);
+     
     }
   }
 };
 
   
-
+  const [toolIdd,setToolId] = useState("")
   const submitHandler= async (data)=> {
      fetchToolData(data.toolId)
    
   }
+
   return (
     <div>
       <div className="w-[40%] mt-24 flex mx-auto flex-col justify-center items-center p-6 bg-white rounded-3xl">
         <div className="w-full flex flex-row gap-x-5 mx-auto">
           <div className="w-full max-w-md">
-            <Header className="Page" title="Enter Tool ID" />
+            <Header className="Page" title="Enter Instrument ID" />
             <form onSubmit={handleSubmit(submitHandler)} className="mb-4">
               <label htmlFor="toolId" className="block text-sm font-medium text-gray-700">
-                Tool ID
+                Instrument code
               </label>
-              <select
-                id="toolId"
-                {...register("toolId")}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm"
-              >
-                <option value="" disabled>Select Tool</option>
-                {calibrationData?.instrument_models?.map((tool) => (
-                  <option key={tool.instrument_no} value={tool.instrument_no}>
-                    {tool.instrument_name}
-                  </option>
-                ))}
-              </select>
+               <select
+      id="toolId"
+      {...register("toolId")}
+      className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm"
+      value={toolIdd} // Bind the value to state
+      onChange={(e) => setToolId(e.target.value)} // Update state on change
+    >
+      <option value="" disabled>
+        Select instrument
+      </option>
+      {calibrationData?.instrument_models?.map((tool) => (
+        <option key={tool.instrument_no} value={tool.instrument_no}>
+          {tool.instrument_name}
+        </option>
+      ))}
+    </select>
                           <button type="submit" className="bg-blue-500 px-4 mt-3 text-white font-semibold py-2 rounded-md flex mx-auto">Submit</button>
 
             </form>
@@ -321,6 +360,7 @@ const Instruments = () => {
           allowPaging
           allowFiltering
           allowSorting
+          pageSettings={{ pageSize: 10 }}
           allowDeleting
           toolbar={['PdfExport','ExcelExport','Delete']}
           allowPdfExport
@@ -349,6 +389,7 @@ const Instruments = () => {
           allowPaging
           allowFiltering
           allowSorting
+          pageSettings={{ pageSize: 10 }}
           allowDeleting
           toolbar={['PdfExport','ExcelExport', 'Delete']}
           allowPdfExport
@@ -375,6 +416,7 @@ const Instruments = () => {
           allowPaging
           allowFiltering
           allowSorting
+          pageSettings={{ pageSize: 10 }}
           allowDeleting
           
           toolbar={['PdfExport','ExcelExport','Delete']}

@@ -34,7 +34,7 @@ useEffect(()=> {
 },[])
   
   
-  const [shedDetails, setShedDetails] = useState({}); // State to store shed details
+ 
   let grid;
   // Fetch shed details from the server
   
@@ -115,27 +115,18 @@ useEffect(()=> {
         
     
         try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/shed/${id}/delete/`);
+      await axios.post(`${process.env.REACT_APP_URL}/shed/${id}/delete/`);
   
     } catch (error) {
       console.error("Error deleting data:", error);
     }
     };
     
-  const handleAcknowledgment = async (props) => {
-  try {
-     await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${props.movement_id}/`);
-    toast.success("Transport acknowledged successfully");
-  } catch (error) {
-    toast.error(error.message);
-    
-  
-  }
-};
+ 
 const navigate=useNavigate()
 const handleDelete =async () => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_URL}/instrument/${instrument.instrument_no}/delete/`);
+   await axios.post(`${process.env.REACT_APP_URL}/instrument/${instrument.instrument_no}/delete/`);
 
       toast.success("Instrument deleted successfully");
     setTimeout(()=> {

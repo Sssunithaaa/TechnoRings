@@ -9,22 +9,15 @@ import "react-toastify/dist/ReactToastify.css";
 
 const DeliveryChallan = ({ open, handleClose, refetch }) => {
   const [showCalibrationModal, setShowCalibrationModal] = useState(false);
-  const [details, setDetails] = useState([]);
-  const [services, setServices] = useState([]);
+
+  // const [services, setServices] = useState([]);
   const [serviceTools, setServiceTools] = useState([]);
   const [vendorTypes, setVendorTypes] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [pendingServiceOrders, setPendingServiceOrders] = useState([]);
   const date = new Date().toISOString().split('T')[0];
 
-  const { data: deliveryChallan } = useQuery({
-    queryKey: ["delivery"],
-    queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/service-order/`);
-      setDetails(response?.data);
-      return response.data;
-    },
-  });
+  
 
   const { data: shedDetails } = useQuery({
     queryKey: ["shed"],
@@ -54,7 +47,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
     reset,
     watch,
     getValues,
-    formState: { errors },
+    formState: {  },
   } = useForm({
     defaultValues: {
       receivedDate: date,
@@ -129,7 +122,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
 
   const submitHandler = async (data) => {
     try {
-      console.log("Submitting calibration details form:", data);
+
 
       const formData = new FormData();
       formData.append("received_date", getValues("receivedDate"));
@@ -163,7 +156,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
         },
       };
 
-      const response = await axios.post(`${process.env.REACT_APP_URL}/store-delivery-challan/`, formData, config);
+      await axios.post(`${process.env.REACT_APP_URL}/store-delivery-challan/`, formData, config);
   
        
 

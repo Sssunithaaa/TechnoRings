@@ -13,6 +13,10 @@ import {
   Paper,
 } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import UpdateCalibrationDetailsForm from "../forms/UpdateCalibrationHistory";
+
 
 const ChallanTools = ({ open, handleClose, transportOrder }) => {
   const [calibrationReports, setCalibrationReports] = useState([]);
@@ -45,7 +49,61 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
       (report) => report.calibrationtool_id === toolId
     );
   };
+ 
+  const history = [
+    {
+    "calibrationtool_id": 24,
+    "calibration_date": "2024-07-11",
+    "calibration_report_no": "TR/A/1/01",
+    "calibration_agency": "MICROWAVE",
+    "result": "12",
+    "action": "OK",
+    "next_calibration_date": "2025-07-11",
+    "notification_date": "2025-07-04",
+    "remark": "ok",
+    "calibration_report_file": "/media/calibration_reports/gcp_quiz1_j0lImxh.pdf",
+    "calibration_report_file2": "/media/samplereport.txt",
+    "calibration_tool": 1
+},{
+    "calibrationtool_id": 25,
+    "calibration_date": "2024-07-11",
+    "calibration_report_no": "TR/A/1/01",
+    "calibration_agency": "MICROWAVE",
+    "result": "pass",
+    "action": "OK",
+    "next_calibration_date": "2025-07-11",
+    "notification_date": "2025-07-04",
+    "remark": "ok",
+    "calibration_report_file": "/media/calibration_reports/gcp_quiz1_avQYuve.pdf",
+    "calibration_report_file2": "/media/calibration_reports2/VendorType-2024-06-24_QrleB7p.csv",
+    "calibration_tool": 2
+}
+  ]
+  const { data: tools } = useQuery({
+    queryKey: ["calibration"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_URL}/instrument-tools/`
+      );
 
+      return response.data?.instrument_models;
+    },
+  });
+  const [serviceTools,setServiceTools] =  useState([])
+
+    useEffect(() => {
+
+      const fetchServiceTools = async () => {
+        try {         
+           const response1 = await axios.get(`${process.env.REACT_APP_URL}/pending_service_order_tools/15/`);
+          setServiceTools(response1.data.data);
+        } catch (error) {
+          console.error("Error fetching service tools:", error);
+        }
+      };
+      fetchServiceTools();
+    
+  }, []);
   const handleDeleteChallan = async (id) => {
     const url = `${process.env.REACT_APP_URL}/delivery_challan/${id}/delete/`;
     try {
@@ -81,7 +139,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
       });
 
       if (response.ok) {
-        console.log(response)
+      
         toast.success("Challan tool deleted successfully");
         setTimeout(()=> {
           handleClose()
@@ -94,9 +152,16 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
       console.error('Error:', error);
     }
   };
+  const [update,setUpdate] = useState(false)
+  const handleUpdateTool = (id)=> {
+    setUpdate(true);
+  }
+  
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="lg">
+    <>
+    {update && <UpdateCalibrationDetailsForm existingToolDetails={history} tools={tools} setUpdate={setUpdate}></UpdateCalibrationDetailsForm>}
+    <Dialog open={open} onClose={handleClose} maxWidth="xl" sx={{zIndex:40}}>
       <DialogTitle>Delivery Challan Details</DialogTitle>
       <ToastContainer/>
       <DialogContent>
@@ -136,7 +201,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
                         <TableCell>Remark</TableCell>
                         <TableCell>Report File</TableCell>
                         <TableCell>Report File 2</TableCell>
-                        <TableCell>Delete</TableCell>
+                        <TableCell></TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -159,7 +224,23 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
                               View Report 2
                             </a>
                           </TableCell>
-                          <TableCell>
+                          <TableCell sx={{
+          backgroundColor: 'white',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: 3,
+          display:'flex',
+          gap:'10px',
+          justifyContent:'space-between',
+          alignItems:'start'
+        }}>
+                            {/* <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleUpdateTool(tool.deliverychallantool_id)}
+                            >
+                              Update
+                            </Button> */}
                             <Button
                               variant="contained"
                               color="secondary"
@@ -181,13 +262,62 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
           <p>Loading...</p>
         )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={()=> handleDeleteChallan(transportOrder?.delivery_challan?.deliverychallan_id)}  color="secondary">Delete</Button>
-        <Button onClick={handleClose}  color="primary">
-          Close
-        </Button>
+      <DialogActions sx={{
+          backgroundColor: 'white',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: 3,
+          display:'flex',
+          justifyContent:'space-between',
+          alignItems:'start'
+        }}>
+       <Button
+  sx={{
+    backgroundColor: 'red',
+    paddingBlock: '10px',
+    paddingInline: '20px',
+    borderRadius: '10px',
+    boxShadow: 3,
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'start',
+    alignItems: 'start',
+    // Ensure hover keeps the same background color
+    '&:hover': {
+      backgroundColor: 'red', // Keeps the same red color on hover
+    },
+  }}
+  onClick={() =>
+    handleDeleteChallan(transportOrder?.delivery_challan?.deliverychallan_id)
+  }
+>
+  Delete
+</Button>
+<Button
+  sx={{
+    backgroundColor: 'blue',
+    color: 'white',
+    paddingBlock: '10px',
+    paddingInline: '20px',
+    borderRadius: '10px',
+    boxShadow: 3,
+    display: 'flex',
+    justifyContent: 'end',
+    alignItems: 'start',
+    // Ensure hover keeps the same background color
+    '&:hover': {
+      backgroundColor: 'blue', // Keeps the same blue color on hover
+    },
+  }}
+  onClick={handleClose}
+>
+  Close
+</Button>
+
       </DialogActions>
+
     </Dialog>
+    </>
   );
 };
 

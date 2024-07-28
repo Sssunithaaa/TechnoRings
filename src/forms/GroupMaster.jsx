@@ -42,12 +42,12 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
       if (instrumentGroup) {
        
         const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument_group/${instrumentGroup}/`, data);
-        console.log(response)
+   
         toast.success("Instrument group master updated successfully");
       } else {
         // Add new instrument group
         const response = await axios.post(`${process.env.REACT_APP_URL}/add_instrument_group_master/`, data);
-        console.log(response)
+     
         if(response.data.success){
         toast.success("Instrument group master added successfully");
          setTimeout(() => {

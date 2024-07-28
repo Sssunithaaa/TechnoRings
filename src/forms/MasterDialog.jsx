@@ -112,7 +112,7 @@ const MasterToolsDialog = () => {
                  refetch()
                 }
             } catch (error) {
-                console.log("Error inserting data:", error);
+             
             }
     };
 

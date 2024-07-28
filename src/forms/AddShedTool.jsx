@@ -21,7 +21,7 @@ const AddShedTools = ({setClose}) => {
   fetchTools();
   }, []);
   const shed = useParams()
-  console.log(shed.id)
+ 
  
 
   const {
@@ -44,9 +44,9 @@ const AddShedTools = ({setClose}) => {
       tool_id: data.tool,
       
     };
-      console.log(requestData)
+   
       const response = await axios.post(`${process.env.REACT_APP_URL}/add_shed_tools/`, requestData);
-      console.log(response)
+     
       toast.success("Tool added successfully", {
         position: "top-center",
         autoClose: 1000,

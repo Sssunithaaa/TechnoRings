@@ -76,7 +76,7 @@ const ServiceHistory = () => {
     }
   };
    const toolbarClick = (args) => {
-    console.log(args.item.id)
+  
         if (args.item.id === 'gridcomp_pdfexport') {
             grid.pdfExport({
                 pageOrientation: 'Landscape'

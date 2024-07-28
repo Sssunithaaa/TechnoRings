@@ -4,10 +4,10 @@ import { kanbanData, kanbanGrid, } from '../data/apps'
 import {Header} from '../components'
 const Kanban = () => {
   const handleActionComplete = (args)=> {
-    console.log(args)
+  
      if (args.requestType === 'cardChanged') {
       const updatedData = args.changedRecords;
-      console.log(updatedData)
+     
      }
   }
   return (

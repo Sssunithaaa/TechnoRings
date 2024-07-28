@@ -48,23 +48,22 @@ const CreateVendorHandleData = ({ open, handleClose, id ,vendorName}) => {
 
   const submitHandler = async (data) => {
     try {
-      console.log(data)
       const vendorId = id.id;
       const formData = {
         ...data,
         vendor: vendorId,
       };
-      const response = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_URL}/add_vendor_handles/`,
         formData
       );
-      console.log(response)
+  
       toast.success("Vendor handle data added successfully");
       setTimeout(()=> {
         handleClose();
       },2000)
     } catch (error) {
-      console.log(error);
+   
       toast.error("Failed to add vendor handle data. Please try again later.");
     }
   };

@@ -136,7 +136,7 @@ export const links = [
         role:["admin"],
       },
         {
-        name: "shed tools",
+        name: "shed instruments",
         icon: <FaWarehouse />,
         link:`shed-tools`,
         role:["shed"],

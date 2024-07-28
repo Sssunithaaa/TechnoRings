@@ -26,13 +26,13 @@ const AddInstrumentFamilyDialog = ({ open, handleClose, instrumentGroup }) => {
       familyID,
       instrument_family_name: familyName,
     };
-    console.log(data);
+
 
     try {
       if (instrumentGroup) {
         // Update existing instrument group
         const response = await axios.post(`${process.env.REACT_APP_URL}/update_instrument_family/${instrumentGroup.instrument_family_id}/`, data);
-        console.log(response)
+     
         toast.success("Instrument family updated successfully");
       } else {
         // Add new instrument group
