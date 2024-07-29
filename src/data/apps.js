@@ -132,8 +132,8 @@ export const CalibrationGrid = [
     textAlign: "Center",
   },
   {
-    field: "description",
-    headerText: "Description",
+    field: "instrument_range",
+    headerText: "Range",
     width: "120",
     textAlign: "Center",
   },
@@ -143,12 +143,7 @@ export const CalibrationGrid = [
     width: "100",
     textAlign: "Center",
   },
-  {
-    field: "instrument_range",
-    headerText: "Range",
-    width: "120",
-    textAlign: "Center",
-  },
+ 
   
   {
     field: "calibration_frequency",
@@ -166,6 +161,12 @@ export const CalibrationGrid = [
     field: "next_calibration_date",
     headerText: "Next Calibration Date",
     width: "150",
+    textAlign: "Center",
+  },
+   {
+    field: "description",
+    headerText: "Remarks",
+    width: "120",
     textAlign: "Center",
   },
 

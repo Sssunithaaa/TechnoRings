@@ -42,7 +42,7 @@ const [showPassword, setShowPassword] = useState(false);
       let response;
       if (mode === 'add') {
         response = await axios.post(`${process.env.REACT_APP_URL}/add_shed/`, data);
-        
+        console.log(response)
        if(response.data.success){
          toast.success("Shed added successfully");
        } else {

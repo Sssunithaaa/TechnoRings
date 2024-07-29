@@ -12,6 +12,7 @@ import {
   Edit,
   PdfExport,
   ExcelExport,
+  excelExportComplete,
 } from "@syncfusion/ej2-react-grids";
 import { CalibrationGrid } from "../data/apps";
 import { useNavigate } from "react-router-dom";
@@ -68,12 +69,13 @@ const Calibration = () => {
     } else if (args.item.id === "gridcomp_excelexport") {
        const excelExportProperties = {
         header: {
-          headerRows: 3,
+          headerRows: 5,
           rows: [
             {
               cells: [
                 {
-                  colSpan: 11, // Adjust according to your column span
+                 
+                  colSpan: 10, // Adjust according to your column span
                   value: "TechnoRings, Shimoga",
                   style: {
                     fontColor: "#000000",
@@ -82,6 +84,7 @@ const Calibration = () => {
                     bold: true,
                   },
                 },
+                
               ],
             },
             {
@@ -89,8 +92,42 @@ const Calibration = () => {
                
                 {
 
-  colSpan: 11, // Set the appropriate column span
-  value: "DOC REF :TR/QA-M/L/01\nDOC REF :TR/QA-M/L/01\nDOC REF :TR/QA-M/L/01",
+  colSpan: 10, // Set the appropriate column span
+  value: "DOC REF :TR/QA-M/L/01",
+  style: {
+    fontColor: "#000000",
+    fontSize: 14,
+    hAlign: "Right", // Ensures the text is aligned to the right
+    bold: true,
+  },
+},
+
+              ],
+            },
+             {
+              cells: [
+               
+                {
+
+  colSpan: 10, // Set the appropriate column span
+  value: "REV NO: 2",
+  style: {
+    fontColor: "#000000",
+    fontSize: 14,
+    hAlign: "Right", // Ensures the text is aligned to the right
+    bold: true,
+  },
+},
+
+              ],
+            },
+             {
+              cells: [
+               
+                {
+
+  colSpan: 10, // Set the appropriate column span
+  value: `REV DATE: ${date}`,
   style: {
     fontColor: "#000000",
     fontSize: 14,
@@ -104,8 +141,8 @@ const Calibration = () => {
             {
               cells: [
                 {
-                  colSpan: 11, // Adjust according to your column span
-                  value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY - ${user} PLANNED ON ${date}`,
+                  colSpan: 10, // Adjust according to your column span
+                  value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY OF ALL SHEDS PLANNED ON ${date}`,
                   style: {
                     fontColor: "#000000",
                     fontSize: 14,
@@ -118,6 +155,12 @@ const Calibration = () => {
           ],
         },
       };
+   if (grid) {
+  
+            grid.columns[4].visible = false;
+            grid.columns[6].visible = false;
+            grid.columns[7].visible = false;
+        }
       grid.excelExport(excelExportProperties);
     }
     if (args.item.id === "Add") {
@@ -168,6 +211,7 @@ const Calibration = () => {
       });
     }
   };
+     
 
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -202,6 +246,7 @@ const Calibration = () => {
           pageSettings={{ pageSize: 10 }}
           rowSelected={rowSelected}
           pdfExportComplete={pdfExportComplete}
+       
           sortSettings={{
             columns: [{ field: "instrument_no", direction: "Descending" }],
           }}

@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import CalibrationDialog from "../forms/CalibrationDialog";
 import { useSelector } from "react-redux";
 import { useStateContext } from "../context/ContextProvider";
+import { CalibrationGrid } from "../data/apps";
 const ShedTools = () => {
   const [shedTools, setShedTools] = useState([]);
   const [tools, setTools] = useState([]);
@@ -64,22 +65,6 @@ const mergedToolsData = shedTools.map((shedTool, index) => {
   };
 });
 
-  const serviceGrid = [
-    { field: "sl_no", headerText: "Sl No", width: "120", textAlign: "Center" },
-     { field: "type_of_tool_name", headerText: "Instrument Name", width: "150", textAlign: "Center" },
-        { field: "manufacturer_name", headerText: "Manufacturer", width: "150", textAlign: "Center" },
-    { field: "instrument_name", headerText: "Instrument No", width: "150", textAlign: "Center" },
-  { field: "instrument_range", headerText: "Range", width: "150", textAlign: "Center" },
-  { field: "least_count", headerText: "Least Count", width: "150", textAlign: "Center" },
-    { field: "calibration_frequency", headerText: "Calibration Frequency", width: "150", textAlign: "Center" },
-   
-    { field: "year_of_purchase", headerText: "Year of Purchase", width: "150", textAlign: "Center" },
-    { field: "gst", headerText: "GST", width: "150", textAlign: "Center" },
-    { field: "description", headerText: "Remarks", width: "150", textAlign: "Center" },
-   
-    
-    
-  ];
  const toolbarClick = (args) => {
     const exportPattern = /(excelexport|pdfexport)$/;
 
@@ -103,7 +88,7 @@ const mergedToolsData = shedTools.map((shedTool, index) => {
             grid.pdfExport(pdfExportProperties);
         } else if (args.item.id.endsWith('excelexport')) {
            
-            grid.excelExport(excelExportProperties(serviceGrid.length));
+            grid.excelExport(excelExportProperties(CalibrationGrid.length));
         }
     }
 };
@@ -224,7 +209,7 @@ const handleDialogClosee=()=> {
           pageSettings={{pageSize:10}}
         >
           <ColumnsDirective>
-            {serviceGrid.map((item, index) => (
+            {CalibrationGrid.map((item, index) => (
               <ColumnDirective key={index} {...item}></ColumnDirective>
             ))}
           </ColumnsDirective>
