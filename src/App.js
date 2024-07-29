@@ -24,19 +24,31 @@ import CalibrationDetailsForm from './forms/CalibrationDetails';
 import Instruments from './pages/Instruments';
 import History from './pages/History';
 import ServiceHistory from './pages/ServiceHistory';
-
+import DocumentForm from './forms/Document';
 import Challan from './pages/Challan';
 import GroupMaster from './pages/InstrumentGroupMaster';
 import MasterToolsDialog from './forms/MasterDialog';
 import InstrumentFamily from './pages/InstrumentFamily';
-
+import { logout } from './store/actions';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 // Import FullPageLoading component
 import FullPageLoading from './components/FullPageLoading';
 
 const App = () => {
-  const { setCurrentColor, setCurrentMode, activeMenu, currentMode, currentColor, themeSettings, setThemeSettings, isLoading, setIsLoading } = useStateContext();
-  const { isAuthenticated, role,id } = useSelector((state) => state.auth);
-
+  const { setCurrentColor, setCurrentMode,setActiveMenu, activeMenu, currentMode, currentColor, themeSettings, setThemeSettings, isLoading, setIsLoading } = useStateContext();
+  const { isAuthenticated, role } = useSelector((state) => state.auth);
+    // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+    setActiveMenu(false);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      window.location.href="/"
+    }, 1000);
+  };
   useEffect(() => {
     const currentThemeColor = localStorage.getItem('colorMode');
     const currentThemeMode = localStorage.getItem('themeMode');
@@ -50,33 +62,23 @@ const App = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Function to handle logout
-  const handleLogout = () => {
-    setIsLoading(true); // Set loading to true before starting logout
-    setTimeout(() => {
-      // Simulate logout process
-      // This can be replaced with actual logout logic
-      window.location.href = '/'; // Redirect to the login page or any desired page after logout
-      setIsLoading(false); // Set loading to false after logout is complete
-    }, 2000); // Simulating a 2-second delay
-  };
-
+  
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
       <BrowserRouter>
         <div className="flex relative dark:bg-main-dark-bg">
-          <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
+         {isAuthenticated &&  <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
             <TooltipComponent content="Settings" position="Top">
               <button
                 type="button"
-                className="text-3xl p-3 hover:drop-shadow-xl hover:bg-light-gray text-white"
-                onClick={() => setThemeSettings(true)}
-                style={{ background: currentColor, borderRadius: '50%' }}
+                className="text-lg py-2 px-5 font-semibold hover:drop-shadow-xl rounded-md hover:bg-light-gray text-white"
+                onClick={handleLogout}
+                style={{ background: currentColor }}
               >
-                <FiSettings />
+                LOGOUT
               </button>
             </TooltipComponent>
-          </div>
+          </div>}
           {activeMenu && isAuthenticated ? (
             <div className="w-72 fixed sidebar">
               <Sidebar />
@@ -130,6 +132,7 @@ const App = () => {
                     <Route path="/instrument-family/master/:id" element={<GroupMaster />} />
                     <Route path="/instrument-family/master/tools/:id" element={<MasterToolsDialog />} />
                     <Route path="/instruments" element={<Instruments />} />
+                    <Route path="/document-form" element = {<DocumentForm/>}/>
                   </>
                 ) : null}
               </Routes>

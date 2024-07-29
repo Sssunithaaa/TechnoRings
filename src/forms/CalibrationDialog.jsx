@@ -263,7 +263,7 @@ const validateInstrumentName = (name) => {
                   <MenuItem value="" disabled>
                     <em>Select Instrument Family</em>
                   </MenuItem>
-                  {masters.map((tool) => (
+                  {masters?.map((tool) => (
                     <MenuItem key={tool.tool_group_id} value={tool.tool_group_id}>
                       {tool.tool_group_name}
                     </MenuItem>
@@ -357,7 +357,7 @@ const validateInstrumentName = (name) => {
                   <MenuItem value=" " disabled>
                     <em>Select Shed</em>
                   </MenuItem>
-                  {shedDetailsData?.shed_details.map((shed) => (
+                  {shedDetailsData?.shed_details?.map((shed) => (
                     <MenuItem key={shed.shed_id} value={shed.shed_id}>
                       {shed.name}
                     </MenuItem>

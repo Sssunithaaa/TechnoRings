@@ -65,7 +65,8 @@ const {data:vendorHandles,refetch } = useQuery({
     width: "120",
     textAlign: "Center",
   visible:false},
-      { field: "tool_name", headerText: "Instrument Family", width: "150", textAlign: "Center" },
+      { field: "tool", headerText: "Instrument Family ID", width: "150", textAlign: "Center",visible:false },
+           { field: "tool_name", headerText: "Instrument Family", width: "150", textAlign: "Center" },
         { field: "vendor_name", headerText: "Vendor", width: "150", textAlign: "Center" },
   { field: "turnaround_time", headerText: "Turnaround Time", width: "150", textAlign: "Center" },
   { field: "cost", headerText: "Cost", width: "150", textAlign: "Center" },
@@ -122,12 +123,14 @@ const toolbarClick = (args) => {
   } else if (args.requestType === "save"){
     try {
       const id=args.data.vendorhandle_id;
-      await axios.post(`${process.env.REACT_APP_URL}/update_vendor_handles/${id}/`);
+      console.log({...args.data, tool_group_id: args.data.tool})
+      await axios.post(`${process.env.REACT_APP_URL}/update_vendor_handles/${id}/`,{...args.data, tool_group_id: args.data.tool});
             toast.success("Vendor handle updated successfully")
         refetch()
     } catch (error) {
+      console.log(error)
             toast.error(error.message)
-       console.log(error)
+       
       refetch()
     }
   }

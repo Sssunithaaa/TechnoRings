@@ -48,9 +48,8 @@ const [open,setOpen] = useState(false)
     // fetchToolData(id["id"]);
     fetchToolsData();
   }, []);
-const {  user } = useSelector(state => state.auth);
-  // Merge shedTools and tools data
- // Merge shedTools and tools data
+ const documentInfo = useSelector((state) => state.document);
+  const {user} = useSelector((state)=> state.auth)
 const mergedToolsData = shedTools.map((shedTool, index) => {
   // Find matching tool details
   const toolDetails = tools.find(
@@ -87,8 +86,110 @@ const mergedToolsData = shedTools.map((shedTool, index) => {
             };
             grid.pdfExport(pdfExportProperties);
         } else if (args.item.id.endsWith('excelexport')) {
+            const excelExportProperties = {
+        header: {
+          headerRows: 6,
+          rows: [
+            {
+              cells: [
+                {
+                 
+                  colSpan: 11, // Adjust according to your column span
+                  value: "M/S. TECHNORINGS, SHIMOGA",
+                  style: {
+                    fontColor: "#000000",
+                    fontSize: 24,
+                    hAlign: "Center",
+                    bold: true,
+                  },
+                },
+                
+              ],
+            },
+            {
+              cells: [
+               
+                {
+
+  colSpan: 11, // Set the appropriate column span
+  value: `DOC REF :${documentInfo.documentRef}`,
+  style: {
+    fontColor: "#000000",
+    fontSize: 14,
+    hAlign: "Right", // Ensures the text is aligned to the right
+    bold: true,
+  },
+},
+
+              ],
+            },
+             {
+              cells: [
+               
+                {
+
+  colSpan: 11, // Set the appropriate column span
+  value: `REV NO: ${documentInfo.revNo}`,
+  style: {
+    fontColor: "#000000",
+    fontSize: 14,
+    hAlign: "Right", // Ensures the text is aligned to the right
+    bold: true,
+  },
+},
+
+              ],
+            },
+             {
+              cells: [
+               
+                {
+
+  colSpan: 11, // Set the appropriate column span
+  value: `REV DATE: ${date}`,
+  style: {
+    fontColor: "#000000",
+    fontSize: 14,
+    hAlign: "Right", // Ensures the text is aligned to the right
+    bold: true,
+  },
+},
+
+              ],
+            },
+            
+            {
+              cells: [
+                {
+                  colSpan: 11, // Adjust according to your column span
+                  value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY - ${user} PLANNED ON ${date}`,
+                  style: {
+                    fontColor: "#000000",
+                    fontSize: 14,
+                    hAlign: "Center",
+                    bold: true,
+                  },
+                },
+              ],
+            },
+            {
+              cells: [
+                {
+                  colSpan:11,
+                  value:" "
+                }
+              ]
+            },
+          ],
+        },
+      };
+   if (grid) {
+  
            
-            grid.excelExport(excelExportProperties(CalibrationGrid.length));
+            grid.columns[6].visible = false;
+            grid.columns[7].visible = false;
+        }
+      grid.excelExport(excelExportProperties);
         }
     }
 };

@@ -22,7 +22,7 @@ const Sidebar = () => {
   };
 
   const { data: shed, isLoading: shedLoading } = useQuery({
-    queryKey: ["shed-detail"],
+    queryKey: ["shed"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${id}/`);
       return response.data.shed;
@@ -125,7 +125,7 @@ const Sidebar = () => {
                 )}
               </div>
             ))}
-            <NavLink
+            {/* <NavLink
               onClick={handleLogout}
               style={({ isActive }) => ({
                 backgroundColor: isActive ? currentColor : "",
@@ -135,7 +135,7 @@ const Sidebar = () => {
               <span className="capitalize text-center font-semibold flex mx-auto">
                 LOGOUT
               </span>
-            </NavLink>
+            </NavLink> */}
           </div>
         </>
       )}

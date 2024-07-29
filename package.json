@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.16.5",
     "@mui/material": "^5.15.18",
+    "@mui/system": "^5.16.5",
     "@reduxjs/toolkit": "^2.2.2",
     "@syncfusion/ej2": "^25.1.35",
     "@syncfusion/ej2-base": "^25.1.35",

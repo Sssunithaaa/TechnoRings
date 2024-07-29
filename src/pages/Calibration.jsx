@@ -29,7 +29,7 @@ const Calibration = () => {
   let grid;
   const date = new Date().toISOString().split("T")[0];
   const {calibrationData,refetch,isLoadingg} = useStateContext()
- 
+ const documentInfo = useSelector((state) => state.document);
  const {  user } = useSelector(state => state.auth);
 
   const navigate = useNavigate();
@@ -69,17 +69,17 @@ const Calibration = () => {
     } else if (args.item.id === "gridcomp_excelexport") {
        const excelExportProperties = {
         header: {
-          headerRows: 5,
+          headerRows: 6,
           rows: [
             {
               cells: [
                 {
                  
-                  colSpan: 10, // Adjust according to your column span
-                  value: "TechnoRings, Shimoga",
+                  colSpan: 11, // Adjust according to your column span
+                  value: "M/S. TECHNORINGS, SHIMOGA",
                   style: {
                     fontColor: "#000000",
-                    fontSize: 20,
+                    fontSize: 24,
                     hAlign: "Center",
                     bold: true,
                   },
@@ -92,8 +92,8 @@ const Calibration = () => {
                
                 {
 
-  colSpan: 10, // Set the appropriate column span
-  value: "DOC REF :TR/QA-M/L/01",
+  colSpan: 11, // Set the appropriate column span
+  value: `DOC REF :${documentInfo.documentRef}`,
   style: {
     fontColor: "#000000",
     fontSize: 14,
@@ -109,8 +109,8 @@ const Calibration = () => {
                
                 {
 
-  colSpan: 10, // Set the appropriate column span
-  value: "REV NO: 2",
+  colSpan: 11, // Set the appropriate column span
+  value: `REV NO: ${documentInfo.revNo}`,
   style: {
     fontColor: "#000000",
     fontSize: 14,
@@ -126,7 +126,7 @@ const Calibration = () => {
                
                 {
 
-  colSpan: 10, // Set the appropriate column span
+  colSpan: 11, // Set the appropriate column span
   value: `REV DATE: ${date}`,
   style: {
     fontColor: "#000000",
@@ -138,10 +138,11 @@ const Calibration = () => {
 
               ],
             },
+             
             {
               cells: [
                 {
-                  colSpan: 10, // Adjust according to your column span
+                  colSpan: 11, // Adjust according to your column span
                   value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY OF ALL SHEDS PLANNED ON ${date}`,
                   style: {
                     fontColor: "#000000",
@@ -152,12 +153,20 @@ const Calibration = () => {
                 },
               ],
             },
+             {
+              cells: [
+                {
+                  colSpan:11,
+                  value:" "
+                }
+              ]
+            },
           ],
         },
       };
    if (grid) {
   
-            grid.columns[4].visible = false;
+           
             grid.columns[6].visible = false;
             grid.columns[7].visible = false;
         }
@@ -254,7 +263,7 @@ const Calibration = () => {
           ref={(g) => (grid = g)}
         >
           <ColumnsDirective>
-            {CalibrationGrid.map((item, index) => (
+            {CalibrationGrid?.map((item, index) => (
               <ColumnDirective key={index} {...item}  visible={item.visible !== false} ></ColumnDirective>
             ))}
           </ColumnsDirective>

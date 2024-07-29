@@ -94,27 +94,29 @@ export const CalibrationGrid = [
     visible:false
   },
   
-  {
-    field: "instrument_name",
-    headerText: "Instrument Code",
-    width: "150",
-    textAlign: "Center",
-  },
+
     {
     field: "type_of_tool_name",
     headerText: "Instrument Name",
     width: "150",
     textAlign: "Center",
   },
-  {
-    field: "current_shed_name",
-    headerText: "Shed",
-    width: "150",
-    textAlign: "Center",
-  },
+ 
   {
     field: "manufacturer_name",
     headerText: "Manufacturer Name",
+    width: "150",
+    textAlign: "Center",
+  },
+    {
+    field: "instrument_name",
+    headerText: "Instrument Code",
+    width: "150",
+    textAlign: "Center",
+  },
+   {
+    field: "current_shed_name",
+    headerText: "Shed",
     width: "150",
     textAlign: "Center",
   },

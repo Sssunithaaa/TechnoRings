@@ -184,6 +184,12 @@ export const links = [
         link:`deliverychallan`,
         role:["admin"],
       },
+       {
+        name: "Document Details",
+        icon: <HiDocumentReport />,
+        link:`document-form`,
+        role:["admin"],
+      },
       // {
       //   name: "Generate Bill",
       //   icon: <HiDocumentReport />,

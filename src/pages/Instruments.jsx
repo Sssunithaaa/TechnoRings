@@ -4,7 +4,7 @@ import { Header } from "../components";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import {  calibrationHistoryGrid } from "../data/apps";
 import { useStateContext } from "../context/ContextProvider";
@@ -61,7 +61,7 @@ const Instruments = () => {
       });
   }, []);
 
-
+ const documentInfo = useSelector((state) => state.document);
 
   // Columns configuration for the service grid
   const serviceGridColumns = [
@@ -136,7 +136,7 @@ const Instruments = () => {
                             {
                             // Ensures "TR/QAD/F13:R0" is placed in the remaining two columns
                             colSpan:calibrationHistoryGrid.length,
-                            value: 'TR/QAD/F13:R0',
+                            value: `${documentInfo.historyRef}`,
                             style: {
                                 fontColor: '#000000',
                                 fontSize: 16,
