@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
-
+import { useStateContext } from "../context/ContextProvider";
 const CalibrationDialog = ({
   shed,
   open,
@@ -34,6 +34,7 @@ const CalibrationDialog = ({
       return response.data;
     },
   });
+  const {addId,calibrationData,refetch} = useStateContext()
 
   const [formData, setFormData] = useState({
     instrument_name: "tr",
@@ -214,15 +215,7 @@ const validateInstrumentName = (name) => {
     return [years, months, days];
   };
 
-  const { data: calibrationData } = useQuery({
-    queryKey: ["calibration"],
-    queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_URL}/instrument-tools/`
-      );
-      return response.data.instrument_models;
-    },
-  });
+  
 
   const convertToSentenceCase = (str) => {
     return str

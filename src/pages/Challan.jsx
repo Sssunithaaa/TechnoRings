@@ -6,18 +6,18 @@ import { useQuery } from "@tanstack/react-query";
 
 import DeliveryChallan from "../forms/DeliveryChallan";
 import ChallanTools from "./ChallanTools";
-
+import { useStateContext } from "../context/ContextProvider";
 const Challan = () => {
   const [open, setOpen] = useState(false);
   const [openn, setOpenn] = useState(false);
   const [service, setService] = useState([]);
-  
+  const {addId} = useStateContext()
   const { data: deliveryChallans = [],refetch } = useQuery({
     queryKey: ["deliveryChallans"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/all_delivery_challan/`);
       
-      return response.data.delivery_challan;
+      return addId(response.data.delivery_challan);
     },
   });
 
@@ -26,7 +26,11 @@ const Challan = () => {
 
 
   const challanGridColumns = [
-    { field: "deliverychallan_id", headerText: "Challan ID", width: "150", textAlign: "Center" },
+     {field: "sl_no",
+    headerText: "Sl No",
+    width: "120",
+    textAlign: "Center"},
+    { field: "deliverychallan_id", headerText: "Challan ID", width: "150", textAlign: "Center",visible:false },
     { field: "received_date", headerText: "Received Date", width: "150", textAlign: "Center" },
     { field: "vendor_name", headerText: "Vendor Name", width: "150", textAlign: "Center" },
     { field: "shed_name", headerText: "Shed Name", width: "150", textAlign: "Center" },
@@ -91,7 +95,7 @@ const Challan = () => {
       >
         <ColumnsDirective>
           {challanGridColumns.map((item, index) => (
-            <ColumnDirective key={index} {...item}></ColumnDirective>
+            <ColumnDirective key={index} {...item} visible={item.visible !== false}></ColumnDirective>
           ))}
         </ColumnsDirective>
         <Inject

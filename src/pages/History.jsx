@@ -6,11 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import CreateMovement from "../forms/Transport";
 import ToolDialog from "./ToolDialog";
 import { useSelector } from "react-redux";
+import { useStateContext } from "../context/ContextProvider";
 const History = () => {
       const [open, setOpen] = useState(false);
          const [openn, setOpenn] = useState(false);
   const [selectedTransportOrder, setSelectedTransportOrder] = useState(null);
  const { role,user } = useSelector((state) => state.auth);
+  const {excelExportProperties,addId} = useStateContext()
   const { data: transportOrders, refetch } = useQuery({
   queryKey: ["transportorders"],
   queryFn: async () => {
@@ -24,7 +26,7 @@ const History = () => {
       transformedData = transformedData.filter((order)=> order.destination_shed_name === user || order.source_shed_name === user)
     }
    
-    return transformedData;
+    return addId(transformedData);
   },
 });
 
@@ -49,8 +51,11 @@ const History = () => {
     window.scrollTo(0,0);
   },[])
    const transportGridColumns = [
-    
-    { field: "movement_id", headerText: "Movement ID", width: "150", textAlign: "Center" },
+     {field: "sl_no",
+    headerText: "Sl No",
+    width: "120",
+    textAlign: "Center"},
+    { field: "movement_id", headerText: "Movement ID", width: "150", textAlign: "Center",visible:false },
     { field: "movement_date", headerText: "Movement date", width: "150", textAlign: "Center" },
     { field: "acknowledgment", headerText: "Status", width: "150", textAlign: "Center" },
     { field: "source_shed_name", headerText: "Source shed", width: "150", textAlign: "Center" },
@@ -90,36 +95,38 @@ const History = () => {
             };
             grid.pdfExport(pdfExportProperties);
         } else if (args.item.id === 'gridcomp_excelexport') {
-            const excelExportProperties = {
-                header: {
-                    headerRows: 2,
-                    rows: [
-                        {
-                            cells: [
-                                {
-                                    colSpan: transportGridColumns.length, // Adjust according to your column span
-                                    value: 'TechnoRings, Shimoga',
-                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
-                                }
-                            ]
-                        }, {
-                            cells: [
-                                {
-                                    colSpan: transportGridColumns.length, // Adjust according to your column span
-                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
-                                    style: { fontColor: '#000000', fontSize: 10, hAlign: 'Center',wAlign:'Center', bold: true }
-                                }
-                            ] 
-                        }
-                    ]
-                }
+            // const excelExportProperties = {
+            //     header: {
+            //         headerRows: 2,
+            //         rows: [
+            //             {
+            //                 cells: [
+            //                     {
+            //                         colSpan: transportGridColumns.length, // Adjust according to your column span
+            //                         value: 'TechnoRings, Shimoga',
+            //                         style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
+            //                     }
+            //                 ]
+            //             }, {
+            //                 cells: [
+            //                     {
+            //                         colSpan: transportGridColumns.length, // Adjust according to your column span
+            //                         value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
+            //                         style: { fontColor: '#000000', fontSize: 10, hAlign: 'Center',wAlign:'Center', bold: true }
+            //                     }
+            //                 ] 
+            //             }
+            //         ]
+            //     }
         
                 
-            };
-            grid.excelExport(excelExportProperties);
+            // };
+
+            grid.excelExport(excelExportProperties(transportGridColumns.length));
         }
     };
-      const toolbarClickk = (args) => {
+
+  const toolbarClickk = (args) => {
     if (args.item.id === 'gridcomp_pdfexport') {
             const pdfExportProperties = {
                 pageOrientation: 'Landscape',
@@ -197,7 +204,7 @@ const History = () => {
       >
         <ColumnsDirective>
           {transportGridColumns.map((item, index) => (
-            <ColumnDirective key={index} {...item}></ColumnDirective>
+            <ColumnDirective key={index} {...item}  visible={item.visible !== false}></ColumnDirective>
           ))}
         </ColumnsDirective>
         <Inject

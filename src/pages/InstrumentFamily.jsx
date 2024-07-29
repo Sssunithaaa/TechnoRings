@@ -6,16 +6,17 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useNavigate } from "react-router-dom";
 import AddInstrumentFamilyDialog from "../forms/InstrumentGroup";
+import { useStateContext } from "../context/ContextProvider";
 const InstrumentFamily = () => {
   const [open, setOpen] = useState(false);
-
+  const {excelExportProperties,addId} = useStateContext()
 
 
   const { data: masters, refetch } = useQuery({
     queryKey: ["family"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-family-group-tools/`);
-      return response.data.instrument_family_groups;
+      return addId(response.data.instrument_family_groups);
     },
   });
 
@@ -39,7 +40,12 @@ const InstrumentFamily = () => {
   }, []);
 
   const transportGridColumns = [
-    { field: "instrument_family_id", headerText: "Instrument Family ID", width: "150", textAlign: "Center" },
+    
+    {field: "sl_no",
+    headerText: "Sl No",
+    width: "120",
+    textAlign: "Center"},
+    { field: "instrument_family_id", headerText: "Instrument Family ID", width: "150", textAlign: "Center",visible:false },
     { field: "instrument_family_name", headerText: "Instrument Family Name", width: "150", textAlign: "Center" },
    
   ];
@@ -64,33 +70,8 @@ const InstrumentFamily = () => {
             };
             grid.pdfExport(pdfExportProperties);
         } else if (args.item.id === 'gridcomp_excelexport') {
-            const excelExportProperties = {
-                header: {
-                    headerRows: 2,
-                    rows: [
-                        {
-                            cells: [
-                                {
-                                    colSpan: 11, // Adjust according to your column span
-                                    value: 'TechnoRings, Shimoga',
-                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
-                                }
-                            ]
-                        }, {
-                            cells: [
-                                {
-                                    colSpan: 11, // Adjust according to your column span
-                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
-                                }
-                            ] 
-                        }
-                    ]
-                }
-        
-                
-            };
-            grid.excelExport(excelExportProperties);
+           
+            grid.excelExport(excelExportProperties(transportGridColumns.length));
         }
         
     };
@@ -117,14 +98,14 @@ const InstrumentFamily = () => {
         pageSettings={{ pageSize: 10 }}
        
         allowExcelExport
-        sortSettings={{ columns: [{ field: 'tool_group_id', direction: 'Descending' }] }}
+        sortSettings={{ columns: [{ field: 'instrument_family_id', direction: 'Descending' }] }}
         allowPdfExport
         rowSelected={handleRowClick} // Add rowSelected event handler
            ref={g => grid = g}
       >
         <ColumnsDirective>
           {transportGridColumns.map((item, index) => (
-            <ColumnDirective key={index} {...item}></ColumnDirective>
+            <ColumnDirective key={index} {...item}  visible={item.visible !== false}></ColumnDirective>
           ))}
         </ColumnsDirective>
         <Inject

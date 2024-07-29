@@ -24,8 +24,10 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import UpdateShed from "../forms/UpdateShed";
+import { useStateContext } from "../context/ContextProvider";
 
 const Shed = () => {
+      const {excelExportProperties,addId} = useStateContext()
   const { data: shedDetailsData, refetch } = useQuery({
     queryKey: ["shed"],
     queryFn: async () => {
@@ -33,6 +35,7 @@ const Shed = () => {
       return response.data;
     },
   });
+
 
   let grid;
 
@@ -105,7 +108,7 @@ const Shed = () => {
   const [open,setOpen] = useState(false);
   const fetchToolData = async (shed_id) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
+      await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${shed_id}/`);
       navigate(`${shed_id}`);
     } catch (error) {
       console.error("Error fetching tool data:", error);
@@ -121,7 +124,8 @@ const Shed = () => {
      refetch()
   }
   const rowSelected = (args) => {
-    const selectedRecord = args.data["shed_id"];
+    // console.log(args)
+    const selectedRecord = args.data.shed_id;
     fetchToolData(selectedRecord);
   };
     const date = new Date().toISOString().split('T')[0];
@@ -146,33 +150,8 @@ const Shed = () => {
             };
             grid.pdfExport(pdfExportProperties);
         } else if (args.item.id === 'gridcomp_excelexport') {
-            const excelExportProperties = {
-                header: {
-                    headerRows: 2,
-                    rows: [
-                        {
-                            cells: [
-                                {
-                                    colSpan: shedDetailsGrid.length, // Adjust according to your column span
-                                    value: 'TechnoRings, Shimoga',
-                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
-                                }
-                            ]
-                        }, {
-                            cells: [
-                                {
-                                    colSpan: shedDetailsGrid.length, // Adjust according to your column span
-                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
-                                }
-                            ] 
-                        }
-                    ]
-                }
-        
-                
-            };
-            grid.excelExport(excelExportProperties);
+           
+            grid.excelExport(excelExportProperties(shedDetailsGrid.length));
         }
   };
 
@@ -185,7 +164,7 @@ const Shed = () => {
         
         <GridComponent
           id="gridcomp"
-          dataSource={shedDetailsData?.shed_details}
+          dataSource={addId(shedDetailsData?.shed_details)}
           width="auto"
           allowGrouping
           allowPaging
@@ -199,13 +178,16 @@ const Shed = () => {
           rowSelected={rowSelected}
           allowPdfExport
           allowExcelExport
+          sortSettings={{
+          columns: [{ field: "shed_id", direction: "Descending" }],
+        }}
           actionComplete={handleActionComplete}
           ref={g => grid = g}
         >
           <ColumnsDirective>
             {shedDetailsGrid.map((item, index) => (
              
-              <ColumnDirective key={index} {...item}></ColumnDirective>
+              <ColumnDirective key={index} {...item}  visible={item.visible !== false} ></ColumnDirective>
             ))}
           </ColumnsDirective>
           <Inject

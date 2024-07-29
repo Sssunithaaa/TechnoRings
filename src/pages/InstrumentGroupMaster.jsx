@@ -9,14 +9,16 @@ import {  useNavigate, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import { toast,ToastContainer } from "react-toastify";
 import AddInstrumentFamilyDialog from "../forms/InstrumentGroup";
+import { useStateContext } from "../context/ContextProvider";
 const GroupMaster = () => {
   const { id } = useParams();  // Extracting the id from URL params
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [name,setName] = useState()
+    const {excelExportProperties,addId} = useStateContext()
   const [instrumentGroup,setInstrumentGroup] = useState()
   const { data, refetch } = useQuery({
-    queryKey: ["masters", id],  // Adding id to the query key
+    queryKey: ["masters", id], 
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/instruments_by_instrument_family/${id}/`);
       setInstrumentGroup({
@@ -24,7 +26,7 @@ const GroupMaster = () => {
         instrument_family_name: response.data.tool_family
       })
       setName(response.data.tool_family)
-      return response.data.tools;
+      return addId(response.data.tools);
     },
   });
 
@@ -47,7 +49,12 @@ const GroupMaster = () => {
   }, []);
 
   const transportGridColumns = [
-    { field: "tool_group_id", headerText: "Tool Group ID", width: "150", textAlign: "Center" },
+    
+    {field: "sl_no",
+    headerText: "Sl No",
+    width: "120",
+    textAlign: "Center"},
+    { field: "tool_group_id", headerText: "Tool Group ID", width: "150", textAlign: "Center",visible:false },
     { field: "tool_group_name", headerText: "Tool Group Name", width: "150", textAlign: "Center" },
     { field: "tool_group_code", headerText: "Tool Group Code", width: "150", textAlign: "Center" },
   ];
@@ -72,33 +79,8 @@ const GroupMaster = () => {
             };
             grid.pdfExport(pdfExportProperties);
         } else if (args.item.id === 'gridcomp_excelexport') {
-            const excelExportProperties = {
-                header: {
-                    headerRows: 2,
-                    rows: [
-                        {
-                            cells: [
-                                {
-                                    colSpan: transportGridColumns.length, // Adjust according to your column span
-                                    value: 'TechnoRings, Shimoga',
-                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
-                                }
-                            ]
-                        }, {
-                            cells: [
-                                {
-                                    colSpan: transportGridColumns.length, // Adjust according to your column span
-                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
-                                }
-                            ] 
-                        }
-                    ]
-                }
-        
-                
-            };
-            grid.excelExport(excelExportProperties);
+          
+            grid.excelExport(excelExportProperties(transportGridColumns.length));
         }
   };
 
@@ -180,7 +162,7 @@ const GroupMaster = () => {
       >
         <ColumnsDirective>
           {transportGridColumns.map((item, index) => (
-            <ColumnDirective key={index} {...item}></ColumnDirective>
+            <ColumnDirective key={index} {...item}  visible={item.visible !== false}></ColumnDirective>
           ))}
         </ColumnsDirective>
         <Inject

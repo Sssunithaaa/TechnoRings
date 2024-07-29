@@ -22,21 +22,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CalibrationDialog from "../forms/CalibrationDialog";
 import FullPageLoading from "../components/FullPageLoading";
-
+import { useStateContext } from "../context/ContextProvider";
+import { useSelector } from "react-redux";
 const Calibration = () => {
   let grid;
   const date = new Date().toISOString().split("T")[0];
-
-  const { data: calibrationData, refetch, isLoading } = useQuery({
-    queryKey: ["calibration"],
-    queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_URL}/instrument-tools/`
-      );
-
-      return response.data;
-    },
-  });
+  const {calibrationData,refetch,isLoadingg} = useStateContext()
+ 
+ const {  user } = useSelector(state => state.auth);
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -73,9 +66,9 @@ const Calibration = () => {
       };
       grid.pdfExport(pdfExportProperties);
     } else if (args.item.id === "gridcomp_excelexport") {
-      const excelExportProperties = {
+       const excelExportProperties = {
         header: {
-          headerRows: 2,
+          headerRows: 3,
           rows: [
             {
               cells: [
@@ -93,9 +86,26 @@ const Calibration = () => {
             },
             {
               cells: [
+               
+                {
+
+  colSpan: 11, // Set the appropriate column span
+  value: "DOC REF :TR/QA-M/L/01\nDOC REF :TR/QA-M/L/01\nDOC REF :TR/QA-M/L/01",
+  style: {
+    fontColor: "#000000",
+    fontSize: 14,
+    hAlign: "Right", // Ensures the text is aligned to the right
+    bold: true,
+  },
+},
+
+              ],
+            },
+            {
+              cells: [
                 {
                   colSpan: 11, // Adjust according to your column span
-                  value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
+                  value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY - ${user} PLANNED ON ${date}`,
                   style: {
                     fontColor: "#000000",
                     fontSize: 14,
@@ -175,7 +185,7 @@ const Calibration = () => {
       </div>
       <Header className="Page" title="Instrument details" />
 
-      {isLoading ? ( // Conditional rendering based on loading state
+      {isLoadingg ? ( // Conditional rendering based on loading state
         <FullPageLoading />
       ) : (
         <GridComponent
@@ -200,7 +210,7 @@ const Calibration = () => {
         >
           <ColumnsDirective>
             {CalibrationGrid.map((item, index) => (
-              <ColumnDirective key={index} {...item}></ColumnDirective>
+              <ColumnDirective key={index} {...item}  visible={item.visible !== false} ></ColumnDirective>
             ))}
           </ColumnsDirective>
           <Inject

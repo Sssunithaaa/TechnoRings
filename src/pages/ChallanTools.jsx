@@ -16,6 +16,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import UpdateCalibrationDetailsForm from "../forms/UpdateCalibrationHistory";
+import { useStateContext } from "../context/ContextProvider";
 
 
 const ChallanTools = ({ open, handleClose, transportOrder }) => {
@@ -49,6 +50,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
       (report) => report.calibrationtool_id === toolId
     );
   };
+  const {addId,calibrationData} = useStateContext()
  
   const history = [
     {
@@ -79,16 +81,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
     "calibration_tool": 2
 }
   ]
-  const { data: tools } = useQuery({
-    queryKey: ["calibration"],
-    queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_URL}/instrument-tools/`
-      );
 
-      return response.data?.instrument_models;
-    },
-  });
   const [serviceTools,setServiceTools] =  useState([])
 
     useEffect(() => {
@@ -160,7 +153,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
 
   return (
     <>
-    {update && <UpdateCalibrationDetailsForm existingToolDetails={history} tools={tools} setUpdate={setUpdate}></UpdateCalibrationDetailsForm>}
+    {update && <UpdateCalibrationDetailsForm existingToolDetails={history} tools={calibrationData} setUpdate={setUpdate}></UpdateCalibrationDetailsForm>}
     <Dialog open={open} onClose={handleClose} maxWidth="xl" sx={{zIndex:40}}>
       <DialogTitle>Delivery Challan Details</DialogTitle>
       <ToastContainer/>

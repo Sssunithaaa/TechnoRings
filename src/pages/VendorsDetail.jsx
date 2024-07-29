@@ -9,27 +9,29 @@ import "react-toastify/dist/ReactToastify.css";
 import BackButton from "../components/BackButton";
 import CreateVendorHandleData from "../forms/VendorHandle";
 import { useQuery } from "@tanstack/react-query";
+import { useStateContext } from "../context/ContextProvider";
 const VendorsDetail = () => {
   
        const [open, setOpen] = useState(false);
          const [openn,setOpenn] = useState(false)
-
+  const {excelExportProperties,addId} = useStateContext()
       const [vendorName,setVendorname] = useState("")
   const id=useParams()
-  const [vendorHandle,setVendorHandle] = useState([])
+  // const [vendorHandle,setVendorHandle] = useState([])
     const [vendor,setVendor] = useState([])
 
 
-const {refetch } = useQuery({
+const {data:vendorHandles,refetch } = useQuery({
     queryKey: ["vendorhandle",id["id"]],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/vendor_details/${id["id"]}/`);
-      setVendorHandle(response?.data?.vendor_handles)
+      // setVendorHandle(getId(response?.data?.vendor_handles))
         setVendorname(response?.data?.vendor?.name)
         setVendor(response?.data?.vendor)
+        return addId(response?.data?.vendor_handles)
     },
   });
-
+ 
  
   let grid;
 
@@ -54,6 +56,15 @@ const {refetch } = useQuery({
   
   const vendorGridColumns = [
     {type:"checkbox",width:"50"},
+    {field: "sl_no",
+    headerText: "Sl No",
+    width: "120",
+    textAlign: "Center"},
+    {field: "vendorhandle_id",
+    headerText: "Id",
+    width: "120",
+    textAlign: "Center",
+  visible:false},
       { field: "tool_name", headerText: "Instrument Family", width: "150", textAlign: "Center" },
         { field: "vendor_name", headerText: "Vendor", width: "150", textAlign: "Center" },
   { field: "turnaround_time", headerText: "Turnaround Time", width: "150", textAlign: "Center" },
@@ -74,7 +85,7 @@ const toolbarClick = (args) => {
                 pageOrientation: 'Landscape'
             });
         } else if (args.item.id.endsWith('excelexport')) {
-            grid.excelExport();
+            grid.excelExport(excelExportProperties(vendorGridColumns.length));
         }
     }
 };
@@ -94,6 +105,7 @@ const toolbarClick = (args) => {
     }
   }
    const handleActionComplete=async (args)=> {
+    console.log(args)
       if (args.requestType === "delete") {
     try {
       const id=args.data[0].vendorhandle_id;
@@ -105,7 +117,18 @@ const toolbarClick = (args) => {
     } catch (error) {
             toast.error(error.message)
 
-      console.error("Error deleting data:", error);
+    refetch()
+    }
+  } else if (args.requestType === "save"){
+    try {
+      const id=args.data.vendorhandle_id;
+      await axios.post(`${process.env.REACT_APP_URL}/update_vendor_handles/${id}/`);
+            toast.success("Vendor handle updated successfully")
+        refetch()
+    } catch (error) {
+            toast.error(error.message)
+       console.log(error)
+      refetch()
     }
   }
      }
@@ -143,25 +166,28 @@ const toolbarClick = (args) => {
          </div>
         <ToastContainer/>
         <GridComponent
-          dataSource={vendorHandle}
+          dataSource={vendorHandles}
           width="auto"
           id="grid"
           allowGrouping
           allowPaging
           allowFiltering
           allowSorting
-          editSettings={{allowDeleting:true}}
-          toolbar={['PdfExport','ExcelExport','Delete']}
+          editSettings={{allowEditing:true,allowDeleting:true,mode:'Dialog'}}
+          toolbar={['PdfExport','ExcelExport','Delete','Edit']}
           allowPdfExport
           allowExcelExport
       pageSettings={{pageSize: 5}}
             ref={g => grid = g}
+            sortSettings={{
+          columns: [{ field: "vendorhandle_id", direction: "Descending" }],
+        }}
           toolbarClick={toolbarClick}
           actionComplete={handleActionComplete}
         >
           <ColumnsDirective>
             {vendorGridColumns.map((item, index) => (
-              <ColumnDirective key={index} {...item}></ColumnDirective>
+              <ColumnDirective key={index} {...item}  visible={item.visible !== false}></ColumnDirective>
             ))}
           </ColumnsDirective>
           <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport,ExcelExport]} />

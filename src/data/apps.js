@@ -17,11 +17,18 @@ export const shedVendorsData = [
 ];
 
 export const shedDetailsGrid = [
+ 
+    {field: "sl_no",
+    headerText: "Sl No",
+    width: "120",
+    textAlign: "Center"},
+  
   {
     field: "shed_id",
     headerText: "ID",
     width: "120",
     textAlign: "Center",
+    visible:false
   },
    {
     field: "name",
@@ -75,11 +82,16 @@ export const shedVendorsGrid = [
 
 export const CalibrationGrid = [
 
+    {field: "sl_no",
+    headerText: "Sl No",
+    width: "120",
+    textAlign: "Center"},
   {
-    field: "instrument_no",
+  field: "instrument_no",
     headerText: "Instrument Number",
-    width: "80",
+    width: "120",
     textAlign: "Center",
+    visible:false
   },
   
   {
@@ -144,7 +156,18 @@ export const CalibrationGrid = [
     width: "150",
     textAlign: "Center",
   },
- 
+  {
+    field: "calibration_date",
+    headerText: "Calibration Date",
+    width: "150",
+    textAlign: "Center",
+  },
+   {
+    field: "next_calibration_date",
+    headerText: "Next Calibration Date",
+    width: "150",
+    textAlign: "Center",
+  },
 
 ];
 

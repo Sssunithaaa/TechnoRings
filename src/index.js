@@ -15,14 +15,16 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
      <Provider store={store}>
+       <QueryClientProvider client={queryClient}>
     <ContextProvider>
-        <QueryClientProvider client={queryClient}>
+       
 
      <PersistGate loading={null} persistor={persistor}>
       <App />
      </PersistGate>
-      </QueryClientProvider>
+  
     </ContextProvider>
+        </QueryClientProvider>
     </Provider>
   </React.StrictMode>
 );

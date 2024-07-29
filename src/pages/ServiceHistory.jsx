@@ -5,18 +5,21 @@ import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
 import Service from "../forms/Service";
 import ServiceTool from "./ServiceTool";
+import { useStateContext } from "../context/ContextProvider";
 const ServiceHistory = () => {
         const [open, setOpen] = useState(false);
   const [openn, setOpenn] = useState(false);
+  
+    const {excelExportProperties,addId} = useStateContext()
+  
      const { data: serviceorders,refetch } = useQuery({
     queryKey: ["serviceorders"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/all_service_orders/`);
     
-      return response.data.service_orders;
+      return addId(response.data.service_orders);
     },
   });
-  
    const { data: vendors=[
     {
             "vendor_id": 1,
@@ -39,8 +42,11 @@ const ServiceHistory = () => {
   });
   
    const serviceGridColumns = [
-  
-    { field: "service_id", headerText: "Service ID", width: "150", textAlign: "Center" },
+   {field: "sl_no",
+    headerText: "Sl No",
+    width: "120",
+    textAlign: "Center"},
+    { field: "service_id", headerText: "Service ID", width: "150", textAlign: "Center",visible:false },
     { field: "vendor_name", headerText: "Vendor", width: "150", textAlign: "Center" },
     { field: "date", headerText: "Date", width: "150", textAlign: "Center" },
     { field: "amount", headerText: "Amount", width: "150", textAlign: "Center" },
@@ -82,7 +88,7 @@ const ServiceHistory = () => {
                 pageOrientation: 'Landscape'
             });
         } else if(args.item.id === 'gridcomp_excelexport') {
-            grid.excelExport();
+            grid.excelExport(excelExportProperties(serviceGridColumns.length));
         }
         
     };

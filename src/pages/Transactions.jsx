@@ -9,8 +9,9 @@ import BackButton from "../components/BackButton";
 import { useNavigate } from "react-router-dom";
 import CalibrationDialog from "../forms/CalibrationDialog";
 import {  calibrationHistoryGrid } from "../data/apps";
+import { useStateContext } from "../context/ContextProvider";
 const Transactions = () => {
- 
+     const {excelExportProperties} = useStateContext()
   const id= useParams()
   const [service,setService] = useState([])
   const [transportOrder,setTransportOrder] = useState([])
@@ -43,7 +44,7 @@ useEffect(()=> {
    
   // Columns configuration for the service grid
   const serviceGridColumns = [
-    { type: 'checkbox', width: '50' },
+    
     { field: "service_id", headerText: "Service ID", width: "150", textAlign: "Center" },
     { field: "vendor", headerText: "Vendor", width: "150", textAlign: "Center" },
     { field: "date", headerText: "Date", width: "150", textAlign: "Center" },
@@ -76,7 +77,7 @@ useEffect(()=> {
                 pageOrientation: 'Landscape'
             });
         } else if (args.item.id.endsWith('excelexport')) {
-            grid.excelExport();
+            grid.excelExport(excelExportProperties(transportGridColumns.length));
         }
     }
 };

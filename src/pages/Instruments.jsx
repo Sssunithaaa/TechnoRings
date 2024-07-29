@@ -6,7 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { CalibrationGrid, calibrationHistoryGrid } from "../data/apps";
+import {  calibrationHistoryGrid } from "../data/apps";
+import { useStateContext } from "../context/ContextProvider";
 const Instruments = () => {
   const [service, setService] = useState([]);
   const [transportOrder, setTransportOrder] = useState([]);
@@ -15,17 +16,13 @@ const Instruments = () => {
     const [instrumentDetails, setInstrumentDetails] = useState(null); // State to store instrument details
   
   let grid;
-  const date = new Date().toISOString().split('T')[0];
+    const {excelExportProperties,calibrationData} = useStateContext()
+
+ 
   const { register, handleSubmit, watch } = useForm();
   const toolId = watch("toolId");
 
-  const { data: calibrationData } = useQuery({
-    queryKey: ["instruments"],
-    queryFn: async () => {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/instrument-tools/`);
-      return response.data;
-    },
-  });
+ 
 
   const fetchToolData = async (toolId) => {
     try {
@@ -98,33 +95,8 @@ const Instruments = () => {
         } else if (args.item.id.endsWith('excelexport')) {
         
           
-            const excelExportProperties = {
-                header: {
-                    headerRows: 2,
-                    rows: [
-                        {
-                            cells: [
-                                {
-                                    colSpan: transportGridColumns.length, // Adjust according to your column span
-                                    value: 'TechnoRings, Shimoga',
-                                    style: { fontColor: '#000000', fontSize: 20, hAlign: 'Center', bold: true }
-                                }
-                            ]
-                        }, {
-                            cells: [
-                                {
-                                    colSpan: transportGridColumns.length, // Adjust according to your column span
-                                    value: `List of monitoring and measuring equipments including calibration schedule and calibration history of all sheds planned on ${date}`,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
-                                }
-                            ] 
-                        }
-                    ]
-                }
-        
-                
-            };
-            grid.excelExport(excelExportProperties);
+            
+            grid.excelExport(excelExportProperties(transportGridColumns.length));
          
     }
 };
@@ -327,7 +299,7 @@ const Instruments = () => {
       <option value="" disabled>
         Select instrument
       </option>
-      {calibrationData?.instrument_models?.map((tool) => (
+      {calibrationData?.map((tool) => (
         <option key={tool.instrument_no} value={tool.instrument_no}>
           {tool.instrument_name}
         </option>
@@ -349,6 +321,8 @@ const Instruments = () => {
          <p><strong>Current Shed:</strong> {instrument.current_shed_name}</p>
             <p><strong>Manufacturer Name:</strong> {instrument.manufacturer_name}</p>
              <p><strong>Service Status:</strong> {instrument.service_status ? "Service pending" : "Service done" }</p>
+             <p><strong>Calibration Date:</strong> {instrument.calibration_date}</p>
+             <p><strong>Next Calibration Date:</strong> {instrument.next_calibration_date}</p>
       </div>}
           </div>
       </div>

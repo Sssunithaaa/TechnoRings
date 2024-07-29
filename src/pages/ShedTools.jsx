@@ -10,6 +10,7 @@ import { toast,ToastContainer } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import CalibrationDialog from "../forms/CalibrationDialog";
 import { useSelector } from "react-redux";
+import { useStateContext } from "../context/ContextProvider";
 const ShedTools = () => {
   const [shedTools, setShedTools] = useState([]);
   const [tools, setTools] = useState([]);
@@ -17,6 +18,7 @@ const ShedTools = () => {
   const [shed,setShed] = useState();
  const date = new Date().toISOString().split('T')[0];
   const id = useParams();
+    const {excelExportProperties} = useStateContext()
 
 const [open,setOpen] = useState(false)
     const [openn,setOpenn] = useState(false)
@@ -100,33 +102,8 @@ const mergedToolsData = shedTools.map((shedTool, index) => {
             };
             grid.pdfExport(pdfExportProperties);
         } else if (args.item.id.endsWith('excelexport')) {
-            const excelExportProperties = {
-                header: {
-                    headerRows: 2,
-                    rows: [
-                        {
-                            cells: [
-                                {
-                                    colSpan: 11, // Adjust according to your column span
-                                    value: 'TechnoRings, Shimoga',
-                                    style: { fontColor: '#000000', fontSize: 22, hAlign: 'Center', bold: true }
-                                }
-                            ]
-                        },{
-                            cells: [
-                                {
-                                    colSpan: serviceGrid.length, // Adjust according to your column span
-                                    value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY - ${user} PLANNED ON ${date}`,
-                                    style: { fontColor: '#000000', fontSize: 14, hAlign: 'Center', bold: true }
-                                }
-                            ] 
-                        }
-                    ]
-                }
-        
-                
-            };
-            grid.excelExport(excelExportProperties);
+           
+            grid.excelExport(excelExportProperties(serviceGrid.length));
         }
     }
 };
