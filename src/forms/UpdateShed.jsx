@@ -99,6 +99,7 @@ const [showPassword, setShowPassword] = useState(false);
           type="text"
           fullWidth
           variant="outlined"
+          disabled={shed ? true : false}
           value={name}
           onChange={(e) => setName(e.target.value)}
         />

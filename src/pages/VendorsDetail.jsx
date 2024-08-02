@@ -172,7 +172,7 @@ const toolbarClick = (args) => {
           dataSource={vendorHandles}
           width="auto"
           id="grid"
-          allowGrouping
+        
           allowPaging
           allowFiltering
           allowSorting
@@ -193,7 +193,7 @@ const toolbarClick = (args) => {
               <ColumnDirective key={index} {...item}  visible={item.visible !== false}></ColumnDirective>
             ))}
           </ColumnsDirective>
-          <Inject services={[Group, Toolbar, Sort, Filter, Page, Edit, PdfExport,ExcelExport]} />
+          <Inject services={[ Toolbar, Sort, Filter, Page, Edit, PdfExport,ExcelExport]} />
         </GridComponent>
       </div>
                         <CreateVendorHandleData open={open} handleClose={handleDialogClose} id={id} vendorName={vendorName} />
