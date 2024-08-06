@@ -169,7 +169,7 @@ const CreateVendor = ({ open, handleClose, vendorData }) => {
                 error={!!errors.nabl_number}
                 helperText={errors.nabl_number?.message}
               />
-              <label className="file-input-label">
+              {/* <label className="file-input-label">
                 <input
                   {...register("certificate")}
                   type="file"
@@ -180,7 +180,7 @@ const CreateVendor = ({ open, handleClose, vendorData }) => {
                   Upload Certificate
                 </Button>
                 {errors.certificate && <p>{errors.certificate.message}</p>}
-              </label>
+              </label> */}
             </>
           )}
 

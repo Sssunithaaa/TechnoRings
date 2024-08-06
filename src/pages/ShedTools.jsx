@@ -287,7 +287,7 @@ const handleDialogClosee=()=> {
           <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={handleDialogOpen}>Update shed</button>
 
 {
-  user !== "QA"   &&          <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete shed</button>
+  name !== "QA"   &&          <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete shed</button>
 
 }        </div>
         <Header className={`Shed tools`} title={name}/>

@@ -63,9 +63,9 @@ const Sidebar = () => {
       const data = {
         "shed_note": newDetails
       }
-      console.log(data)
-      const response = await axios.post(`${process.env.REACT_APP_URL}/update_shed/${id}/`, data);
-      console.log(response.data)
+      
+      await axios.post(`${process.env.REACT_APP_URL}/update_shed_note/shed/${id}/`, data);
+     
       
    
   }
@@ -153,7 +153,7 @@ const Sidebar = () => {
             <div className="mt-6">
               <p className="text-white mb-2">Shed Details:</p>
               <textarea
-                value={shedDetails.shed_note}
+                value={shedDetails?.shed_note}
                 onChange={(e) => setShedDetails(e.target.value)}
                 disabled={!isEditing}
                 className="w-full h-32 p-2 text-gray-800 rounded-md bg-white resize-none"
