@@ -64,7 +64,10 @@ const Sidebar = () => {
         "shed_note": newDetails
       }
       
-      await axios.post(`${process.env.REACT_APP_URL}/update_shed_note/shed/${id}/`, data);
+      const response = await axios.post(`${process.env.REACT_APP_URL}/update_shed_note/shed/${id}/`, data);
+      if(response.data.success){
+        setIsEditing(false)
+      }
      
       
    
