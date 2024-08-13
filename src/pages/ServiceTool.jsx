@@ -4,7 +4,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
+  
   Table,
   TableBody,
   TableCell,
@@ -71,16 +71,16 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
               {transportOrder?.service_order?.description}
             </p>
             <p>
-              <strong>Tool count:</strong>{" "}
+              <strong>Instrument count:</strong>{" "}
               {transportOrder?.service_order?.tool_count}
             </p>
 
-            <h3 className="mt-3 font-bold text-[18px]">Service Tools</h3>
+            <h3 className="mt-3 font-bold text-[18px]">Service Instruments</h3>
             <Paper>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Tool Name</TableCell>
+                    <TableCell>Instrument Code</TableCell>
                     <TableCell>Service Remarks</TableCell>
                     <TableCell>Service Type</TableCell>
                     <TableCell>Amount</TableCell>

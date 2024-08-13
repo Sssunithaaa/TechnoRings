@@ -98,7 +98,7 @@ const MasterToolsDialog = () => {
                
             } else{
                        setOpenn(false);
-            toast.success("Tool added successfully", {
+            toast.success("Instrument added successfully", {
                     position: "top-center",
                     autoClose: 1000,
                     style: { width: "auto", style: "flex justify-center" },
@@ -157,7 +157,7 @@ const [instrumentGroup,setInstrumentGroup] = useState(false)
      
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       <div>
-        <strong>Tool group name: </strong>{toolGroup}
+        <strong>Instrument group name: </strong>{toolGroup}
       </div>
        <div className="flex flex-row justify-between gap-x-5 my-4">
           <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={handleDialogOpen}>Update instrument group master</button>

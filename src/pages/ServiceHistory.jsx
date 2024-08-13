@@ -51,7 +51,7 @@ const ServiceHistory = () => {
     { field: "date", headerText: "Date", width: "150", textAlign: "Center" },
     { field: "amount", headerText: "Amount", width: "150", textAlign: "Center" },
     { field: "description", headerText: "Description", width: "150", textAlign: "Center" },
-    { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
+    { field: "tool_count", headerText: "Instrument count", width: "150", textAlign: "Center" }
   ];
    const handleDialogClose = () => {
         setOpen(false);

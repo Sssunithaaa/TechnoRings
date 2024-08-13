@@ -205,7 +205,7 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={`Service Tool ${index + 1}`}
+                label={`Service Instrument ${index + 1}`}
                 margin="normal"
                 fullWidth
                 required
@@ -242,10 +242,10 @@ const Service = ({ open, handleClose, serviceOrder, id }) => {
             </div>
           ))}
           <IconButton onClick={addToolField} color="primary" aria-label="add tool">
-            <p className="text-[14px] mr-4">Add tool</p>
+            <p className="text-[14px] mr-4">Add Instrument</p>
           </IconButton>
           <IconButton onClick={subtractToolField} color="primary" aria-label="remove tool">
-            <p className="text-[14px]">Remove tool</p>
+            <p className="text-[14px]">Remove Instrument</p>
           </IconButton>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">

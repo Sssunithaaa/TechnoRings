@@ -78,7 +78,7 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
         <TextField
           autoFocus
           margin="dense"
-          label="Tool Group Name"
+          label="Instrument Group Name"
           type="text"
           fullWidth
           variant="outlined"
@@ -87,7 +87,7 @@ const AddInstrumentGroupDialog = ({ open, handleClose, instrumentGroup,family,id
         />
         <TextField
           margin="dense"
-          label="Tool Group Code"
+          label="Instrument Group Code"
           type="text"
           fullWidth
           variant="outlined"

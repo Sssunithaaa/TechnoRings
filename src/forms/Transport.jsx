@@ -79,57 +79,70 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
   });
   const [dshed, setDshed] = useState(transportOrder ? transportOrder.transport_order.destination_shed : '');
 
-  const submitHandler = async (data) => {
-    try {
-      const toolsArray = tools.map((tool) => ({
-        tool: tool.tool,
-        tool_movement_remarks: tool.remark,
-      }));
+const submitHandler = async (data) => {
+  try {
+    const toolsArray = tools.map((tool) => ({
+      tool: tool.tool,
+      tool_movement_remarks: tool.remark,
+    }));
 
-      const requestData = {
-        movement_date: data.movementDate,
-        source_shed: role === "shed" ? id : data.sourceShed,
-        destination_shed: data.destinationShed,
-        tool_count: toolCount,
-        tools: toolsArray,
-      };
-     
+    const requestData = {
+      movement_date: data.movementDate,
+      source_shed: role === "shed" ? id : data.sourceShed,
+      destination_shed: data.destinationShed,
+      tool_count: toolCount,
+      tools: toolsArray,
+    };
 
-      if (transportOrder) {
-        // Update existing transport order
-        await axios.post(`${process.env.REACT_APP_URL}/update_transport_order/${transportOrder.transport_order.movement_id}/`, requestData);
-        toast.success("Tool movement updated successfully", {
-          position: "top-center",
-          autoClose: 1000,
-          style: {
-            width: "auto",
-            style: "flex justify-center",
-          },
-          closeButton: false,
-          progress: undefined,
-        });
-      } else {
-        // Create new transport order
-        await axios.post(`${process.env.REACT_APP_URL}/add-transport-order/`, requestData);
-        toast.success("Tool movement added successfully", {
-          position: "top-center",
-          autoClose: 1000,
-          style: {
-            width: "auto",
-            style: "flex justify-center",
-          },
-          closeButton: false,
-          progress: undefined,
-        });
-      }
-      setTimeout(() => {
-        handleClose();
-      }, 3000);
-      reset()
-    } catch (error) {
-      console.error("Error sending data:", error);
+    if (transportOrder) {
+      // Update existing transport order
+      await axios.post(`${process.env.REACT_APP_URL}/update_transport_order/${transportOrder.transport_order.movement_id}/`, requestData);
+      toast.success("Instrument movement updated successfully", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          width: "auto",
+          display: "flex",
+          justifyContent: "center",
+        },
+        closeButton: false,
+        progress: undefined,
+      });
+    } else {
+      // Create new transport order
+      await axios.post(`${process.env.REACT_APP_URL}/add-transport-order/`, requestData);
+      toast.success("Instrument movement added successfully", {
+        position: "top-center",
+        autoClose: 1000,
+        style: {
+          width: "auto",
+          display: "flex",
+          justifyContent: "center",
+        },
+        closeButton: false,
+        progress: undefined,
+      });
     }
-  };
+
+    // Resetting the form state and local state
+    reset({
+      movementDate: date,
+      sourceShed: role === "shed" ? id : 0,
+      destinationShed: 0,
+    });
+    setTools([{ id: 1, tool: "", remark: "" }]);
+    setToolCount(1);
+    setSelectedShed(role === "shed" ? id : null);
+    setShedTools([]);
+    setDshed("");
+
+    setTimeout(() => {
+      handleClose();
+    }, 3000);
+  } catch (error) {
+    console.error("Error sending data:", error);
+  }
+};
 
   useEffect(() => {
     const fetchSheds = async () => {

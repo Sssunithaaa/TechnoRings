@@ -41,7 +41,7 @@ const Instruments = () => {
       setTransportOrder(response?.data?.transport_orders);
       
     } catch (error) {
-      console.error("Error fetching tool data:", error);
+      console.error("Error fetching Instrument data:", error);
     }
   };
 
@@ -71,7 +71,7 @@ const Instruments = () => {
     { field: "date", headerText: "Date", width: "150", textAlign: "Center" },
     { field: "amount", headerText: "Amount", width: "150", textAlign: "Center" },
     { field: "description", headerText: "Description", width: "150", textAlign: "Center" },
-    { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
+    { field: "tool_count", headerText: "Instrument count", width: "150", textAlign: "Center" }
   ];
 
   // Columns configuration for the transport grid
@@ -81,7 +81,7 @@ const Instruments = () => {
     { field: "acknowledgment", headerText: "Status", width: "150", textAlign: "Center" },
     { field: "source_shed_name", headerText: "Source shed", width: "150", textAlign: "Center" },
     { field: "destination_shed_name", headerText: "Destination shed", width: "150", textAlign: "Center" },
-    { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
+    { field: "tool_count", headerText: "Instrument count", width: "150", textAlign: "Center" }
   ];
 
  const toolbarClick = (args) => {
@@ -96,7 +96,7 @@ const Instruments = () => {
         
           
             
-            grid.excelExport(excelExportProperties(transportGridColumns.length));
+            grid.excelExport();
          
     }
 };

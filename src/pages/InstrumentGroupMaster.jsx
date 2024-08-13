@@ -54,9 +54,9 @@ const GroupMaster = () => {
     headerText: "Sl No",
     width: "120",
     textAlign: "Center"},
-    { field: "tool_group_id", headerText: "Tool Group ID", width: "150", textAlign: "Center",visible:false },
-    { field: "tool_group_name", headerText: "Tool Group Name", width: "150", textAlign: "Center" },
-    { field: "tool_group_code", headerText: "Tool Group Code", width: "150", textAlign: "Center" },
+    { field: "tool_group_id", headerText: "Instrument Group ID", width: "150", textAlign: "Center",visible:false },
+    { field: "tool_group_name", headerText: "Instrument Group Name", width: "150", textAlign: "Center" },
+    { field: "tool_group_code", headerText: "Instrument Group Code", width: "150", textAlign: "Center" },
   ];
   const date = new Date().toISOString().split('T')[0];
 

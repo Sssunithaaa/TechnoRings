@@ -60,7 +60,7 @@ const History = () => {
     { field: "acknowledgment", headerText: "Status", width: "150", textAlign: "Center" },
     { field: "source_shed_name", headerText: "Source shed", width: "150", textAlign: "Center" },
     { field: "destination_shed_name", headerText: "Destination shed", width: "150", textAlign: "Center" },
-    { field: "tool_count", headerText: "Tool count", width: "150", textAlign: "Center" }
+    { field: "tool_count", headerText: "Instrument count", width: "150", textAlign: "Center" }
   ];
     const handleRowClick = async (args) => {
     const movementId = args.data.movement_id;
