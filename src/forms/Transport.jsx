@@ -157,7 +157,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>{transportOrder ? "Update Tool Movement" : "Add Tool Movement"}</DialogTitle>
+      <DialogTitle>{transportOrder ? "Update Instrument Movement" : "Add Instrument Movement"}</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(submitHandler)}>
           <TextField
@@ -220,14 +220,14 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
             <div key={index}>
               <TextField
                 select
-                label={`Tool ${index + 1}`}
+                label={`Instrument ${index + 1}`}
                 value={tools[index]?.tool || ""}
                 onChange={(e) => handleToolChange(index, "tool", e.target.value)}
                 fullWidth
                 margin="normal"
                 required
               >
-                <MenuItem value="">Select a tool
+                <MenuItem value="">Select a Instrument
 </MenuItem>
                 {shedTools?.map((shedTool) => (
                   <MenuItem
@@ -256,7 +256,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
               color="primary"
               style={{ margin: "20px 0" }}
             >
-              Add Another Tool
+              Add Another Instrument
             </Button>
             <Button
               onClick={subtractToolField}
@@ -264,7 +264,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
               color="secondary"
               style={{ margin: "20px 0" }}
             >
-              Remove Tool
+              Remove Instrument
             </Button>
           </div>
         </form>

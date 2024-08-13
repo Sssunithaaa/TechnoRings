@@ -28,6 +28,7 @@ const DocumentForm = () => {
   const [documentRef, setDocumentRef] = useState(documentInfo.documentRef || "");
   const [revNo, setRevNo] = useState(documentInfo.revNo || "");
     const [historyRef, setHistoryRef] = useState(documentInfo.historyRef || "");
+     const [date, setDate] = useState(documentInfo.date || "");
   
 
   const handleDocumentRefChange = (event) => {
@@ -37,13 +38,16 @@ const DocumentForm = () => {
   const handleRevNoChange = (event) => {
     setRevNo(event.target.value);
   };
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
     const handleHistoryRefChange = (event) => {
     setHistoryRef(event.target.value);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(setDocumentInfo(documentRef, revNo,historyRef));
+    dispatch(setDocumentInfo(documentRef, revNo,historyRef,date));
     toast.success("Details updated successfully")
 
     
@@ -55,6 +59,7 @@ const DocumentForm = () => {
     setDocumentRef("")
     setRevNo("")
     setHistoryRef("")
+    setDate("")
   };
 
   return (
@@ -70,6 +75,15 @@ const DocumentForm = () => {
             variant="outlined"
             value={documentRef}
             onChange={handleDocumentRefChange}
+            fullWidth
+            required
+          />
+          <TextField
+            label="Rev Date"
+            variant="outlined"
+            value={date}
+            type="date"
+            onChange={handleDateChange}
             fullWidth
             required
           />

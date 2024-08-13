@@ -23,6 +23,7 @@ const CreateVendor = ({ open, handleClose, vendorData }) => {
   } = useForm();
 
   useEffect(() => {
+ 
     if (vendorData) {
       setValue("name", vendorData.name);
       setValue("location", vendorData.location);

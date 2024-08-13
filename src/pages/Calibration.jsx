@@ -127,7 +127,7 @@ const Calibration = () => {
                 {
 
   colSpan: 11, // Set the appropriate column span
-  value: `REV DATE: ${date}`,
+  value: `REV DATE: ${documentInfo.date}`,
   style: {
     fontColor: "#000000",
     fontSize: 14,

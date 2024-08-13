@@ -74,7 +74,7 @@ const Homepage = () => {
     { label: "Movement ID", key: "movement_id" },
     { label: "Movement Date", key: "movement_date" },
     { label: "Status", key: "acknowledgment" },
-    { label: "Tool count", key: "tool_count" },
+    { label: "Instrument count", key: "tool_count" },
     { label: "Source shed", key: "source_shed_name" },
     { label: "Destination shed", key: "destination_shed_name" }
   ];
@@ -84,14 +84,14 @@ const Homepage = () => {
     { label: "Date", key: "date" },
     { label: "Amount", key: "amount" },
     { label: "Description", key: "description" },
-    { label: "Tool count", key: "tool_count" },
+    { label: "Instrument count", key: "tool_count" },
     { label: "Vendor", key: "vendor_name" }
   ];
 
   const deliveryChallanHeaders = [
     { label: "ID", key: "deliverychallan_id" },
     { label: "Received date", key: "received_date" },
-    { label: "Vendor", key: "vendor" },
+    { label: "Vendor", key: "vendor_name" },
     { label: "Shed", key: "shed_name" },
     { label: "Service ID", key: "service" }
   ];
@@ -263,7 +263,7 @@ const Homepage = () => {
               <table className='min-w-full bg-white'>
                 <thead className='bg-gray-900 text-white'>
                   <tr>
-                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Name</th>
+                    <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Instrument Code</th>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Shed name</th>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Next calibration date</th>
                     <th className='w-1/3 text-center py-3 px-4 uppercase font-semibold text-sm'>Remaining days</th>

@@ -19,7 +19,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
 
   
 
-  const { data: shedDetails } = useQuery({
+  const { data: shedDetails,isFetching,isLoading ,error} = useQuery({
     queryKey: ["shed"],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed-details/`);
@@ -176,8 +176,10 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
   };
 
   const handleToolDetails = (toolDetails) => {};
-
-  const shed_details = shedDetails?.shed_details;
+  const [shed_details,setShedDetails] = useState([])
+  useEffect(()=> {
+    setShedDetails(shedDetails?.shed_details)
+  },[shedDetails])
 
   return (
     <>
@@ -256,7 +258,8 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
               </TextField>
             </div>
 
-            <div>
+          
+              <div>
               <TextField
                 {...register("shed", {
                   required: {
@@ -273,13 +276,14 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
                 <MenuItem value="">
                   <em>Select shed</em>
                 </MenuItem>
-                {shed_details?.map((shed) => (
+                {error ? <div>Error</div> : isLoading || isFetching ? <div>Loading</div> : shed_details?.map((shed) => (
                   <MenuItem key={shed.shed_id} value={shed.shed_id}>
                     {shed.name}
                   </MenuItem>
                 ))}
               </TextField>
             </div>
+          
 
             <div>
               <TextField

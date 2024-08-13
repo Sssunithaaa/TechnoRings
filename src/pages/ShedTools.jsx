@@ -49,7 +49,7 @@ const [open,setOpen] = useState(false)
     fetchToolsData();
   }, []);
  const documentInfo = useSelector((state) => state.document);
-  const {user} = useSelector((state)=> state.auth)
+  const {user,role} = useSelector((state)=> state.auth)
 const mergedToolsData = shedTools.map((shedTool, index) => {
   // Find matching tool details
   const toolDetails = tools.find(
@@ -146,7 +146,7 @@ const mergedToolsData = shedTools.map((shedTool, index) => {
                 {
 
   colSpan: 11, // Set the appropriate column span
-  value: `REV DATE: ${date}`,
+  value: `REV DATE: ${documentInfo.date}`,
   style: {
     fontColor: "#000000",
     fontSize: 14,
@@ -162,7 +162,7 @@ const mergedToolsData = shedTools.map((shedTool, index) => {
               cells: [
                 {
                   colSpan: 11, // Adjust according to your column span
-                  value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY - ${user} PLANNED ON ${date}`,
+                  value: `LIST OF MONITORING & MEASURING EQUIPMENTS INCLUDING CALIBRATION SCHEDULE & CALIBRATION HISTORY - ${user} ${date}`,
                   style: {
                     fontColor: "#000000",
                     fontSize: 14,
@@ -287,7 +287,7 @@ const handleDialogClosee=()=> {
           <button className="px-5 py-2 bg-blue-500 rounded-md text-white font-semibold" onClick={handleDialogOpen}>Update shed</button>
 
 {
-  name !== "QA"   &&          <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete shed</button>
+  name !== "QA"   &&  role === "admin"       && <button className="px-5 py-2 bg-red-500 rounded-md text-white font-semibold" onClick={handleDelete}>Delete shed</button>
 
 }        </div>
         <Header className={`Shed tools`} title={name}/>

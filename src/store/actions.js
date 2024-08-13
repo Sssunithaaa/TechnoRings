@@ -16,9 +16,9 @@ export const logout = () => ({
 
 
 
-export const setDocumentInfo = (documentRef, revNo,historyRef) => ({
+export const setDocumentInfo = (documentRef, revNo,historyRef,date) => ({
   type: SET_DOCUMENT_INFO,
-  payload: { documentRef, revNo,historyRef },
+  payload: { documentRef, revNo,historyRef,date },
 });
 
 export const clearDocumentInfo = () => ({

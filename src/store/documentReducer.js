@@ -5,6 +5,7 @@ import { SET_DOCUMENT_INFO, CLEAR_DOCUMENT_INFO } from './actions';
 // Initial state for the document reducer
 const initialDocumentState = {
   documentRef: null,
+  date: null,
   revNo: null,
   historyRef: null
 };
@@ -43,8 +44,10 @@ const documentReducer = (state = persistedState, action) => {
       const updatedState = {
         ...state,
         documentRef: action.payload.documentRef,
+      
         revNo: action.payload.revNo,
-        historyRef: action.payload.historyRef
+        historyRef: action.payload.historyRef,
+          date: action.payload.date,
       };
       saveStateToLocalStorage(updatedState); // Save to localStorage
       return updatedState;
@@ -53,8 +56,10 @@ const documentReducer = (state = persistedState, action) => {
       const clearedState = {
         ...state,
         documentRef: null,
+     
         revNo: null,
-        historyRef: null
+        historyRef: null,
+           date: null,
       };
       saveStateToLocalStorage(clearedState); // Save to localStorage
       return clearedState;

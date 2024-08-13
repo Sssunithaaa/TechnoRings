@@ -155,26 +155,42 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
               rows="3"
             ></textarea>
           </td>
-            <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
-                                  <input
-              {...register(`file${i}`, {
-                required: "File is required",
-              })}
-              type="file"
-        name={`file${i}`}
-              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
-            ></input>
-            </td>
-             <td class="px-3 py-0 text-sm bg-white border-b border-gray-200">
-                                  <input
-              {...register(`file2${i}`, {
-                required: "File is required",
-              })}
-              type="file"
-        name={`file2${i}`}
-              className="form-select border-2 border-gray-300 border-b py-2 px-2  rounded-md mt-1 w-full"
-            ></input>
-            </td>
+           <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
+  <input
+    {...register(`file${i}`, {
+      required: "File is required",
+      validate: {
+        checkFileSize: (value) =>
+          value[0]?.size <= 5 * 1024 * 1024 || "File size should be less than 5MB",
+        checkFileType: (value) =>
+          ["application/pdf", "image/jpeg", "image/png", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].includes(value[0]?.type) ||
+          "Only PDF, image and excel files are allowed",
+      },
+    })}
+    type="file"
+    name={`file${i}`}
+    className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
+  ></input>
+</td>
+
+<td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
+  <input
+    {...register(`file2${i}`, {
+      required: "File is required",
+      validate: {
+        checkFileSize: (value) =>
+          value[0]?.size <= 5 * 1024 * 1024 || "File size should be less than 5MB",
+        checkFileType: (value) =>
+          ["application/pdf", "image/jpeg", "image/png", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].includes(value[0]?.type)  ||
+          "Only PDF,image and excel files are allowed",
+      },
+    })}
+    type="file"
+    name={`file2${i}`}
+    className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
+  ></input>
+</td>
+
         </tr>
       );
     }
@@ -222,7 +238,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
                             onClick={handleAddTool}
                             className="bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 "
                         >
-                            Add Tool
+                            Add Instrument
 
                         </button>
                         <button
@@ -230,7 +246,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
                             onClick={handleRemoveTool}
                             className="bg-red-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-600 "
                         >
-                            Remove Tool
+                            Remove Instrument
                         </button>
                         <button
                             type="submit"
