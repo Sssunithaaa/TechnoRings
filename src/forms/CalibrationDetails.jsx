@@ -171,7 +171,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
     name={`file${i}`}
     className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
   ></input>
-  {errors[`file${i}`] && <p className="text-red-500 text-xs mt-1">{errors[`file${i}`].message}</p>}
+  {/* {errors[`file`] && <p className="text-red-500 text-xs mt-1">{errors[`file`].message}</p>} */}
 
 </td>
 
@@ -191,7 +191,7 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
     name={`file2${i}`}
     className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
   ></input>
-  {errors[`file2${i}`] && <p className="text-red-500 text-xs mt-1">{errors[`file2${i}`].message}</p>}
+  {/* {errors[`file2`] && <p className="text-red-500 text-xs mt-1">{errors[`file2`].message}</p>} */}
 
 </td>
 
