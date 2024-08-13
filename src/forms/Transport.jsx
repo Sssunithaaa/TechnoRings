@@ -125,6 +125,7 @@ const CreateMovement = ({ open, handleClose, transportOrder }) => {
       setTimeout(() => {
         handleClose();
       }, 3000);
+      reset()
     } catch (error) {
       console.error("Error sending data:", error);
     }
