@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import {TextField} from "@mui/material";
 import { Autocomplete } from "@mui/material";
 
-const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools, reset, sendToolDetails, caVendors }) => {
+const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools, reset, sendToolDetails, caVendors,errors }) => {
   const [toolCount, setToolCount] = useState(1); // State to track the number of tools
   const date = new Date().toISOString().split('T')[0];
 
@@ -171,6 +171,8 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
     name={`file${i}`}
     className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
   ></input>
+  {errors[`file${i}`] && <p className="text-red-500 text-xs mt-1">{errors[`file${i}`].message}</p>}
+
 </td>
 
 <td className="px-3 py-0 text-sm bg-white border-b border-gray-200">
@@ -189,6 +191,8 @@ const CalibrationDetailsForm = ({ onClose, onSubmit, getValues, register, tools,
     name={`file2${i}`}
     className="form-select border-2 border-gray-300 border-b py-2 px-2 rounded-md mt-1 w-full"
   ></input>
+  {errors[`file2${i}`] && <p className="text-red-500 text-xs mt-1">{errors[`file2${i}`].message}</p>}
+
 </td>
 
         </tr>

@@ -47,6 +47,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
     reset,
     watch,
     getValues,
+    errors,
     formState: {  },
   } = useForm({
     defaultValues: {
@@ -178,6 +179,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
   const handleToolDetails = (toolDetails) => {};
   const [shed_details,setShedDetails] = useState([])
   useEffect(()=> {
+    
     setShedDetails(shedDetails?.shed_details)
   },[shedDetails])
 
@@ -345,6 +347,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
           reset={reset}
           tools={serviceTools}
           caVendors={caVendors}
+          errors={errors}
           sendToolDetails={handleToolDetails}
         />
       )}
