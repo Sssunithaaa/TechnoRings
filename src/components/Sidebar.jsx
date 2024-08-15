@@ -24,7 +24,7 @@ const Sidebar = () => {
 
   // Fetch shed details using useQuery
   const { data: shed, isLoading: shedLoading, refetch } = useQuery({
-    queryKey: ["shed"],
+    queryKey: ["shed",id],
     queryFn: async () => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/shed_detail/${id}/`);
       return response.data;

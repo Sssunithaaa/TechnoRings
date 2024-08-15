@@ -13,7 +13,7 @@ const Homepage = () => {
   const [request, setRequest] = useState("recent_transport_orders");
   const [table, setTable] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Current month as default
-  
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear() + 1);
  const {  role,user } = useSelector((state) => state.auth);
 
   const [count, setCount] = useState();
@@ -242,7 +242,8 @@ const Homepage = () => {
      
      
       <div className='flex flex-col gap-5  mt-[20%] gap-x-3'>
-         <div className='text-center'>
+       <div className='flex flex-row mx-auto gap-x-4'>
+          <div className='text-center'>
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(Number(e.target.value))}
@@ -255,6 +256,20 @@ const Homepage = () => {
           ))}
         </select>
       </div>
+      <div>
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className='px-6 py-3 text-lg bg-[#2e1cc9] text-gray-300 rounded-md'
+        >
+          {Array.from({ length: 10 }, (_, index) => (
+            <option key={index} value={new Date().getFullYear() + index}>
+      {new Date().getFullYear() + index}
+    </option>
+          ))}
+        </select>
+      </div>
+       </div>
         
         {/* {notificationData && notificationData.length > 0 && ( */}
           <div className='bg-gray-700 p-4 h-auto rounded-md lg:w-full'>
@@ -270,7 +285,13 @@ const Homepage = () => {
                   </tr>
                 </thead>
                 <tbody className='text-gray-700'>
-                  {count && count?.tools_to_notify?.slice(0,displayedNotifications).map((notification, index) => (
+                  {count && count.tools_to_notify
+          ?.filter(notification => {
+            const notificationYear = new Date(notification.notification_date).getFullYear();
+
+            
+            return notificationYear === selectedYear;
+          }).slice(0,displayedNotifications).map((notification, index) => (
                     <tr key={index} className='bg-gray-200'>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.instrument_name}</td>
                       <td className='w-1/3 text-center py-3 px-4'>{notification.current_shed}</td>
