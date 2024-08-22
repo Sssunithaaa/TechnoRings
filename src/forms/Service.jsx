@@ -4,7 +4,6 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem,Autocomplete, IconButton } from '@mui/material';
-import { useNavigate } from "react-router-dom";
 
 const Service = ({ open, handleClose, serviceOrder, id }) => {
   const [toolCount, setToolCount] = useState(serviceOrder?.service_tools?.length || 1);

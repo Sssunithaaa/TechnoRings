@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,lazy } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import CalibrationDetailsForm from "./CalibrationDetails";
-import "react-toastify/dist/ReactToastify.css";
 
+import "react-toastify/dist/ReactToastify.css";
+const CalibrationDetailsForm = lazy(()=>import("./CalibrationDetails"));
 const DeliveryChallan = ({ open, handleClose, refetch }) => {
   const [showCalibrationModal, setShowCalibrationModal] = useState(false);
 

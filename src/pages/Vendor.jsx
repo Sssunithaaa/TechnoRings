@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,lazy} from "react";
 import {
   GridComponent,
   Inject,
@@ -14,13 +14,15 @@ import {
   Filter
 } from "@syncfusion/ej2-react-grids";
 import { useQuery } from "@tanstack/react-query";
+
 import axios from "axios";
-import CreateVendor from "../forms/AddVendor";
 import { Header } from "../components";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
+
+const CreateVendor = lazy(()=>import("../forms/AddVendor"))
 
 const Vendor = () => {
   const [open, setOpen] = useState(false);

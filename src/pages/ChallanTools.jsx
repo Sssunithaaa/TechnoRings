@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,lazy} from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,12 +13,11 @@ import {
   Paper,
 } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import UpdateCalibrationDetailsForm from "../forms/UpdateCalibrationHistory";
+
 import { useStateContext } from "../context/ContextProvider";
 
-
+const UpdateCalibrationDetailsForm = lazy(()=>import("../forms/UpdateCalibrationHistory"));
 const ChallanTools = ({ open, handleClose, transportOrder }) => {
   const [calibrationReports, setCalibrationReports] = useState([]);
 
@@ -50,7 +49,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
       (report) => report.calibrationtool_id === toolId
     );
   };
-  const {addId,calibrationData} = useStateContext()
+  const {calibrationData} = useStateContext()
  
   const history = [
     {
@@ -146,9 +145,7 @@ const ChallanTools = ({ open, handleClose, transportOrder }) => {
     }
   };
   const [update,setUpdate] = useState(false)
-  const handleUpdateTool = (id)=> {
-    setUpdate(true);
-  }
+
   
 
   return (

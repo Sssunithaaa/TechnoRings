@@ -7,6 +7,7 @@ import axios from "axios";
 
 
 import { useSelector } from 'react-redux';
+
 const Homepage = () => {
   const [displayedOrders, setDisplayedOrders] = useState(5);
     const [displayedNotifications, setNotifications] = useState(5);

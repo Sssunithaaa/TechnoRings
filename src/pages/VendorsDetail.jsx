@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState,lazy } from "react";
 import {  useNavigate, useParams } from "react-router-dom";
-import CreateVendor from "../forms/AddVendor";
-import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
+
+import { GridComponent, ColumnsDirective, ColumnDirective, Page, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import BackButton from "../components/BackButton";
-import CreateVendorHandleData from "../forms/VendorHandle";
+
+
 import { useQuery } from "@tanstack/react-query";
 import { useStateContext } from "../context/ContextProvider";
+const CreateVendorHandleData = lazy(()=>import("../forms/VendorHandle"));
+const BackButton = lazy(()=>import("../components/BackButton"));
+const CreateVendor = lazy(()=>import("../forms/AddVendor"));
 const VendorsDetail = () => {
   
        const [open, setOpen] = useState(false);

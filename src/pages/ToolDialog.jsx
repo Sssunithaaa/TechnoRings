@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,lazy} from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,9 +10,11 @@ import {
 } from "@mui/material";
 
 import axios from "axios";
-import CreateMovement from "../forms/Transport";
+
 import { toast,ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
+
+const CreateMovement = lazy(()=>import("../forms/Transport"));
 const ToolDialog = ({ open, handleClose, transportOrder }) => {
   const [selectedToolIds, setSelectedToolIds] = useState([]);
   const [allSelected, setAllSelected] = useState(false);

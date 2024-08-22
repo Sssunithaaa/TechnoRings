@@ -13,7 +13,7 @@ import axios from "axios";
 import { ContactSupport } from "@mui/icons-material";
 
 const Sidebar = () => {
-  const { currentColor, activeMenu, setActiveMenu, screenSize, setIsLoading } = useStateContext();
+  const { currentColor, activeMenu, setActiveMenu, screenSize } = useStateContext();
   const { role, id, user } = useSelector((state) => state.auth);
 
   const handleCloseSideBar = () => {

@@ -1,11 +1,9 @@
-import React,{useState} from "react";
+import React,{useState,lazy} from "react";
 import {
   GridComponent,
   ColumnsDirective,
   ColumnDirective,
   Page,
-  Resize,
-  ContextMenu,
   Inject,
   Edit,
   Toolbar,
@@ -23,9 +21,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import UpdateShed from "../forms/UpdateShed";
+
 import { useStateContext } from "../context/ContextProvider";
 
+
+const UpdateShed = lazy(()=> import("../forms/UpdateShed"));
 const Shed = () => {
       const {excelExportProperties,addId} = useStateContext()
   const { data: shedDetailsData, refetch } = useQuery({
@@ -44,7 +44,6 @@ const Shed = () => {
   const handleActionComplete = async (args) => {
     if (args.requestType === "save") {
       if (args.action === "add") {
-        // Add operation
         try {
           
           const response = await axios.post(`${process.env.REACT_APP_URL}/add_shed/`, args.data);

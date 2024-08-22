@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import {
   GridComponent,
   ColumnsDirective,
@@ -12,25 +12,26 @@ import {
   Edit,
   PdfExport,
   ExcelExport,
-  excelExportComplete,
 } from "@syncfusion/ej2-react-grids";
 import { CalibrationGrid } from "../data/apps";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../components";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CalibrationDialog from "../forms/CalibrationDialog";
-import FullPageLoading from "../components/FullPageLoading";
 import { useStateContext } from "../context/ContextProvider";
 import { useSelector } from "react-redux";
+
+// Lazy load components
+const CalibrationDialog = lazy(() => import("../forms/CalibrationDialog"));
+const FullPageLoading = lazy(() => import("../components/FullPageLoading"));
+
 const Calibration = () => {
   let grid;
   const date = new Date().toISOString().split("T")[0];
-  const {calibrationData,refetch,isLoadingg} = useStateContext()
- const documentInfo = useSelector((state) => state.document);
- const {  user } = useSelector(state => state.auth);
+  const { calibrationData, refetch, isLoadingg } = useStateContext();
+  const documentInfo = useSelector((state) => state.document);
+  const { user } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -67,14 +68,13 @@ const Calibration = () => {
       };
       grid.pdfExport(pdfExportProperties);
     } else if (args.item.id === "gridcomp_excelexport") {
-       const excelExportProperties = {
+      const excelExportProperties = {
         header: {
           headerRows: 6,
           rows: [
             {
               cells: [
                 {
-                 
                   colSpan: 11, // Adjust according to your column span
                   value: "M/S. TECHNORINGS, SHIMOGA",
                   style: {
@@ -84,61 +84,50 @@ const Calibration = () => {
                     bold: true,
                   },
                 },
-                
               ],
             },
             {
               cells: [
-               
                 {
-
-  colSpan: 11, // Set the appropriate column span
-  value: `DOC REF :${documentInfo.documentRef}`,
-  style: {
-    fontColor: "#000000",
-    fontSize: 14,
-    hAlign: "Right", // Ensures the text is aligned to the right
-    bold: true,
-  },
-},
-
+                  colSpan: 11, // Set the appropriate column span
+                  value: `DOC REF :${documentInfo.documentRef}`,
+                  style: {
+                    fontColor: "#000000",
+                    fontSize: 14,
+                    hAlign: "Right", // Ensures the text is aligned to the right
+                    bold: true,
+                  },
+                },
               ],
             },
-             {
+            {
               cells: [
-               
                 {
-
-  colSpan: 11, // Set the appropriate column span
-  value: `REV NO: ${documentInfo.revNo}`,
-  style: {
-    fontColor: "#000000",
-    fontSize: 14,
-    hAlign: "Right", // Ensures the text is aligned to the right
-    bold: true,
-  },
-},
-
+                  colSpan: 11, // Set the appropriate column span
+                  value: `REV NO: ${documentInfo.revNo}`,
+                  style: {
+                    fontColor: "#000000",
+                    fontSize: 14,
+                    hAlign: "Right", // Ensures the text is aligned to the right
+                    bold: true,
+                  },
+                },
               ],
             },
-             {
+            {
               cells: [
-               
                 {
-
-  colSpan: 11, // Set the appropriate column span
-  value: `REV DATE: ${documentInfo.date}`,
-  style: {
-    fontColor: "#000000",
-    fontSize: 14,
-    hAlign: "Right", // Ensures the text is aligned to the right
-    bold: true,
-  },
-},
-
+                  colSpan: 11, // Set the appropriate column span
+                  value: `REV DATE: ${documentInfo.date}`,
+                  style: {
+                    fontColor: "#000000",
+                    fontSize: 14,
+                    hAlign: "Right", // Ensures the text is aligned to the right
+                    bold: true,
+                  },
+                },
               ],
             },
-             
             {
               cells: [
                 {
@@ -153,23 +142,21 @@ const Calibration = () => {
                 },
               ],
             },
-             {
+            {
               cells: [
                 {
-                  colSpan:11,
-                  value:" "
+                  colSpan: 11,
+                  value: " "
                 }
               ]
             },
           ],
         },
       };
-   if (grid) {
-  
-           
-            grid.columns[6].visible = false;
-            grid.columns[7].visible = false;
-        }
+      if (grid) {
+        grid.columns[6].visible = false;
+        grid.columns[7].visible = false;
+      }
       grid.excelExport(excelExportProperties);
     }
     if (args.item.id === "Add") {
@@ -195,7 +182,6 @@ const Calibration = () => {
         data
       );
       if (response.data.success === false) {
-       
         toast.error(response.data.errors, {
           position: "top-center",
           autoClose: 1000,
@@ -205,7 +191,7 @@ const Calibration = () => {
         });
       } else {
         toast.success("Tool added successfully");
-        refetch(); 
+        refetch();
         setTimeout(() => {
           setOpen(false);
         }, 2000);
@@ -220,7 +206,6 @@ const Calibration = () => {
       });
     }
   };
-     
 
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -238,55 +223,56 @@ const Calibration = () => {
       </div>
       <Header className="Page" title="Instrument details" />
 
-      {isLoadingg ? ( // Conditional rendering based on loading state
-        <FullPageLoading />
-      ) : (
-        <GridComponent
-          id="gridcomp"
-          dataSource={calibrationData}
-          width="auto"
-          allowGrouping
-          allowPaging
-          allowFiltering
-          allowSorting
-          toolbar={["PdfExport", "ExcelExport"]}
-          allowExcelExport
-          allowPdfExport
-          pageSettings={{ pageSize: 10 }}
-          rowSelected={rowSelected}
-          pdfExportComplete={pdfExportComplete}
-       
-          sortSettings={{
-            columns: [{ field: "instrument_no", direction: "Descending" }],
-          }}
-          toolbarClick={toolbarClick}
-          ref={(g) => (grid = g)}
-        >
-          <ColumnsDirective>
-            {CalibrationGrid?.map((item, index) => (
-              <ColumnDirective key={index} {...item}  visible={item.visible !== false} ></ColumnDirective>
-            ))}
-          </ColumnsDirective>
-          <Inject
-            services={[
-              Group,
-              Toolbar,
-              Sort,
-              Filter,
-              Page,
-              Edit,
-              PdfExport,
-              ExcelExport,
-            ]}
-          />
-        </GridComponent>
-      )}
+      <Suspense fallback={<FullPageLoading />}>
+        {isLoadingg ? ( // Conditional rendering based on loading state
+          <FullPageLoading />
+        ) : (
+          <GridComponent
+            id="gridcomp"
+            dataSource={calibrationData}
+            width="auto"
+            allowGrouping
+            allowPaging
+            allowFiltering
+            allowSorting
+            toolbar={["PdfExport", "ExcelExport"]}
+            allowExcelExport
+            allowPdfExport
+            pageSettings={{ pageSize: 10 }}
+            rowSelected={rowSelected}
+            pdfExportComplete={pdfExportComplete}
+            sortSettings={{
+              columns: [{ field: "instrument_no", direction: "Descending" }],
+            }}
+            toolbarClick={toolbarClick}
+            ref={(g) => (grid = g)}
+          >
+            <ColumnsDirective>
+              {CalibrationGrid?.map((item, index) => (
+                <ColumnDirective key={index} {...item} visible={item.visible !== false} />
+              ))}
+            </ColumnsDirective>
+            <Inject
+              services={[
+                Group,
+                Toolbar,
+                Sort,
+                Filter,
+                Page,
+                Edit,
+                PdfExport,
+                ExcelExport,
+              ]}
+            />
+          </GridComponent>
+        )}
 
-      <CalibrationDialog
-        open={open}
-        handleClose={handleDialogClose}
-        handleAdd={handleAddTool}
-      />
+        <CalibrationDialog
+          open={open}
+          handleClose={handleDialogClose}
+          handleAdd={handleAddTool}
+        />
+      </Suspense>
     </div>
   );
 };

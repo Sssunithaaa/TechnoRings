@@ -1,13 +1,14 @@
-import React,{useState} from "react";
+import React,{useState,lazy} from "react";
 import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,Inject,Edit,Toolbar,Sort,Filter} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
-import AddInstrumentGroupDialog from "./GroupMaster";
+
 import { ToastContainer, toast } from "react-toastify";
-import CalibrationDialog from "./CalibrationDialog";
+const CalibrationDialog = lazy(()=> import("./CalibrationDialog"));
+const AddInstrumentGroupDialog = lazy(()=> import("./GroupMaster"));
 const MasterToolsDialog = () => {
   const {id} = useParams();
   const [toolGroup,setToolGroup] = useState()

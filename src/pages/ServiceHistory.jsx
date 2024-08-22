@@ -1,11 +1,13 @@
-import React,{useState} from "react";
-import {GridComponent,ColumnsDirective,ColumnDirective,Page,Selection,Resize,ContextMenu,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group, Search} from '@syncfusion/ej2-react-grids'
+import React,{useState,lazy} from "react";
+import {GridComponent,ColumnsDirective,ColumnDirective,Page,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group, Search} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
-import Service from "../forms/Service";
-import ServiceTool from "./ServiceTool";
+
 import { useStateContext } from "../context/ContextProvider";
+
+const Service = lazy(()=>import("../forms/Service"));
+const ServiceTool = lazy(()=>import("./ServiceTool"));
 const ServiceHistory = () => {
         const [open, setOpen] = useState(false);
   const [openn, setOpenn] = useState(false);

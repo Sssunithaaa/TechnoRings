@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,lazy } from "react";
 import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, ContextMenu, Inject, Edit, Toolbar, Sort, Filter, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import AddInstrumentGroupDialog from "../forms/GroupMaster";
+
 
 import {  useNavigate, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import { toast,ToastContainer } from "react-toastify";
-import AddInstrumentFamilyDialog from "../forms/InstrumentGroup";
+
 import { useStateContext } from "../context/ContextProvider";
+
+const AddInstrumentGroupDialog = lazy(()=> import("../forms/GroupMaster"));
+const AddInstrumentFamilyDialog = lazy(()=> import("../forms/InstrumentGroup"));
 const GroupMaster = () => {
   const { id } = useParams();  // Extracting the id from URL params
   const [open, setOpen] = useState(false);

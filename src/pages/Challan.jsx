@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,lazy } from "react";
 import { GridComponent, ColumnsDirective, ColumnDirective, Page, Resize, Inject, Edit, Toolbar, Sort, Filter, Group } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
-import DeliveryChallan from "../forms/DeliveryChallan";
-import ChallanTools from "./ChallanTools";
+
 import { useStateContext } from "../context/ContextProvider";
+
+const DeliveryChallan = lazy(()=>import("../forms/DeliveryChallan"));
+const ChallanTools = lazy(()=>import("./ChallanTools"));
 const Challan = () => {
   const [open, setOpen] = useState(false);
   const [openn, setOpenn] = useState(false);

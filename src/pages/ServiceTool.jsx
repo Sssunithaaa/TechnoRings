@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,lazy } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,9 +13,9 @@ import {
   Paper,
 } from "@mui/material";
 import axios from "axios";
-import Service from "../forms/Service";
-import { ToastContainer, toast } from "react-toastify";
 
+import { ToastContainer, toast } from "react-toastify";
+const Service = lazy(()=>import("../forms/Service"));
 const ServiceTool = ({ open, handleClose, transportOrder }) => {
   const [billData, setBillData] = useState(null);
 

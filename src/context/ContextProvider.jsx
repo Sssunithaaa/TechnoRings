@@ -14,7 +14,7 @@ const initialState = {
 export const ContextProvider = ({ children }) => {
     const { isAuthenticated, user } = useSelector(state => state.auth);
   const [screenSize, setScreenSize] = useState(undefined);
-  const [currentColor, setCurrentColor] = useState("#03C9D7");
+  const [currentColor, setCurrentColor] = useState("#7352FF");
   const [currentMode, setCurrentMode] = useState("Dark");
   const [themeSettings, setThemeSettings] = useState(false);
   const [activeMenu, setActiveMenu] = useState(isAuthenticated ? true : false);

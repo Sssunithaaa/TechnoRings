@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,lazy} from "react";
 import {  useNavigate, useParams } from "react-router-dom";
 import { GridComponent, ColumnsDirective, ColumnDirective, Page, Group, Toolbar, Sort, Filter, Inject, Edit, PdfExport, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Header } from "../components";
-import AddShedTools from "../forms/AddShedTool";
+
 import axios from "axios";
-import BackButton from "../components/BackButton";
-import UpdateShed from "../forms/UpdateShed";
+
 import { toast,ToastContainer } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
-import CalibrationDialog from "../forms/CalibrationDialog";
+
 import { useSelector } from "react-redux";
 import { useStateContext } from "../context/ContextProvider";
 import { CalibrationGrid } from "../data/apps";
+
+const CalibrationDialog = lazy(()=>import("../forms/CalibrationDialog"));
+const BackButton = lazy(()=>import("../components/BackButton"));
+const UpdateShed = lazy(()=>import("../forms/UpdateShed"));
+const AddShedTools = lazy(()=>import("../forms/AddShedTool"));
 const ShedTools = () => {
   const [shedTools, setShedTools] = useState([]);
   const [tools, setTools] = useState([]);
