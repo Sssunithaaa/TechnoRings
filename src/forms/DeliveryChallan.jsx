@@ -126,8 +126,6 @@ const DeliveryChallan = ({ open, handleClose }) => {
 
   const submitHandler = async (data) => {
     try {
-
-
       const formData = new FormData();
       formData.append("received_date", getValues("receivedDate"));
       formData.append("vendor", getValues("vendor"));

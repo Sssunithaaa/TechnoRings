@@ -31,7 +31,7 @@ const Calibration = () => {
   const date = new Date().toISOString().split("T")[0];
   const { calibrationData, refetch, isLoadingg } = useStateContext();
   const documentInfo = useSelector((state) => state.document);
-  const { user } = useSelector((state) => state.auth);
+
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);

@@ -106,9 +106,9 @@ const CalibrationDialog = ({
   }, [instrument, date, masters, shed]);
 
   const handleChange = (field, value) => {
-    if (field === "instrument_name") {
-      value = formatInstrumentName(value);
-    }
+    // if (field === "instrument_name") {
+    //   value = formatInstrumentName(value);
+    // }
 
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -143,14 +143,13 @@ const handleFormAddOrUpdate = () => {
       return;
     }
 
-    if (!validateInstrumentName(formData.instrument_name)) {
-      toast.error(
-        "Instrument name is invalid. Format should be TR/AAAAA/11111."
-      );
-      return;
-    }
+    // if (!validateInstrumentName(formData.instrument_name)) {
+    //   toast.error(
+    //     "Instrument name is invalid. Format should be TR/AAAAA/11111."
+    //   );
+    //   return;
+    // }
 
-    // Convert the calibration_frequency before creating the convertedFormData
     const convertedCalibrationFrequency = convertToDays(
       formData.calibration_frequency
     );
@@ -169,36 +168,36 @@ const handleFormAddOrUpdate = () => {
     }
   };
 
-const formatInstrumentName = (name) => {
-  // Remove any non-alphanumeric characters
-  name = name.replace(/[^a-zA-Z0-9]/g, "");
+// const formatInstrumentName = (name) => {
+//   // Remove any non-alphanumeric characters
+//   name = name.replace(/[^a-zA-Z0-9]/g, "");
 
-   if (!name.startsWith("TR")) {
-    name = "TR" + name;
-  }
+//    if (!name.startsWith("TR")) {
+//     name = "TR" + name;
+//   }
 
-  // Find the start of the numeric part (part2)
-  let numericIndex = name.length;
-  for (let i = 2; i < name.length; i++) {
-    if (!isNaN(name[i])) {
-      numericIndex = i;
-      break;
-    }
-  }
+//   // Find the start of the numeric part (part2)
+//   let numericIndex = name.length;
+//   for (let i = 2; i < name.length; i++) {
+//     if (!isNaN(name[i])) {
+//       numericIndex = i;
+//       break;
+//     }
+//   }
 
-  // Extract parts
-  const part1 = name.substring(2, numericIndex).toUpperCase(); // Up to numericIndex characters after 'tr'
-  const part2 = name.substring(numericIndex, Math.min(numericIndex + 5, name.length)); // Up to 5 digits after part1
+//   // Extract parts
+//   const part1 = name.substring(2, numericIndex).toUpperCase(); // Up to numericIndex characters after 'tr'
+//   const part2 = name.substring(numericIndex, Math.min(numericIndex + 5, name.length)); // Up to 5 digits after part1
 
-  // Return formatted string
-  return `TR/${part1}/${part2}`;
-};
+//   // Return formatted string
+//   return `TR/${part1}/${part2}`;
+// };
 
-const validateInstrumentName = (name) => {
-  // Regex to validate the format: tr/XXXXX/##### with any length from 0 to 5
-  const regex = /^TR\/[A-Z]{0,5}\/\d{0,5}$/;
-  return regex.test(name);
-};
+// const validateInstrumentName = (name) => {
+
+//   const regex = /^TR\/[A-Z]{0,5}\/\d{0,5}$/;
+//   return regex.test(name);
+// };
 
   const convertToDays = (frequency) => {
     const { years, months, days } = frequency;
@@ -296,12 +295,13 @@ const validateInstrumentName = (name) => {
       fullWidth
       size="large"
       margin="normal"
-      error={!validateInstrumentName(formData[field]) && formData[field] !== ""}
-      helperText={
-        !validateInstrumentName(formData[field]) && formData[field] !== ""
-          ? "Format: tr/AAAAA/11111"
-          : ""
-      }
+      // error={!validateInstrumentName(formData[field]) && formData[field] !== ""}
+       error={formData[field] !== ""}
+      // helperText={
+      //   !validateInstrumentName(formData[field]) && formData[field] !== ""
+      //     ? "Format: tr/AAAAA/11111"
+      //     : ""
+      // }
     />
   );
 } else if (field === "calibration_frequency") {
