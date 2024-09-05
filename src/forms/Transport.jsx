@@ -138,8 +138,8 @@ const submitHandler = async (data) => {
 
     setTimeout(() => {
       handleClose();
-       window.location.reload(); 
-    }, 2000);
+       window.location.reload(false); 
+    }, 1000);
   } catch (error) {
     console.error("Error sending data:", error);
   }
