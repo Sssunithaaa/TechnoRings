@@ -42,7 +42,9 @@ const Challan = () => {
 
   const handleDialogClose = () => {
     setOpen(false);
-    refetch()
+    console.log("Closing box")
+   
+    
   };
 
   const handleDialogOpen = () => {
@@ -105,7 +107,7 @@ const Challan = () => {
         />
       </GridComponent>
       <h2 className="mt-4 font-semibold text-[18px]">Click on records to view tools</h2>
-      <DeliveryChallan open={open} handleClose={handleDialogClose} refetch={refetch} />
+      <DeliveryChallan open={open} handleClose={handleDialogClose}/>
             <ChallanTools open={openn} handleClose={handleDialogClosee} transportOrder={service} />
 
     </div>

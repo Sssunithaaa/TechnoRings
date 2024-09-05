@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 const CalibrationDetailsForm = lazy(()=>import("./CalibrationDetails"));
-const DeliveryChallan = ({ open, handleClose, refetch }) => {
+const DeliveryChallan = ({ open, handleClose }) => {
   const [showCalibrationModal, setShowCalibrationModal] = useState(false);
 
   // const [services, setServices] = useState([]);
@@ -117,8 +117,11 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
   }, [selectedVendor, vendors]);
 
   const handleAddCalibrationDetails = () => {
-    setShowCalibrationModal(true);
     handleClose();
+    setTimeout(()=> {
+      setShowCalibrationModal(true);
+    },500)
+   
   };
 
   const submitHandler = async (data) => {
@@ -166,7 +169,7 @@ const DeliveryChallan = ({ open, handleClose, refetch }) => {
       alert("Success")
       
        setShowCalibrationModal(false);
-      refetch();
+     
       
 
     } catch (error) {
