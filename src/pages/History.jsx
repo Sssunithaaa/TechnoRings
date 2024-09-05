@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useMemo} from "react";
 import {GridComponent,ColumnsDirective,ColumnDirective,Page,Resize,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
@@ -38,6 +38,7 @@ const History = () => {
     };
   const handleDialogOpen = () => {
         setOpen(true);
+        console.log("Hii")
     };
      const handleDialogClosee = () => {
         setOpenn(false);
@@ -77,7 +78,8 @@ const History = () => {
     const date = new Date().toISOString().split('T')[0];
 
    const toolbarClick = (args) => {
-    if (args.item.id === 'gridcomp_pdfexport') {
+   if(grid){
+     if (args.item.id === 'gridcomp_pdfexport') {
             const pdfExportProperties = {
                 pageOrientation: 'Landscape',
                 header: {
@@ -124,10 +126,12 @@ const History = () => {
 
             grid.excelExport(excelExportProperties(transportGridColumns.length));
         }
+   }
     };
-
+  let grid;
   const toolbarClickk = (args) => {
-    if (args.item.id === 'gridcomp_pdfexport') {
+    if(grid){
+      if (args.item.id === 'gridcomp_pdfexport') {
             const pdfExportProperties = {
                 pageOrientation: 'Landscape',
                 header: {
@@ -173,57 +177,44 @@ const History = () => {
             };
             grid.excelExport(excelExportProperties);
         }
+    }
     };
-  let grid;
-  return (
-    <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+
+   const transportOrdersMemo = useMemo(() => transportOrders, [transportOrders]);
+
+ return (
+  <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       <button       className="bg-blue-500 rounded-sm py-2 px-4 text-white" 
  onClick={handleDialogOpen}>Add Instrument Movement</button>
  
       <Header className="Page" title="Instrument movement" />
-
       <GridComponent
         id="gridcomp"
-        dataSource={transportOrders}
+        dataSource={transportOrdersMemo}  // Use memoized data to prevent clearing
         width="auto"
         allowFiltering
         allowGrouping
         allowPaging
         allowSelection
         allowSorting
-        toolbar={["ExcelExport","PdfExport"]}
-         pageSettings={{ pageSize: 10 }}
-        editSettings={{ allowDeleting:true,allowEditing:true}}
+        toolbar={["ExcelExport", "PdfExport"]}
+        pageSettings={{ pageSize: 10 }}
+        editSettings={{ allowDeleting: true, allowEditing: true }}
         toolbarClick={toolbarClick}
         allowExcelExport
-          sortSettings={{ columns: [{ field: 'movement_id', direction: 'Descending' }] }} 
+        sortSettings={{ columns: [{ field: 'movement_id', direction: 'Descending' }] }}
         allowPdfExport
-                rowSelected={handleRowClick} // Add rowSelected event handler
-           ref={g => grid = g}
-        
+        rowSelected={handleRowClick}
       >
         <ColumnsDirective>
           {transportGridColumns.map((item, index) => (
-            <ColumnDirective key={index} {...item}  visible={item.visible !== false}></ColumnDirective>
+            <ColumnDirective key={index} {...item}></ColumnDirective>
           ))}
         </ColumnsDirective>
-        <Inject
-          services={[
-           Group,
-          Toolbar,
-                        Sort,
-                        Filter,
-                        Page,
-                        Resize,
-                        Edit,
-                        PdfExport,
-                        ExcelExport
-          ]}
-        />
+        <Inject services={[Group, Toolbar, Sort, Filter, Page, Resize, Edit, PdfExport, ExcelExport]} />
       </GridComponent>
-      <h2 className="mt-4 font-semibold text-[18px]">Click on records to view tools</h2>
-                  <CreateMovement open={open} handleClose={handleDialogClose} />
-<ToolDialog open={openn} handleClose={handleDialogClosee} transportOrder={selectedTransportOrder}></ToolDialog>
+        <CreateMovement open={open} handleClose={handleDialogClose} />
+      <ToolDialog open={openn} handleClose={() => setOpenn(false)} transportOrder={selectedTransportOrder} />
     </div>
   );
 };

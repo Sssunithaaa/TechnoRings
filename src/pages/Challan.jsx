@@ -107,7 +107,7 @@ const Challan = () => {
         />
       </GridComponent>
       <h2 className="mt-4 font-semibold text-[18px]">Click on records to view tools</h2>
-      <DeliveryChallan open={open} handleClose={handleDialogClose}/>
+      <DeliveryChallan open={open} handleClose={handleDialogClose} refetch/>
             <ChallanTools open={openn} handleClose={handleDialogClosee} transportOrder={service} />
 
     </div>

@@ -1,4 +1,4 @@
-import React,{useState,lazy} from "react";
+import React,{useState,lazy, useMemo} from "react";
 import {GridComponent,ColumnsDirective,ColumnDirective,Page,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group, Search} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
@@ -83,18 +83,21 @@ const ServiceHistory = () => {
       console.error("Error fetching transport order details:", error);
     }
   };
+   let grid;
    const toolbarClick = (args) => {
   
-        if (args.item.id === 'gridcomp_pdfexport') {
+      if(grid){
+          if (args.item.id === 'gridcomp_pdfexport') {
             grid.pdfExport({
                 pageOrientation: 'Landscape'
             });
         } else if(args.item.id === 'gridcomp_excelexport') {
             grid.excelExport(excelExportProperties(serviceGridColumns.length));
         }
+      }
         
     };
-  let grid;
+   const serviceOrders = useMemo(()=>serviceorders,[serviceorders])
     
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -103,7 +106,7 @@ const ServiceHistory = () => {
       <Header className="Page" title="Service Orders" />
       <GridComponent
         id="gridcomp"
-        dataSource={serviceorders}
+        dataSource={serviceOrders}
         width="auto"
           toolbar={["ExcelExport","PdfExport",'Search']}
         allowGrouping
