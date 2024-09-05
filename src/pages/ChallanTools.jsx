@@ -17,7 +17,8 @@ import axios from "axios";
 
 import { useStateContext } from "../context/ContextProvider";
 
-const UpdateCalibrationDetailsForm = lazy(()=>import("../forms/UpdateCalibrationHistory"));
+// const UpdateCalibrationDetailsForm = lazy(()=>import("../forms/UpdateCalibrationHistory"));
+import UpdateCalibrationDetailsForm from "../forms/UpdateCalibrationHistory";
 const ChallanTools = ({ open, handleClose, transportOrder }) => {
   const [calibrationReports, setCalibrationReports] = useState([]);
 

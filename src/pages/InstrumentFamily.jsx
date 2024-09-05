@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useStateContext } from "../context/ContextProvider";
 
-const AddInstrumentFamilyDialog = lazy(()=>import("../forms/InstrumentGroup"));
+// const AddInstrumentFamilyDialog = lazy(()=>import("../forms/InstrumentGroup"));
+import AddInstrumentFamilyDialog from "../forms/InstrumentGroup";
 const InstrumentFamily = () => {
   const [open, setOpen] = useState(false);
   const {excelExportProperties,addId} = useStateContext()

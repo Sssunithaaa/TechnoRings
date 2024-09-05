@@ -23,9 +23,10 @@ import { useStateContext } from "../context/ContextProvider";
 import { useSelector } from "react-redux";
 
 // Lazy load components
-const CalibrationDialog = lazy(() => import("../forms/CalibrationDialog"));
-const FullPageLoading = lazy(() => import("../components/FullPageLoading"));
-
+// const CalibrationDialog = lazy(() => import("../forms/CalibrationDialog"));
+// const FullPageLoading = lazy(() => import("../components/FullPageLoading"));
+import CalibrationDialog from "../forms/CalibrationDialog";
+import FullPageLoading from "../components/FullPageLoading";
 const Calibration = () => {
   let grid;
   const date = new Date().toISOString().split("T")[0];

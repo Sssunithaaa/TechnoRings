@@ -7,8 +7,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 
 import { ToastContainer, toast } from "react-toastify";
-const CalibrationDialog = lazy(()=> import("./CalibrationDialog"));
-const AddInstrumentGroupDialog = lazy(()=> import("./GroupMaster"));
+// const CalibrationDialog = lazy(()=> import("./CalibrationDialog"));
+// const AddInstrumentGroupDialog = lazy(()=> import("./GroupMaster"));
+import CalibrationDialog from "./CalibrationDialog";
+import AddInstrumentGroupDialog from "./GroupMaster";
 const MasterToolsDialog = () => {
   const {id} = useParams();
   const [toolGroup,setToolGroup] = useState()

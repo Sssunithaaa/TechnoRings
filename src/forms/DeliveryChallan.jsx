@@ -6,7 +6,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-const CalibrationDetailsForm = lazy(()=>import("./CalibrationDetails"));
+// const CalibrationDetailsForm = lazy(()=>import("./CalibrationDetails"));
+import CalibrationDetailsForm from "./CalibrationDetails";
 const DeliveryChallan = ({ open, handleClose,refetch }) => {
   const [showCalibrationModal, setShowCalibrationModal] = useState(false);
 

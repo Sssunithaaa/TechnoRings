@@ -22,8 +22,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 
-const CreateVendor = lazy(()=>import("../forms/AddVendor"))
-
+// const CreateVendor = lazy(()=>import("../forms/AddVendor"))
+import CreateVendor from "../forms/AddVendor";
 const Vendor = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();

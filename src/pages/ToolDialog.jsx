@@ -13,20 +13,34 @@ import axios from "axios";
 
 import { toast,ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 
-const CreateMovement = lazy(()=>import("../forms/Transport"));
-const ToolDialog = ({ open, handleClose, transportOrder }) => {
+// const CreateMovement = lazy(()=>import("../forms/Transport"));
+import CreateMovement from "../forms/Transport";
+const ToolDialog = ({ open, handleClose,movementId }) => {
   const [selectedToolIds, setSelectedToolIds] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
   const {user,role} = useSelector((user)=> user.auth)
- 
+const { data, isLoading, error } = useQuery({
+  queryKey: ["transportorders", movementId],
+  queryFn: async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_URL}/transport_orders/${movementId}/`
+    );
+    return response.data;
+  },
+  onError: (error) => {
+    console.error("Error fetching transport order details:", error);
+  },
+});
+
 
   useEffect(() => {
-    if (transportOrder) {
-      const allToolIds = transportOrder.transport_tools.map(tool => tool.tool);
+    if (data) {
+      const allToolIds = data.transport_tools.map(tool => tool.tool);
       setSelectedToolIds(allToolIds);
     }
-  }, [transportOrder]);
+  }, [data]);
 
   const handleCheckboxChange = (toolId) => {
     setSelectedToolIds((prev) =>
@@ -40,17 +54,17 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
     if (allSelected) {
       setSelectedToolIds([]);
     } else {
-      const allToolIds = transportOrder.transport_tools.map(tool => tool.tool);
+      const allToolIds = data.transport_tools.map(tool => tool.tool);
       setSelectedToolIds(allToolIds);
     }
     setAllSelected(!allSelected);
   };
 
   const acknowledgeTools = async () => {
-    if (!transportOrder) return;
+    if (!data) return;
 
     try {
-      await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${transportOrder.transport_order.movement_id}/`, {
+      await axios.post(`${process.env.REACT_APP_URL}/transport_acknowledge_tools/${data.transport_order.movement_id}/`, {
         tool_ids: selectedToolIds,
       });
       handleClose();
@@ -66,7 +80,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
     setOpenn(false)
   }
    const handleDelete =async ()=> {
-    const response =await axios.post(`https://practicehost.pythonanywhere.com/transport_order/${transportOrder.transport_order.movement_id}/delete/`);
+    const response =await axios.post(`https://practicehost.pythonanywhere.com/transport_order/${data.transport_order.movement_id}/delete/`);
     if(response.data.success){
       toast.success(response.data.message);
       setTimeout(()=>{
@@ -78,17 +92,17 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle className="text-center">Transport Order Details</DialogTitle>
       <DialogContent>
-        {transportOrder ? (
+        {data ? (
           <div className="px-10">
-            <p><strong>Movement ID:</strong> {transportOrder.transport_order.movement_id}</p>
-            <p><strong>Movement Date:</strong> {transportOrder.transport_order.movement_date}</p>
-            <p><strong>Acknowledgment:</strong> {transportOrder.transport_order.acknowledgment ? "Yes" : "No"}</p>
-            <p><strong>Tool Count:</strong> {transportOrder.transport_order.tool_count}</p>
-            <p><strong>Source Shed:</strong> {transportOrder.transport_order.source_shed_name}</p>
-            <p><strong>Destination Shed:</strong> {transportOrder.transport_order.destination_shed_name}</p>
+            <p><strong>Movement ID:</strong> {data.transport_order.movement_id}</p>
+            <p><strong>Movement Date:</strong> {data.transport_order.movement_date}</p>
+            <p><strong>Acknowledgment:</strong> {data.transport_order.acknowledgment ? "Yes" : "No"}</p>
+            <p><strong>Tool Count:</strong> {data.transport_order.tool_count}</p>
+            <p><strong>Source Shed:</strong> {data.transport_order.source_shed_name}</p>
+            <p><strong>Destination Shed:</strong> {data.transport_order.destination_shed_name}</p>
             <h3>Transport Tools</h3>
            
-            {transportOrder.transport_tools.map((tool) => (
+            {data?.transport_tools.map((tool) => (
               <div key={tool.tool}>
                 <FormControlLabel
                   control={
@@ -111,10 +125,10 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           <p>Loading...</p>
         )}
               <div className="flex flex-row mx-auto gap-x-4 justify-center items-center">
-  {((role === "admin" && !transportOrder?.transport_order?.acknowledgment)  || (
-    transportOrder &&
-    transportOrder.transport_order?.source_shed_name === user && 
-    !transportOrder.transport_order?.acknowledgment
+  {((role === "admin" && !data?.transport_order?.acknowledgment)  || (
+    data &&
+    data.transport_order?.source_shed_name === user && 
+    !data.transport_order?.acknowledgment
   )) && (
     <button
       className="px-2 py-2 text-blue-500 mx-4 text-[16px] rounded-md font-semibold"
@@ -134,7 +148,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
           Close
         </button>
         {
-          !transportOrder?.transport_order.acknowledgment && transportOrder?.transport_order.destination_shed_name === user && (
+          !data?.transport_order.acknowledgment && data?.transport_order.destination_shed_name === user && (
             <button className="px-5 py-2  text-[16px] rounded-md bg-blue-500 text-white font-semibold" onClick={acknowledgeTools}>
               Acknowledge
             </button>
@@ -142,7 +156,7 @@ const ToolDialog = ({ open, handleClose, transportOrder }) => {
         }
       </DialogActions>
       <ToastContainer/>
-      <CreateMovement open={openn} handleClose={handleDialogClosee} transportOrder={transportOrder}/>
+      <CreateMovement open={openn} handleClose={handleDialogClosee} transportOrder={data}/>
     </Dialog>
   );
 };

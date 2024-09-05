@@ -25,7 +25,8 @@ import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 
 
-const UpdateShed = lazy(()=> import("../forms/UpdateShed"));
+// const UpdateShed = lazy(()=> import("../forms/UpdateShed"));
+import UpdateShed from "../forms/UpdateShed";
 const Shed = () => {
       const {excelExportProperties,addId} = useStateContext()
   const { data: shedDetailsData, refetch } = useQuery({

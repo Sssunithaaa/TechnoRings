@@ -7,8 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useStateContext } from "../context/ContextProvider";
 
-const DeliveryChallan = lazy(()=>import("../forms/DeliveryChallan"));
-const ChallanTools = lazy(()=>import("./ChallanTools"));
+// const DeliveryChallan = lazy(()=>import("../forms/DeliveryChallan"));
+// const ChallanTools = lazy(()=>import("./ChallanTools"));
+import DeliveryChallan from "../forms/DeliveryChallan";
+import ChallanTools from "./ChallanTools";
 const Challan = () => {
   const [open, setOpen] = useState(false);
   const [openn, setOpenn] = useState(false);
@@ -43,7 +45,7 @@ const Challan = () => {
   const handleDialogClose = () => {
     setOpen(false);
     console.log("Closing box")
-   
+    // refetch()
     
   };
 

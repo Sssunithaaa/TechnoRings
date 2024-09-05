@@ -10,8 +10,10 @@ import { useNavigate } from "react-router-dom";
 
 import {  calibrationHistoryGrid } from "../data/apps";
 import { useStateContext } from "../context/ContextProvider";
-const BackButton = lazy(()=> import("../components/BackButton"));
-const CalibrationDialog = lazy(()=> import("../forms/CalibrationDialog"));
+// const BackButton = lazy(()=> import("../components/BackButton"));
+// const CalibrationDialog = lazy(()=> import("../forms/CalibrationDialog"));
+import BackButton from "../components/BackButton";
+import CalibrationDialog from "../forms/CalibrationDialog";
 const Transactions = () => {
      const {excelExportProperties} = useStateContext()
   const id= useParams()

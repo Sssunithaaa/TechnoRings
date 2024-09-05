@@ -11,8 +11,10 @@ import { toast,ToastContainer } from "react-toastify";
 
 import { useStateContext } from "../context/ContextProvider";
 
-const AddInstrumentGroupDialog = lazy(()=> import("../forms/GroupMaster"));
-const AddInstrumentFamilyDialog = lazy(()=> import("../forms/InstrumentGroup"));
+// const AddInstrumentGroupDialog = lazy(()=> import("../forms/GroupMaster"));
+// const AddInstrumentFamilyDialog = lazy(()=> import("../forms/InstrumentGroup"));
+import AddInstrumentFamilyDialog from "../forms/InstrumentGroup";
+import AddInstrumentGroupDialog from "../forms/GroupMaster";
 const GroupMaster = () => {
   const { id } = useParams();  // Extracting the id from URL params
   const [open, setOpen] = useState(false);

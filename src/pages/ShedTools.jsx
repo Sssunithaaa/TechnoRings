@@ -12,10 +12,14 @@ import { useSelector } from "react-redux";
 import { useStateContext } from "../context/ContextProvider";
 import { CalibrationGrid } from "../data/apps";
 
-const CalibrationDialog = lazy(()=>import("../forms/CalibrationDialog"));
-const BackButton = lazy(()=>import("../components/BackButton"));
-const UpdateShed = lazy(()=>import("../forms/UpdateShed"));
-const AddShedTools = lazy(()=>import("../forms/AddShedTool"));
+// const CalibrationDialog = lazy(()=>import("../forms/CalibrationDialog"));
+// const BackButton = lazy(()=>import("../components/BackButton"));
+// const UpdateShed = lazy(()=>import("../forms/UpdateShed"));
+// const AddShedTools = lazy(()=>import("../forms/AddShedTool"));
+import CalibrationDialog from "../forms/CalibrationDialog";
+import BackButton from "../components/BackButton";
+import UpdateShed from "../forms/UpdateShed";
+import AddShedTools from "../forms/AddShedTool";
 const ShedTools = () => {
   const [shedTools, setShedTools] = useState([]);
   const [tools, setTools] = useState([]);

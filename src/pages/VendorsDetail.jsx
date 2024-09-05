@@ -10,9 +10,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useQuery } from "@tanstack/react-query";
 import { useStateContext } from "../context/ContextProvider";
-const CreateVendorHandleData = lazy(()=>import("../forms/VendorHandle"));
-const BackButton = lazy(()=>import("../components/BackButton"));
-const CreateVendor = lazy(()=>import("../forms/AddVendor"));
+// const CreateVendorHandleData = lazy(()=>import("../forms/VendorHandle"));
+// const BackButton = lazy(()=>import("../components/BackButton"));
+// const CreateVendor = lazy(()=>import("../forms/AddVendor"));
+import CreateVendorHandleData from "../forms/VendorHandle";
+import BackButton from "../components/BackButton";
+import CreateVendor from "../forms/AddVendor";
 const VendorsDetail = () => {
   
        const [open, setOpen] = useState(false);

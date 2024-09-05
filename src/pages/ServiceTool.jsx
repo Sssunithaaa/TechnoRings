@@ -13,17 +13,30 @@ import {
   Paper,
 } from "@mui/material";
 import axios from "axios";
-
+import { useQuery } from "@tanstack/react-query";
 import { ToastContainer, toast } from "react-toastify";
-const Service = lazy(()=>import("../forms/Service"));
-const ServiceTool = ({ open, handleClose, transportOrder }) => {
+// const Service = lazy(()=>import("../forms/Service"));
+import Service from "../forms/Service";
+const ServiceTool = ({ open, handleClose, serviceId }) => {
   const [billData, setBillData] = useState(null);
-
+const { data, isLoading, error } = useQuery({
+  queryKey: ["serviceorders", serviceId],
+  queryFn: async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_URL}/service_orders/${serviceId}/`
+    );
+    return response.data;
+  },
+  onError: (error) => {
+    console.error("Error fetching service order details:", error);
+  },
+  enabled: Boolean(serviceId)
+});
   useEffect(() => {
-    if (transportOrder) {
+    if (data) {
       const fetchBillData = async () => {
         try {
-          const response = await axios.get(`https://practicehost.pythonanywhere.com/generate_bill/${transportOrder.service_order.service_id}/`);
+          const response = await axios.get(`https://practicehost.pythonanywhere.com/generate_bill/${data.service_order.service_id}/`);
           setBillData(response.data);
         } catch (error) {
           console.error("Error fetching bill data:", error);
@@ -32,7 +45,7 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
 
       fetchBillData();
     }
-  }, [transportOrder]);
+  }, [data]);
   const [openn,setOpenn] = useState(false);
   const handleDialogOpenn=()=> {
     setOpenn(true);
@@ -41,7 +54,7 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
     setOpenn(false)
   }
   const handleDelete =async ()=> {
-    const response =await axios.post(`https://practicehost.pythonanywhere.com/service_order/${transportOrder.service_order.service_id}/delete/`);
+    const response =await axios.post(`https://practicehost.pythonanywhere.com/service_order/${data.service_order.service_id}/delete/`);
     if(response.data.success){
       toast.success(response.data.message);
       setTimeout(()=>{
@@ -54,25 +67,25 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
     <Dialog open={open} onClose={handleClose} maxWidth="md">
       <DialogTitle>Service Order Details</DialogTitle>
       <DialogContent>
-        {transportOrder ? (
+        {data ? (
           <div>
             <p>
               <strong>Service ID:</strong>{" "}
-              {transportOrder?.service_order?.service_id}
+              {data?.service_order?.service_id}
             </p>
             <p>
-              <strong>Date:</strong> {transportOrder?.service_order?.date}
+              <strong>Date:</strong> {data?.service_order?.date}
             </p>
             <p>
               <strong>Total Amount:</strong> {billData?.total_amount}
             </p>
             <p>
               <strong>Description:</strong>{" "}
-              {transportOrder?.service_order?.description}
+              {data?.service_order?.description}
             </p>
             <p>
               <strong>Instrument count:</strong>{" "}
-              {transportOrder?.service_order?.tool_count}
+              {data?.service_order?.tool_count}
             </p>
 
             <h3 className="mt-3 font-bold text-[18px]">Service Instruments</h3>
@@ -87,7 +100,7 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {transportOrder?.service_tools?.map((tool, index) => {
+                  {data?.service_tools?.map((tool, index) => {
                     const billItem = billData?.bill_items?.find(item => item.tool === tool.tool_name);
                     return (
 
@@ -115,7 +128,7 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
       </DialogContent>
      <ToastContainer/>
       <DialogActions>
-          {transportOrder && transportOrder?.service_order?.service_pending && <button  className="px-5 py-2 bg-blue-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn} color="primary">
+          {data && data?.service_order?.service_pending && <button  className="px-5 py-2 bg-blue-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDialogOpenn} color="primary">
           Update service order
         </button> }
         <button  className="px-5 py-2 bg-red-500 mx-auto text-[14px] rounded-md text-white font-semibold" onClick={handleDelete}>
@@ -125,7 +138,7 @@ const ServiceTool = ({ open, handleClose, transportOrder }) => {
           Close
         </button>
       </DialogActions>
-      <Service open={openn} handleClose={handleDialogClosee} serviceOrder={transportOrder} id={transportOrder?.service_order?.service_id}/>
+      <Service open={openn} handleClose={handleDialogClosee} serviceOrder={data} id={data?.service_order?.service_id}/>
     </Dialog>
   );
 };

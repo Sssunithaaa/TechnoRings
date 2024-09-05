@@ -1,14 +1,15 @@
-import React,{useState,lazy, useMemo} from "react";
+import React,{useState,useEffect, useMemo} from "react";
 import {GridComponent,ColumnsDirective,ColumnDirective,Page,Inject,Edit,Toolbar,Sort,Filter, PdfExport, ExcelExport, Group, Search} from '@syncfusion/ej2-react-grids'
 import { Header } from "../components";
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query";
 
 import { useStateContext } from "../context/ContextProvider";
+import Service from "../forms/Service";
+import ServiceTool from "./ServiceTool";
 
-const Service = lazy(()=>import("../forms/Service"));
-const ServiceTool = lazy(()=>import("./ServiceTool"));
 const ServiceHistory = () => {
+     let grid;
         const [open, setOpen] = useState(false);
   const [openn, setOpenn] = useState(false);
   
@@ -56,34 +57,39 @@ const ServiceHistory = () => {
     { field: "tool_count", headerText: "Instrument count", width: "150", textAlign: "Center" }
   ];
    const handleDialogClose = () => {
-        setOpen(false);
-        refetch()
-    };
-  const handleDialogOpen = () => {
+  if (grid) {
+    refetch(); // Refetch only when grid is initialized
+  }
+  setOpen(false); // Close dialog
+};
+
+const handleDialogClosee = () => {
+  if (grid) {
+    refetch(); // Refetch only when grid is initialized
+  }
+  setOpenn(false); // Close dialog
+};
+     const handleDialogOpen = () => {
         setOpen(true);
-    };
-     const handleDialogClosee = () => {
-        setOpenn(false);
-        refetch()
     };
   const handleDialogOpenn = () => {
         setOpenn(true);
     };
-    const [service,setService] = useState([]);
+    const [serviceId,setServiceid] = useState([]);
     const handleRowClick = async (args) => {
     const serviceId = args.data.service_id;
  
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_URL}/service_orders/${serviceId}/`
-      );
-      setService(response.data)
+   
+      setServiceid(serviceId)
       handleDialogOpenn();
-    } catch (error) {
-      console.error("Error fetching transport order details:", error);
-    }
+    
   };
-   let grid;
+useEffect(() => {
+  if (grid) {
+    console.log('Grid initialized:', grid);
+  }
+}, [grid]);
+
    const toolbarClick = (args) => {
   
       if(grid){
@@ -146,7 +152,7 @@ const ServiceHistory = () => {
             <h2 className="mt-4 font-semibold text-[18px]">Click on records to view tools</h2>
 
                         <Service open={open} handleClose={handleDialogClose} />
-       <ServiceTool open={openn} handleClose={handleDialogClosee} transportOrder={service}></ServiceTool>
+       <ServiceTool open={openn} handleClose={handleDialogClosee} serviceId={serviceId}></ServiceTool>
     </div>
   );
 };
